@@ -33,7 +33,7 @@ console.log(year);
 console.log(typeof(year)); */
 
 // --------------VARIABLE DECLARATIONS---------------
-let age = 30;
+/* let age = 30;
 age = 31;
 
 const birthYear = 1991;
@@ -42,4 +42,12 @@ const birthYear = 1991;
 var job = "Programmmer"; // never use var.
 job = "Teacher";
 
-console.log(typeof(job));
+console.log(typeof(job)); */
+
+// --------------BASIC OPERATORS---------------
+const currentYear = 2037;
+const ageJonas = currentYear - 1991;
+const ageSarah = currentYear - 2018;
+console.log(ageJonas, ageSarah);
+// 2**3 means 2 to the power of 3 = 2*2*2
+console.log(ageJonas*2, ageJonas/10, 2**3); 
