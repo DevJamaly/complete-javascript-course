@@ -11,7 +11,7 @@ console.log("my name is " + firstName + " and i work at " + myCurrentCompany); *
 
 
 // --------------DATA TYPES---------------
-let jsIsFun = true;
+/* let jsIsFun = true;
 
 console.log(jsIsFun);
 console.log(typeof(jsIsFun));
@@ -30,4 +30,16 @@ console.log(typeof(year));
 
 year = null;
 console.log(year);
-console.log(typeof(year));
+console.log(typeof(year)); */
+
+// --------------VARIABLE DECLARATIONS---------------
+let age = 30;
+age = 31;
+
+const birthYear = 1991;
+// birthYear = 1990; // This is an error because const cannot be changed
+
+var job = "Programmmer"; // never use var.
+job = "Teacher";
+
+console.log(typeof(job));
