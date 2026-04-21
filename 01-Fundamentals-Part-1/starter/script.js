@@ -111,7 +111,7 @@ multiple
 lines`) */
 
 // --------------IF/ELSE STATEMENTS---------------
-const age = 15;
+/* const age = 15;
 const isOldEnough = age >= 18;
 
 //Control structure allows code execution flow control
@@ -130,5 +130,74 @@ if (birthYear <= 2000) {
 } else {
     century = 21;
 }
-console.log(`you are born in the ${century} century`);
+console.log(`you are born in the ${century} century`); */
 
+// --------------TYPE CONVERSION AND COERCION---------------
+/* // type conversion
+const inputYear = '1991';
+console. log (Number(inputYear), inputYear);
+console. log (Number(inputYear) + 18);
+
+console. log (Number('Jonas'));
+console. log(typeof NaN) ;
+
+console. log(String(23), 23);
+
+// type coercion
+console.log('I am ' + 23 + ' years old');
+console.log('23' - '10' - 3);
+console.log('23' / '2');
+
+let n = '1' + 1;
+n -= 1;
+console.log(n);
+
+let x = 2+3+4+'5';
+console.log(x); //95
+
+let y = '10'-'4'-'3'-2+'5';
+console.log(y); //15 */
+
+// --------------TRUTHY AND FALSY VALUES---------------
+/* //5 Falsy values: 0, '', undefined, null, NaN
+//Truthy values: number > 0 and non-empty strings
+
+console.log(Boolean(0));
+console.log(Boolean(undefined));
+console.log(Boolean('Jonas'));
+console.log(Boolean({}));
+console.log(Boolean(10));
+
+const money = 10;
+if(money){ console.log("Don't spend it all"); }
+else { console.log("You should get a job!"); }
+
+let height = 0;
+if(height){
+    console.log("YAY! height is defined");
+}else {
+    console.log("Height is undefined");
+} */
+
+// --------------EQUALITY OPERATORS---------------
+/* const age = 18; //assignment 
+if(age === 18) console.log(`You just became an adult! (strict)`); //strict equality check 
+if(age == 18) console.log(`You just became an adult! (loose)`); //loose equality check 
+
+const favourite = Number(prompt("What is your favourtie number?"));
+console.log(favourite);
+console.log(typeof favourite);
+
+if(!favourite) {
+    console.log(`Sorry! Cannot evaluate this`);
+}else if(favourite === 23) {
+    console.log(`Cool! 23 is an amazing number!`);
+}else if (favourite === 7) {
+    console.log(`7 is also a cool number!`);
+}else {
+    console.log("This number is out of range!");
+}
+
+if(favourite !== 23) console.log(`Why not 23?`); */
+
+// --------------EQUALITY OPERATORS---------------
