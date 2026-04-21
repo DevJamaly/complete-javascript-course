@@ -92,7 +92,7 @@ console.log(`ageJonas: ${ageJonas} | ageSarah: ${ageSarah} | ageAvg: ${avgAgeBra
  */
 
 // --------------STRING AND TEMPLATE LITERALS---------------
-const firstName = 'Taha';
+/* const firstName = 'Taha';
 const job = 'Programmer';
 const birthYear = 1996;
 const currentYear = 2026;
@@ -108,4 +108,27 @@ console.log(`Just a regular string....`);
 console.log
 (`String with
 multiple 
-lines`)
+lines`) */
+
+// --------------IF/ELSE STATEMENTS---------------
+const age = 15;
+const isOldEnough = age >= 18;
+
+//Control structure allows code execution flow control
+if (isOldEnough) {
+    console.log(`Mark can start driving license`);
+}else {
+    const yearsLeft = 18 - age;
+    console.log(`Mark is too young wait another ${yearsLeft} years`);
+}
+
+const birthYear = 1996; 
+let century;
+
+if (birthYear <= 2000) {
+    century = 20;
+} else {
+    century = 21;
+}
+console.log(`you are born in the ${century} century`);
+
