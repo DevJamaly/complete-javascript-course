@@ -1,10 +1,10 @@
 /* let js = 'amazing';
 if (js === "amazing") alert("Javascript is fun");
 
-let firstName = "Taha"; //Default convention for variable names 
-let last_name = "Dama"; //Alternative but not preffered 
-let PI = 3.145; // Constant variable naming is all CAPS 
-let firstCompany = "B.U.T" 
+let firstName = "Taha"; //Default convention for variable names
+let last_name = "Dama"; //Alternative but not preffered
+let PI = 3.145; // Constant variable naming is all CAPS
+let firstCompany = "B.U.T"
 let myCurrentCompany = "S.B.E"
 
 console.log("my name is " + firstName + " and i work at " + myCurrentCompany); */
@@ -51,13 +51,13 @@ const ageJonas = currentYear - 1991;
 const ageSarah = currentYear - 2018;
 console.log(ageJonas, ageSarah);
 // 2**3 means 2 to the power of 3 = 2*2*2
-console.log(ageJonas*2, ageJonas/10, 2**3); 
+console.log(ageJonas*2, ageJonas/10, 2**3);
 
 const firstName = 'Taha';
 const lastName = 'Jamaly';
 console.log(firstName + ' ' + lastName);
 
-// Assignment operators 
+// Assignment operators
 let x = 10 + 5; //15
 x += 10; // x = x + 10 == 25
 x *= 4; // 100
@@ -66,7 +66,7 @@ x++; //26
 x--; //25
 console.log(x);
 
-// Comparision operators 
+// Comparision operators
 console.log(ageJonas > ageSarah); //>, <, >=, <=
 console.log(ageSarah >= 18);
 
@@ -101,13 +101,13 @@ const currentYear = 2026;
 const taha = "I'm " + firstName + ", a " + (currentYear-birthYear) + " year old " + job;
 console.log(taha);
 
-//template literals 
+//template literals
 const tahaNew = `I'm ${firstName}, a ${currentYear-birthYear} year-old ${job}`;
 console.log(tahaNew);
 console.log(`Just a regular string....`);
 console.log
 (`String with
-multiple 
+multiple
 lines`) */
 
 // --------------IF/ELSE STATEMENTS---------------
@@ -122,7 +122,7 @@ if (isOldEnough) {
     console.log(`Mark is too young wait another ${yearsLeft} years`);
 }
 
-const birthYear = 1996; 
+const birthYear = 1996;
 let century;
 
 if (birthYear <= 2000) {
@@ -180,9 +180,9 @@ if(height){
 } */
 
 // --------------EQUALITY OPERATORS---------------
-/* const age = 18; //assignment 
-if(age === 18) console.log(`You just became an adult! (strict)`); //strict equality check 
-if(age == 18) console.log(`You just became an adult! (loose)`); //loose equality check 
+/* const age = 18; //assignment
+if(age === 18) console.log(`You just became an adult! (strict)`); //strict equality check
+if(age == 18) console.log(`You just became an adult! (loose)`); //loose equality check
 
 const favourite = Number(prompt("What is your favourtie number?"));
 console.log(favourite);
@@ -200,4 +200,20 @@ if(!favourite) {
 
 if(favourite !== 23) console.log(`Why not 23?`); */
 
-// --------------EQUALITY OPERATORS---------------
+// --------------LOGICAL OPERATORS---------------
+const hasDriversLicense = true;
+const hasGoodVision = true;
+
+console.log(hasDriversLicense && hasGoodVision);
+console.log(hasDriversLicense || hasGoodVision);
+console.log(!hasDriversLicense);
+
+const isTired = true;
+const shouldDrive = hasDriversLicense && hasGoodVision && !isTired;
+
+
+if (shouldDrive) {
+    console.log(`Sarah is able to drive`);
+} else {
+    console.log(`Someone else should drive`);
+}
