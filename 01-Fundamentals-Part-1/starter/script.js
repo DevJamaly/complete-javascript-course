@@ -90,3 +90,22 @@ const avgAgeBracketed = (ageJonas + ageSarah) / 2;
 console.log(`ageJonas: ${ageJonas} | ageSarah: ${ageSarah} | ageAvg: ${avgAgeSimple}`)
 console.log(`ageJonas: ${ageJonas} | ageSarah: ${ageSarah} | ageAvg: ${avgAgeBracketed}`)
  */
+
+// --------------STRING AND TEMPLATE LITERALS---------------
+const firstName = 'Taha';
+const job = 'Programmer';
+const birthYear = 1996;
+const currentYear = 2026;
+
+//string concatination
+const taha = "I'm " + firstName + ", a " + (currentYear-birthYear) + " year old " + job;
+console.log(taha);
+
+//template literals 
+const tahaNew = `I'm ${firstName}, a ${currentYear-birthYear} year-old ${job}`;
+console.log(tahaNew);
+console.log(`Just a regular string....`);
+console.log
+(`String with
+multiple 
+lines`)
