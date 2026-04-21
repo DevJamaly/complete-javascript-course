@@ -45,7 +45,7 @@ job = "Teacher";
 console.log(typeof(job)); */
 
 // --------------BASIC OPERATORS---------------
-// Math operators
+/* // Math operators
 const currentYear = 2037;
 const ageJonas = currentYear - 1991;
 const ageSarah = currentYear - 2018;
@@ -72,4 +72,21 @@ console.log(ageSarah >= 18);
 
 const isFullAge = ageSarah >= 18;
 
+console.log(currentYear - 1991 > currentYear - 2018); */
+
+// --------------OPERATOR PRECEDENCE---------------
+/* const currentYear = 2037;
+const ageJonas = currentYear - 1991;
+const ageSarah = currentYear - 2018;
+
 console.log(currentYear - 1991 > currentYear - 2018);
+
+let x , y;
+x = y = 25 - 10 - 5; // x = y = 10 -> y = 10 -> x = y
+console.log(`X: ${x} | Y: ${y}`);
+
+const avgAgeSimple = ageJonas + ageSarah / 2;
+const avgAgeBracketed = (ageJonas + ageSarah) / 2;
+console.log(`ageJonas: ${ageJonas} | ageSarah: ${ageSarah} | ageAvg: ${avgAgeSimple}`)
+console.log(`ageJonas: ${ageJonas} | ageSarah: ${ageSarah} | ageAvg: ${avgAgeBracketed}`)
+ */
