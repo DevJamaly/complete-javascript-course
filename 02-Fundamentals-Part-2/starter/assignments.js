@@ -1,7 +1,7 @@
 'use strict';
 
 // --------------FUNCTIONS---------------
-function describeCountry(country, population, capitalCity) {
+/* function describeCountry(country, population, capitalCity) {
     const description = `${country} has ${population} million people and its capital city is ${capitalCity}`;
     return description;
 }
@@ -14,4 +14,25 @@ console.log(`
 ${descPortugal}
 ${descGermany}
 ${descFinland}
-    `)
+    `) */
+
+// --------------FUNCTION EXPRESSIONS---------------    
+function percentageOfWorld1(population) {
+    return (population / 7900) * 100;
+}
+
+const percentageOfWorld2 = function (population) {
+    return (population / 7900) * 100;
+}
+
+const percPortugal1 = percentageOfWorld1(10);
+const percChina1 = percentageOfWorld1(1441);
+const percUSA1 = percentageOfWorld1(332);
+
+console.log(percPortugal1, percChina1, percUSA1);
+
+const percPortugal2 = percentageOfWorld2(10);
+const percChina2 = percentageOfWorld2(1441);
+const percUSA2 = percentageOfWorld2(332);
+
+console.log(percPortugal2, percChina2, percUSA2);
