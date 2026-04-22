@@ -220,7 +220,7 @@ if (shouldDrive) {
 
 
 // --------------SWITCH STATEMENTS---------------
-const day = 'monday';
+/* const day = 'monday';
 
 // It does a scrit comparision
 switch (day) {
@@ -260,4 +260,26 @@ if (day === 'monday') {
     console.log(`Enjoy the weekend :D`);
 } else {
     console.log(`Note a valid day!`);
-}
+} */
+
+// --------------STATEMENTS & EXPRESSIONS---------------
+/* //An expression is a piece of code that produces a value
+3+4
+1991
+true && false && !false
+
+//A statement is a piece of code that does not produce a value in and of itself
+if(23 > 10) { const str = '23 is bigger';}
+
+//Template literals only accept expressions not statements
+console.log(`I'm ${2037 - 1996} years old`); */
+
+// --------------CONDITIONAL (TERNARY) OPERATOR---------------
+const age = 23;
+// age >= 18 ? console.log(`I like to drink wine`) : console.log(`I like to drink water`);
+
+const prefferedDrink = age >= 18 ? 'wine' : 'water';
+console.log(`I like to drink ${prefferedDrink}`);
+
+// Since a ternary operator is an expression we can use it with a template literal
+console.log(`I like to drink ${age >= 18 ? 'wine' : 'water'}`);

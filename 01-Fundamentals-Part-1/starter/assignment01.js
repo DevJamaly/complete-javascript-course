@@ -74,3 +74,6 @@ switch (language.toLowerCase()) {
         console.log(`Great language too :D`) ;
         break;
 }
+
+//Ternary Operator
+console.log(`${country}'s population is ${population > avgPopulation ? 'above' : 'below'} average`);
