@@ -17,7 +17,7 @@ if (hasDriversLicense) console.log(`I can drive`);
     console.log(`My name is Taha`);
 }
 
-//calling / running / inovking a function 
+//calling / running / inovking a function
 logger();
 
 function fruitProcessor(appleCount, orangeCount) {
@@ -33,9 +33,9 @@ const appleOrangeJuice = fruitProcessor(2, 4);
 console.log(appleOrangeJuice); */
 
 // --------------FUNCTION EXPRESSIONs---------------
-const myAge = calculateAge(1996);
+/* const myAge = calculateAge(1996);
 
-//function declaration is where we use the 'function' keyword to declare a function 
+//function declaration is where we use the 'function' keyword to declare a function
 //A function declaration can be done after its usage. Although might not be a good idea
 function calculateAge(birthYear) {
     return 2037 - birthYear;
@@ -50,4 +50,22 @@ const calculateAge2 = function (birthYear) {
 }
 
 const myAge2 = calculateAge2(1996);
-console.log(myAge, myAge2);
+console.log(myAge, myAge2); */
+
+// --------------ARROW FUNCTIONS---------------
+const calculateAge2 = function (birthYear) {
+    return 2037 - birthYear;
+}
+
+//Arrow function. In it the value is returned implicitly
+//Used mainly for one liner functions
+const calculateAge3 = birthYear => 2037 - birthYear;
+const age3 = calculateAge3(1996);
+console.log(age3);
+
+//In case of an arrow function if you have brackets you have to return explicitly 
+const yearsUntilRetirement = (birthYear, retirementAge) => {
+    const age = 2037 - birthYear;
+    return retirementAge - age;
+}
+console.log(yearsUntilRetirement(1996, 70));
