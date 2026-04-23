@@ -44,3 +44,12 @@ const percChina3 = percentageOfWorld3(1441);
 const percUSA3 = percentageOfWorld3(332);
 
 console.log(percPortugal3, percChina3, percUSA3);
+
+// --------------NESTED FUNCTIONS--------------- 
+function describePopulation(country, population) {
+    return `${country} has ${population} million people, which is about ${percentageOfWorld1(population)}% of the world`;
+}
+
+console.log(describePopulation('Portugal', 10));
+console.log(describePopulation('China', 1441));
+console.log(describePopulation('USA', 332));

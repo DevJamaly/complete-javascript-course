@@ -53,7 +53,7 @@ const myAge2 = calculateAge2(1996);
 console.log(myAge, myAge2); */
 
 // --------------ARROW FUNCTIONS---------------
-const calculateAge2 = function (birthYear) {
+/* const calculateAge2 = function (birthYear) {
     return 2037 - birthYear;
 }
 
@@ -68,4 +68,19 @@ const yearsUntilRetirement = (birthYear, retirementAge) => {
     const age = 2037 - birthYear;
     return retirementAge - age;
 }
-console.log(yearsUntilRetirement(1996, 70));
+console.log(yearsUntilRetirement(1996, 70)); */
+
+// --------------FUNCTION NESTING---------------
+function cutFruitPieces(fruit) {
+    return fruit * 4;
+}
+
+function fruitProcessor(apples, oranges) {
+    const applePieces = cutFruitPieces(apples);
+    const orangePieces = cutFruitPieces(oranges);
+
+    const juice = `Juice with ${applePieces} pieces of apple and ${orangePieces} pieces of orange.`;
+    return juice;
+}
+
+console.log(fruitProcessor(2, 3));
