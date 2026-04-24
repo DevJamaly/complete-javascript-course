@@ -82,10 +82,20 @@ const myCountry = {
     capital: 'Abu Dhabi',
     language: 'Arabic',
     population: 11.5,
-    neighbours: ['Oman', 'Bahrain', 'Saudi Arabia', 'Kuwait', 'Qatar']
+    neighbours: ['Oman', 'Bahrain', 'Saudi Arabia', 'Kuwait', 'Qatar'],
+    describe: function () {
+        console.log(`${this.country} has ${this.population} million ${this.language}-speaking people, ${this.neighbours.length} neighbouring countries and a capital called ${this.capital}`);
+    },
+    checkIsland: function () {
+        this.isIsland = this.neighbours.length > 0;
+    }
 }
 
 myCountry.population += 2;
 myCountry['population'] -= 2;
 
 console.log(`${myCountry.country} has ${myCountry.population} million ${myCountry.language}-speaking people, ${myCountry.neighbours.length} neighbouring countries and a capital called ${myCountry.capital}`);
+
+myCountry.describe();
+myCountry.checkIsland();
+console.log(myCountry.isIsland);

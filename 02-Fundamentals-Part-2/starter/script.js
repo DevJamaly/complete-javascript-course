@@ -11,7 +11,6 @@ if (hasDriversLicense) console.log(`I can drive`);
 // const interface = 'Audio';
 // const private = 534; */
 
-
 // --------------FUNCTIONS---------------
 /* function logger() {
     console.log(`My name is Taha`);
@@ -128,11 +127,11 @@ console.log(ages); */
 
 // --------------ARRAY METHODS---------------
 /* const friends = ['Michael', 'Steven', 'Peter'];
-const newLength = friends.push('Jay'); //Adds elements to the end of the array and return new length of the array 
+const newLength = friends.push('Jay'); //Adds elements to the end of the array and return new length of the array
 console.log(friends);
 console.log(newLength);
 
-friends.unshift('John'); //Adds element to the start of the array 
+friends.unshift('John'); //Adds element to the start of the array
 console.log(friends);
 
 const popped = friends.pop(); //Removes last element from the array and returns the removed element
@@ -154,7 +153,7 @@ console.log(friends.includes('23'));
 if (friends.includes('Peter')) console.log(`You have a friend called Peter`); */
 
 // --------------OBJECTS---------------
-const currentYear = 2037;
+/* const currentYear = 2037;
 const friends = ['Michael', 'Steven', 'Peter'];
 const tahaArray = ['Taha', 'Jamaly', currentYear - 1996, 'Programmer', friends];
 
@@ -184,7 +183,36 @@ taha.location = 'United Arab Emirates';
 taha['twitter'] = '@tahaJamaly';
 console.log(taha);
 
-console.log(`${taha.firstName} has ${taha.friends.length} friends, and his best friend is called ${taha.friends[0]}`);
-
+console.log(`${taha.firstName} has ${taha.friends.length} friends, and his best friend is called ${taha.friends[0]}`); */
 
 // --------------OBJECT METHODS---------------
+const currentYear = 2037;
+const friends = ['Michael', 'Steven', 'Peter'];
+
+const taha = {
+    firstName: 'Taha',
+    lastName: 'Jamaly',
+    birthYear: 1996,
+    job: 'Programmer',
+    friends: friends,
+    hasDriversLicense: true,
+
+    //Any function attached to an object is called Method. You cannot do declaration functions
+    // calcAge: birthYear => currentYear - birthYear
+    // calcAge: function () {
+    //     return currentYear - this.birthYear;
+    // }
+    calcAge: function () {
+        this.age = currentYear - this.birthYear;
+        return this.age;
+    },
+    description: function () {
+        return `${this.firstName} is ${this.calcAge()}-year old ${this.job}. He has ${this.hasDriversLicense ? 'a' : 'no'} driver's license. He has ${this.friends.length} friends, and his best friend is called ${this.friends[0]}`;
+    }
+};
+
+// console.log(taha.calcAge());
+// console.log(taha['calcAge']());
+// taha.calcAge();
+// console.log(taha.age);
+console.log(taha.description());
