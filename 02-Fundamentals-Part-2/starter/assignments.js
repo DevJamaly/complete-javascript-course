@@ -21,7 +21,7 @@ function percentageOfWorld1(population) {
     return (population / 7900) * 100;
 }
 
-const percentageOfWorld2 = function (population) {
+/* const percentageOfWorld2 = function (population) {
     return (population / 7900) * 100;
 }
 
@@ -43,13 +43,49 @@ const percPortugal3 = percentageOfWorld3(10);
 const percChina3 = percentageOfWorld3(1441);
 const percUSA3 = percentageOfWorld3(332);
 
-console.log(percPortugal3, percChina3, percUSA3);
+console.log(percPortugal3, percChina3, percUSA3); */
 
 // --------------NESTED FUNCTIONS--------------- 
-function describePopulation(country, population) {
+/* function describePopulation(country, population) {
     return `${country} has ${population} million people, which is about ${percentageOfWorld1(population)}% of the world`;
 }
 
 console.log(describePopulation('Portugal', 10));
 console.log(describePopulation('China', 1441));
 console.log(describePopulation('USA', 332));
+
+// --------------ARRAYS--------------- 
+const populations = [10, 1441, 332, 11.5];
+console.log(`Array has 4 elements: ${populations.length === 4}`);
+const percentages = [percentageOfWorld1(populations[0]), percentageOfWorld1(populations[1]), percentageOfWorld1(populations[2]), percentageOfWorld1(populations[3])];
+console.log(percentages); */
+
+// --------------ARRAY METHODS--------------- 
+/* const neighbours = ['Germany', 'Czechia', 'Slovakia', 'Hungary', 'Slovenia', 'Italy', 'Switzerland', 'Liechtenstein'];
+console.log(neighbours);
+
+neighbours.push('Utopia');
+console.log(neighbours);
+
+neighbours.pop();
+console.log(neighbours);
+
+if (!neighbours.includes('Germany')) console.log(`Probably not a central european country :D`);
+
+neighbours[2] = 'United Slovakia';
+console.log(neighbours); */
+
+
+// --------------OBJECTS--------------- 
+const myCountry = {
+    country: 'United Arab Emirates',
+    capital: 'Abu Dhabi',
+    language: 'Arabic',
+    population: 11.5,
+    neighbours: ['Oman', 'Bahrain', 'Saudi Arabia', 'Kuwait', 'Qatar']
+}
+
+myCountry.population += 2;
+myCountry['population'] -= 2;
+
+console.log(`${myCountry.country} has ${myCountry.population} million ${myCountry.language}-speaking people, ${myCountry.neighbours.length} neighbouring countries and a capital called ${myCountry.capital}`);
