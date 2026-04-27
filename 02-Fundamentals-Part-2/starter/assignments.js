@@ -132,7 +132,7 @@ if (john.calcBMI() > mark.calcBMI()) {
 //     console.log(`Voter number ${index + 1} is currently voting`);
 // }
 
-const populations = [10, 1441, 332, 11.5];
+/* const populations = [10, 1441, 332, 11.5];
 const percentages = [percentageOfWorld1(populations[0]), percentageOfWorld1(populations[1]), percentageOfWorld1(populations[2]), percentageOfWorld1(populations[3])];
 const percentages2 = [];
 for (let i = 0; i < populations.length; i++) {
@@ -140,10 +140,10 @@ for (let i = 0; i < populations.length; i++) {
     percentages2.push(percentageOfWorld1(population));
 }
 console.log(percentages);
-console.log(percentages2);
+console.log(percentages2); */
 
 // --------------REVERSE AND NESTED LOOPS--------------- 
-const listOfNeighbours = [['Canada', 'Mexico'], ['Spain'], ['Norway', 'Sweden', 'Russia']];
+/* const listOfNeighbours = [['Canada', 'Mexico'], ['Spain'], ['Norway', 'Sweden', 'Russia']];
 
 for (let i = 0; i < listOfNeighbours.length; i++) {
     const element = listOfNeighbours[i];
@@ -151,4 +151,19 @@ for (let i = 0; i < listOfNeighbours.length; i++) {
         const neighbour = element[j];
         console.log(`Neighbour: ${neighbour}`);
     }
+} */
+
+// --------------WHILE LOOPS--------------- 
+const listOfNeighbours = [['Canada', 'Mexico'], ['Spain'], ['Norway', 'Sweden', 'Russia']];
+
+let i = 0;
+while (i < listOfNeighbours.length) {
+    const element = listOfNeighbours[i];
+    let j = 0;
+    while (j < element.length) {
+        const neighbour = element[j];
+        console.log(`Neighbour: ${neighbour}`);
+        j++;
+    }
+    i++;
 }

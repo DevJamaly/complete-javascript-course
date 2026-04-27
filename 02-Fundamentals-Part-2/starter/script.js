@@ -218,10 +218,10 @@ const taha = {
 console.log(taha.description()); */
 
 // --------------FOR LOOPS---------------
-// for loop keeps running while condition is true
-// for (let rep = 0; rep < 10; rep++) {
-//     console.log(`Lifting weights repetition ${rep + 1} `);
-// }
+/* // for loop keeps running while condition is true
+for (let rep = 0; rep < 10; rep++) {
+    console.log(`Lifting weights repetition ${rep + 1} `);
+} */
 
 /* const currentYear = 2037;
 const friends = ['Michael', 'Steven', 'Peter'];
@@ -254,7 +254,7 @@ for (let index = 0; index < tahaArray.length; index++) {
 } */
 
 // --------------REVERSE FOR LOOPS---------------
-const currentYear = 2037;
+/* const currentYear = 2037;
 const friends = ['Michael', 'Steven', 'Peter'];
 const tahaArray = ['Taha', 'Jamaly', currentYear - 1996, 'Programmer', friends];
 
@@ -270,4 +270,26 @@ for (let excercise = 0; excercise < 3; excercise++) {
     for (let rep = 1; rep < 6; rep++) {
         console.log(`${excerciseNames[excercise]} repetition ${rep}`);
     }
+} */
+
+// --------------WHILE LOOPS---------------
+// for (let rep = 0; rep < 10; rep++) {
+//     console.log(`FOR: Lifting weights repetition ${rep + 1} `);
+// }
+
+// let rep = 1;
+// while (rep <= 10) {
+//     console.log(`WHILE: Lifting weights repetition ${rep}`);
+//     rep++;
+// }
+
+function rollDice() {
+    return Math.trunc(Math.random() * 6) + 1;
+}
+
+let diceVal;
+while (diceVal !== 6) {
+    diceVal = rollDice();
+    console.log(`You rolled a ${diceVal}`);
+    if (diceVal === 6) console.log(`Loop is about to end.....`);
 }
