@@ -127,3 +127,7 @@ if (john.calcBMI() > mark.calcBMI()) {
     console.log(`${mark.fullName}'s BMI (${mark.bmi}) is higher than ${john.fullName}'s (${john.bmi})`);
 }*/
 
+// --------------FOR LOOPS--------------- 
+for (let index = 0; index < 50; index++) {
+    console.log(`Voter number ${index + 1} is currently voting`);
+}
