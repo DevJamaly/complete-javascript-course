@@ -128,6 +128,16 @@ if (john.calcBMI() > mark.calcBMI()) {
 }*/
 
 // --------------FOR LOOPS--------------- 
-for (let index = 0; index < 50; index++) {
-    console.log(`Voter number ${index + 1} is currently voting`);
+// for (let index = 0; index < 50; index++) {
+//     console.log(`Voter number ${index + 1} is currently voting`);
+// }
+
+const populations = [10, 1441, 332, 11.5];
+const percentages = [percentageOfWorld1(populations[0]), percentageOfWorld1(populations[1]), percentageOfWorld1(populations[2]), percentageOfWorld1(populations[3])];
+const percentages2 = [];
+for (let i = 0; i < populations.length; i++) {
+    const population = populations[i];
+    percentages2.push(percentageOfWorld1(population));
 }
+console.log(percentages);
+console.log(percentages2);
