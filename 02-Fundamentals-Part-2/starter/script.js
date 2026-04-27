@@ -252,3 +252,22 @@ for (let index = 0; index < tahaArray.length; index++) {
     if (typeof element !== 'string') continue;
     console.log(`${element} | ${typeof element}`);
 } */
+
+// --------------REVERSE FOR LOOPS---------------
+const currentYear = 2037;
+const friends = ['Michael', 'Steven', 'Peter'];
+const tahaArray = ['Taha', 'Jamaly', currentYear - 1996, 'Programmer', friends];
+
+for (let i = tahaArray.length - 1; i >= 0; i--) {
+    const element = tahaArray[i];
+    console.log(element, typeof element);
+}
+
+// --------------NESTED FOR LOOPS---------------
+const excerciseNames = ['Weight Lifting', 'Dumbell Curls', 'Barbell Curls']
+for (let excercise = 0; excercise < 3; excercise++) {
+    console.log(`-----Starting excercise ${excercise + 1}----`);
+    for (let rep = 1; rep < 6; rep++) {
+        console.log(`${excerciseNames[excercise]} repetition ${rep}`);
+    }
+}

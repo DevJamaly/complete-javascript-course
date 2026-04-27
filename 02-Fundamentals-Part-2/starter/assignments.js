@@ -77,7 +77,7 @@ console.log(neighbours); */
 
 
 // --------------OBJECTS--------------- 
-const myCountry = {
+/* const myCountry = {
     country: 'United Arab Emirates',
     capital: 'Abu Dhabi',
     language: 'Arabic',
@@ -98,7 +98,7 @@ console.log(`${myCountry.country} has ${myCountry.population} million ${myCountr
 
 myCountry.describe();
 myCountry.checkIsland();
-console.log(myCountry.isIsland);
+console.log(myCountry.isIsland); */
 
 // --------------OBJECT METHODS--------------- 
 /* const mark = {
@@ -141,3 +141,14 @@ for (let i = 0; i < populations.length; i++) {
 }
 console.log(percentages);
 console.log(percentages2);
+
+// --------------REVERSE AND NESTED LOOPS--------------- 
+const listOfNeighbours = [['Canada', 'Mexico'], ['Spain'], ['Norway', 'Sweden', 'Russia']];
+
+for (let i = 0; i < listOfNeighbours.length; i++) {
+    const element = listOfNeighbours[i];
+    for (let j = 0; j < element.length; j++) {
+        const neighbour = element[j];
+        console.log(`Neighbour: ${neighbour}`);
+    }
+}
