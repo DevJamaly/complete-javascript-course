@@ -186,7 +186,7 @@ console.log(taha);
 console.log(`${taha.firstName} has ${taha.friends.length} friends, and his best friend is called ${taha.friends[0]}`); */
 
 // --------------OBJECT METHODS---------------
-const currentYear = 2037;
+/* const currentYear = 2037;
 const friends = ['Michael', 'Steven', 'Peter'];
 
 const taha = {
@@ -215,4 +215,40 @@ const taha = {
 // console.log(taha['calcAge']());
 // taha.calcAge();
 // console.log(taha.age);
-console.log(taha.description());
+console.log(taha.description()); */
+
+// --------------FOR LOOPS---------------
+// for loop keeps running while condition is true
+// for (let rep = 0; rep < 10; rep++) {
+//     console.log(`Lifting weights repetition ${rep + 1} `);
+// }
+
+/* const currentYear = 2037;
+const friends = ['Michael', 'Steven', 'Peter'];
+const tahaArray = ['Taha', 'Jamaly', currentYear - 1996, 'Programmer', friends];
+const types = [];
+
+for (let index = 0; index < tahaArray.length; index++) {
+    const element = tahaArray[index];
+    console.log(`${element} | ${typeof element}`);
+    types[index] = typeof element;
+    // types.push(typeof element);
+}
+console.log(types);
+
+const birthYears = [1991, 2007, 1969, 2020];
+const ages = [];
+
+for (let i = 0; i < birthYears.length; i++) {
+    const birthYear = birthYears[i];
+    ages.push(currentYear - birthYear);
+}
+console.log(ages);
+
+//continue immediately exits the current iteration and break immediately exits the loop
+for (let index = 0; index < tahaArray.length; index++) {
+    const element = tahaArray[index];
+    if (typeof element === 'number') break;
+    if (typeof element !== 'string') continue;
+    console.log(`${element} | ${typeof element}`);
+} */
