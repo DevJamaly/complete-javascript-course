@@ -20,26 +20,7 @@ inputField.value = 23;
 console.log(inputField.value); */
 
 //--------------JS Event Handling--------------------
-
-const clickEventHandler = function () {
-  const guess = Number(document.querySelector('.guess').value);
-  console.log(guess);
-
-  if (!guess) {
-    msgElement.setValue('⛔ No Number!');
-  } else {
-    msgElement.setValue(guess);
-  }
-};
-
-// const message = document.querySelector('.message');
-// console.log(message.textContent);
-// function setMessageValue(value) {
-//   message.textContent = value;
-// }
-
 const msgElement = {
-  a: 1,
   setValue: function (value) {
     if (!this.node) {
       this.node = document.querySelector('.message');
@@ -48,8 +29,59 @@ const msgElement = {
   },
 };
 
+const secretNumElement = {
+  setValue: function (value) {
+    if (!this.node) {
+      this.node = document.querySelector('.number');
+    }
+    this.node.textContent = value;
+  },
+};
+
+const scoreElement = {
+  setValue: function (value) {
+    if (!this.node) {
+      this.node = document.querySelector('.score');
+    }
+    this.node.textContent = value;
+  },
+};
+
+let scoreValue = 20;
+const secretNum = Math.floor(Math.random() * 20) + 1;
+secretNumElement.setValue(secretNum);
+
+const clickEventHandler = function () {
+  const guess = Number(document.querySelector('.guess').value);
+  console.log(guess);
+
+  if (!guess) {
+    msgElement.setValue('⛔ No Number!');
+  } else if (guess === secretNum) {
+    msgElement.setValue('🎉 Correct Number !');
+    return;
+  } else if (guess > secretNum) {
+    if (scoreValue > 1) {
+      msgElement.setValue('📈 Too high!');
+      scoreValue--;
+      scoreElement.setValue(scoreValue);
+    } else {
+      scoreValue = 0;
+      scoreElement.setValue(scoreValue);
+      msgElement.setValue('💥 You lost the game!');
+    }
+  } else if (guess < secretNum) {
+    if (scoreValue > 1) {
+      msgElement.setValue('📉 Too low!');
+      scoreValue--;
+      scoreElement.setValue(scoreValue);
+    } else {
+      scoreValue = 0;
+      scoreElement.setValue(scoreValue);
+      msgElement.setValue('💥 You lost the game!');
+    }
+  }
+};
+
 const checkBtn = document.querySelector('.check');
-// checkBtn.addEventListener('click', function () {
-//   console.log(document.querySelector('.guess').value);
-// });
 checkBtn.addEventListener('click', clickEventHandler);
