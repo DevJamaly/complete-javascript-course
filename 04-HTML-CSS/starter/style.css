@@ -1,0 +1,57 @@
+/* This is a universal selector and we use it to set margin and padding 0 first as a universal reset ! */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(24, 28, 29);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;
+  padding: 50px;
+}
+
+h1 {
+  font-size: 30px;
+  margin-bottom: 25px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+p {
+  margin-bottom: 15px;
+}
+
+.first {
+  color: aqua;
+}
+
+#your-name {
+  background-color: rgb(37, 53, 68);
+  border: 3px solid white;
+  width: 600px;
+  padding: 20px;
+  margin-top: 25px;
+}
+
+input,
+button {
+  padding: 10px;
+  font-size: 16px;
+}
+
+a {
+  background-color: rgb(199, 238, 223);
+}
+
+#your-name h2 {
+  color: blanchedalmond;
+}
+
+#profile-photo {
+  width: 200px;
+}
