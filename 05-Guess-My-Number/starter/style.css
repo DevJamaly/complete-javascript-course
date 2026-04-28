@@ -110,6 +110,8 @@ h1 {
 }
 
 .message {
+  display: flex;
+  align-items: center;
   margin-bottom: 8rem;
   height: 3rem;
 }
