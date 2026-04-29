@@ -48,40 +48,90 @@ const scoreElement = {
 };
 
 let scoreValue = 20;
-const secretNum = Math.floor(Math.random() * 20) + 1;
-secretNumElement.setValue(secretNum);
+let secretNum = Math.floor(Math.random() * 20) + 1;
+let highScoreValue = 0;
 
 const clickEventHandler = function () {
   const guess = Number(document.querySelector('.guess').value);
   console.log(guess);
 
+  //When there is no input !
   if (!guess) {
     msgElement.setValue('⛔ No Number!');
-  } else if (guess === secretNum) {
+    document.querySelector('body').style.backgroundColor = '#b34747';
+  }
+
+  // When player wins
+  else if (guess === secretNum) {
     msgElement.setValue('🎉 Correct Number !');
-    return;
-  } else if (guess > secretNum) {
+    document.querySelector('body').style.backgroundColor = '#60b347';
+    document.querySelector('.number').style.width = '30rem';
+    secretNumElement.setValue(secretNum);
+    if (scoreValue > highScoreValue) highScoreValue = scoreValue;
+    document.querySelector('.highscore').textContent = highScoreValue;
+  }
+
+  //When guess is wrong
+  else if (guess != secretNum) {
+    if (scoreValue > 1) {
+      msgElement.setValue(secretNum > guess ? '📈 Too high!' : '📉 Too low!');
+      scoreValue--;
+      scoreElement.setValue(scoreValue);
+      document.querySelector('body').style.backgroundColor =
+        secretNum > guess ? '#b39647' : '#478bb3';
+    } else {
+      scoreValue = 0;
+      scoreElement.setValue(scoreValue);
+      msgElement.setValue('💥 You lost the game!');
+      document.querySelector('body').style.backgroundColor = '#3f1b1b';
+    }
+  }
+
+  /* //When guess is too high
+  else if (guess > secretNum) {
     if (scoreValue > 1) {
       msgElement.setValue('📈 Too high!');
       scoreValue--;
       scoreElement.setValue(scoreValue);
+      document.querySelector('body').style.backgroundColor = '#b39647';
     } else {
       scoreValue = 0;
       scoreElement.setValue(scoreValue);
       msgElement.setValue('💥 You lost the game!');
-    }
-  } else if (guess < secretNum) {
-    if (scoreValue > 1) {
-      msgElement.setValue('📉 Too low!');
-      scoreValue--;
-      scoreElement.setValue(scoreValue);
-    } else {
-      scoreValue = 0;
-      scoreElement.setValue(scoreValue);
-      msgElement.setValue('💥 You lost the game!');
+      document.querySelector('body').style.backgroundColor = '#3f1b1b';
     }
   }
+  //When guess is too low
+  else if (guess < secretNum) {
+    if (scoreValue > 1) {
+      msgElement.setValue();
+      scoreValue--;
+      scoreElement.setValue(scoreValue);
+      document.querySelector('body').style.backgroundColor = '#478bb3';
+    } else {
+      scoreValue = 0;
+      scoreElement.setValue(scoreValue);
+      msgElement.setValue('💥 You lost the game!');
+      document.querySelector('body').style.backgroundColor = '#3f1b1b';
+    }
+  } */
 };
+
+function resetGame() {
+  console.log(`RESET GAME BUTTON PRESSED`);
+  scoreValue = 20;
+  scoreElement.setValue(scoreValue);
+  secretNum = Math.floor(Math.random() * 20) + 1;
+  secretNumElement.setValue('?');
+  document.querySelector('body').style.backgroundColor = '#222';
+  document.querySelector('.number').style.width = '15rem';
+  document.querySelector('.guess').value = null;
+  msgElement.setValue('Start guessing...');
+}
 
 const checkBtn = document.querySelector('.check');
 checkBtn.addEventListener('click', clickEventHandler);
+
+const resetBtn = document.querySelector('.again');
+console.log(resetBtn);
+resetBtn.addEventListener('click', resetGame);
