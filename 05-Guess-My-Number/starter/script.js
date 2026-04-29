@@ -36,6 +36,12 @@ const secretNumElement = {
     }
     this.node.textContent = value;
   },
+  setWidth: function (value) {
+    if (!this.node) {
+      this.node = document.querySelector('.number');
+    }
+    this.node.style.width = value;
+  },
 };
 
 const scoreElement = {
@@ -47,75 +53,78 @@ const scoreElement = {
   },
 };
 
+const bodyElement = {
+  setColor: function (value) {
+    if (!this.node) {
+      this.node = document.querySelector('body');
+    }
+    this.node.style.backgroundColor = value;
+  },
+};
+
+const highScoreElement = {
+  setValue: function (value) {
+    if (!this.node) {
+      this.node = document.querySelector('.highscore');
+    }
+    this.node.textContent = value;
+  },
+};
+
+const inputFieldElement = {
+  setValue: function (value) {
+    if (!this.node) {
+      this.node = document.querySelector('.guess');
+    }
+    this.node.value = value;
+  },
+  getValue: function () {
+    if (!this.node) {
+      this.node = document.querySelector('.guess');
+    }
+    return this.node.value;
+  },
+};
+
 let scoreValue = 20;
 let secretNum = Math.floor(Math.random() * 20) + 1;
 let highScoreValue = 0;
 
-const clickEventHandler = function () {
-  const guess = Number(document.querySelector('.guess').value);
+function checkScore() {
+  const guess = Number(inputFieldElement.getValue());
   console.log(guess);
 
   //When there is no input !
   if (!guess) {
     msgElement.setValue('⛔ No Number!');
-    document.querySelector('body').style.backgroundColor = '#b34747';
+    bodyElement.setColor('#b34747');
   }
 
   // When player wins
   else if (guess === secretNum) {
     msgElement.setValue('🎉 Correct Number !');
-    document.querySelector('body').style.backgroundColor = '#60b347';
-    document.querySelector('.number').style.width = '30rem';
+    bodyElement.setColor('#60b347');
+    secretNumElement.setWidth('30rem');
     secretNumElement.setValue(secretNum);
     if (scoreValue > highScoreValue) highScoreValue = scoreValue;
-    document.querySelector('.highscore').textContent = highScoreValue;
+    highScoreElement.setValue(highScoreValue);
   }
 
   //When guess is wrong
   else if (guess != secretNum) {
     if (scoreValue > 1) {
-      msgElement.setValue(secretNum > guess ? '📈 Too high!' : '📉 Too low!');
+      msgElement.setValue(guess > secretNum ? '📈 Too high!' : '📉 Too low!');
       scoreValue--;
       scoreElement.setValue(scoreValue);
-      document.querySelector('body').style.backgroundColor =
-        secretNum > guess ? '#b39647' : '#478bb3';
+      bodyElement.setColor(guess > secretNum ? '#b39647' : '#478bb3');
     } else {
       scoreValue = 0;
       scoreElement.setValue(scoreValue);
       msgElement.setValue('💥 You lost the game!');
-      document.querySelector('body').style.backgroundColor = '#3f1b1b';
+      bodyElement.setColor('#3f1b1b');
     }
   }
-
-  /* //When guess is too high
-  else if (guess > secretNum) {
-    if (scoreValue > 1) {
-      msgElement.setValue('📈 Too high!');
-      scoreValue--;
-      scoreElement.setValue(scoreValue);
-      document.querySelector('body').style.backgroundColor = '#b39647';
-    } else {
-      scoreValue = 0;
-      scoreElement.setValue(scoreValue);
-      msgElement.setValue('💥 You lost the game!');
-      document.querySelector('body').style.backgroundColor = '#3f1b1b';
-    }
-  }
-  //When guess is too low
-  else if (guess < secretNum) {
-    if (scoreValue > 1) {
-      msgElement.setValue();
-      scoreValue--;
-      scoreElement.setValue(scoreValue);
-      document.querySelector('body').style.backgroundColor = '#478bb3';
-    } else {
-      scoreValue = 0;
-      scoreElement.setValue(scoreValue);
-      msgElement.setValue('💥 You lost the game!');
-      document.querySelector('body').style.backgroundColor = '#3f1b1b';
-    }
-  } */
-};
+}
 
 function resetGame() {
   console.log(`RESET GAME BUTTON PRESSED`);
@@ -123,15 +132,14 @@ function resetGame() {
   scoreElement.setValue(scoreValue);
   secretNum = Math.floor(Math.random() * 20) + 1;
   secretNumElement.setValue('?');
-  document.querySelector('body').style.backgroundColor = '#222';
-  document.querySelector('.number').style.width = '15rem';
-  document.querySelector('.guess').value = null;
+  bodyElement.setColor('#222');
+  secretNumElement.setWidth('15rem');
+  inputFieldElement.setValue(null);
   msgElement.setValue('Start guessing...');
 }
 
 const checkBtn = document.querySelector('.check');
-checkBtn.addEventListener('click', clickEventHandler);
+checkBtn.addEventListener('click', checkScore);
 
 const resetBtn = document.querySelector('.again');
-console.log(resetBtn);
 resetBtn.addEventListener('click', resetGame);
