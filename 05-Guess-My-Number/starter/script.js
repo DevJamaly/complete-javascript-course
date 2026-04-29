@@ -87,8 +87,12 @@ const inputFieldElement = {
 };
 
 let scoreValue = 20;
-let secretNum = Math.floor(Math.random() * 20) + 1;
+let secretNum;
 let highScoreValue = 0;
+
+function SetSecretNum() {
+  secretNum = Math.floor(Math.random() * 20) + 1;
+}
 
 function checkScore() {
   const guess = Number(inputFieldElement.getValue());
@@ -130,7 +134,7 @@ function resetGame() {
   console.log(`RESET GAME BUTTON PRESSED`);
   scoreValue = 20;
   scoreElement.setValue(scoreValue);
-  secretNum = Math.floor(Math.random() * 20) + 1;
+  SetSecretNum();
   secretNumElement.setValue('?');
   bodyElement.setColor('#222');
   secretNumElement.setWidth('15rem');
@@ -143,3 +147,5 @@ checkBtn.addEventListener('click', checkScore);
 
 const resetBtn = document.querySelector('.again');
 resetBtn.addEventListener('click', resetGame);
+
+SetSecretNum();
