@@ -115,7 +115,7 @@ console.log(f);
 f(); //Since we removed the function from the object the 'this' points to nothing causing errors in accessing variables in the 'this' scope */
 
 //--------------------'THIs' in Regular and Arrow Functions-------------------
-var firstName = 'Matilda'; //Var when hoisted puts the variable in the window object.
+/* var firstName = 'Matilda'; //Var when hoisted puts the variable in the window object.
 
 const taha = {
   firstName: 'Taha',
@@ -128,18 +128,18 @@ const taha = {
 
     // SOLUTION 1
     // Even though this function is inside a METHOD it still acts as a regular function call and thus its 'this' is set to undefined.
-    /*  const isMillenial = function () {
-      // console.log(
-      //   this.year >= 1981 && this.year <= 1996
-      //     ? 'YOU ARE A MILLENIAL'
-      //     : 'YOU ARE NOT A MILLENIAL',
-      // );
-      console.log(
-        self.year >= 1981 && self.year <= 1996
-          ? 'YOU ARE A MILLENIAL'
-          : 'YOU ARE NOT A MILLENIAL',
-      );
-    }; */
+    //  const isMillenial = function () {
+    //   // console.log(
+    //   //   this.year >= 1981 && this.year <= 1996
+    //   //     ? 'YOU ARE A MILLENIAL'
+    //   //     : 'YOU ARE NOT A MILLENIAL',
+    //   // );
+    //   console.log(
+    //     self.year >= 1981 && self.year <= 1996
+    //       ? 'YOU ARE A MILLENIAL'
+    //       : 'YOU ARE NOT A MILLENIAL',
+    //   );
+    // };
 
     //SOLUTION 2 [ES6+]
     //If you use an arrow function then it uses the 'this' of its parent scope. And inside a METHOD the parent scope is the object literal itself. Allowing us access to the object literal's 'this'
@@ -176,3 +176,52 @@ const addArrow = (a, b) => {
 addFunc(1, 2); //When sending the arguments to the function we can see them via the 'arguments' keyword
 addExpr(3, 4, 8, 12); // You can send more arguments than the paramters defined. In this case all arguments sent can be access by the 'arguments' keyword
 addArrow(5, 6); //In arrow methods the 'arguments' keyword is not defined and thus throws an error !
+ */
+
+//--------------------OBJECT REFERENCES-------------------
+const jessica1 = {
+  firstName: 'Jessica',
+  lastName: 'Williams',
+  age: 27,
+};
+
+//When we assign to another object we dont make a copy instead we assign another reference to the same object in heap
+//This is also another reason we can change property values of objects decalred using const, since we are not changing the reference but the object stored in heap
+// const marriedJessica = jessica;
+// marriedJessica.lastName = 'Davis';
+
+//Modifying a object even within the function yeilds the same result since all references point to the same object in memory
+function marryPerson(originalPerson, newLastName) {
+  originalPerson.lastName = newLastName;
+  return originalPerson;
+}
+const marriedJessica = marryPerson(jessica1, 'Davis');
+
+console.log('Before:', jessica1);
+console.log('After', marriedJessica);
+
+const jessica2 = {
+  firstName: 'Jessica',
+  lastName: 'Williams',
+  age: 27,
+  family: ['Alice', 'Bob'],
+};
+//We are using a spread opreator to make a copy of the jessica2 object which creates a new object in memory
+const jessicaCopy = { ...jessica2 };
+jessicaCopy.lastName = 'Davis'; //Now that we modify the property we dont mutate the original object
+
+//This however doesnt work because the array is also an object and thus even in the original object it was only a reference which gets copied over!
+//So when copying an object the primitives (Level1) are created anew but nested objects (Level2) are just copied over as references ! THIS IS A SHALLOW COPY
+// jessicaCopy.family.push('Mary');
+// jessicaCopy.family.push('John');
+
+// console.log('Jessica:', jessica2);
+// console.log('Jessica Copy:', jessicaCopy);
+
+// DEEPY COPY/CLONE is created using structured clone (new JS) which does a deep copy of the object and now the clone and original have different arrays
+const jessicaClone = structuredClone(jessica2);
+jessicaClone.family.push('Mary');
+jessicaClone.family.push('John');
+
+console.log('Jessica:', jessica2);
+console.log('Jessica Clone:', jessicaClone);
