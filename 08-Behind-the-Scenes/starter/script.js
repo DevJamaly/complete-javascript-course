@@ -37,7 +37,7 @@ const firstName = 'Taha';
 calcAge(1996); */
 
 //--------------------HOISTING AND TDZ-------------------
-// Variable hoisting
+/* // Variable hoisting
 console.log(me);
 // console.log(job);
 // console.log(year);
@@ -78,4 +78,38 @@ const z = 3;
 
 console.log(`X: ${x === window.x}`);
 console.log(`Y: ${y === window.y}`);
-console.log(`Z: ${z === window.z}`);
+console.log(`Z: ${z === window.z}`); */
+
+//--------------------The 'THIS' Keyword-------------------
+console.log(this); //In glboal scope 'this' is the window object
+
+const calcAge = function (birthYear) {
+  console.log(2037 - birthYear);
+  console.log(this); // Inside the function scope 'this' is undefined
+};
+calcAge(1996);
+
+const calcAgeArrow = birthYear => {
+  console.log(2037 - birthYear);
+  console.log(this); // Inside the arrow function scope 'this' is window object because arrow doesnt have its own 'this' and uses the lexical scope (parent scope 'this' (global scope))
+};
+calcAgeArrow(1996);
+
+const taha = {
+  year: 1996,
+  calcAge: function () {
+    console.log(this); //'This' inside an object points to the object that called it
+    console.log(2037 - this.year);
+  },
+};
+taha.calcAge();
+
+const matilda = {
+  year: 2017,
+};
+matilda.calcAge = taha.calcAge; //assign the calcAge function in taha (a value) to calAge function in matilda
+matilda.calcAge(); //Here the 'this' in calcAge will point to matilda since its the object calling that function.
+
+const f = taha.calcAge;
+console.log(f);
+f(); //Since we removed the function from the object the 'this' points to nothing causing errors in accessing variables in the 'this' scope
