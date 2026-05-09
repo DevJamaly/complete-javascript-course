@@ -81,7 +81,7 @@ console.log(`Y: ${y === window.y}`);
 console.log(`Z: ${z === window.z}`); */
 
 //--------------------The 'THIS' Keyword-------------------
-console.log(this); //In glboal scope 'this' is the window object
+/* console.log(this); //In glboal scope 'this' is the window object
 
 const calcAge = function (birthYear) {
   console.log(2037 - birthYear);
@@ -112,4 +112,67 @@ matilda.calcAge(); //Here the 'this' in calcAge will point to matilda since its 
 
 const f = taha.calcAge;
 console.log(f);
-f(); //Since we removed the function from the object the 'this' points to nothing causing errors in accessing variables in the 'this' scope
+f(); //Since we removed the function from the object the 'this' points to nothing causing errors in accessing variables in the 'this' scope */
+
+//--------------------'THIs' in Regular and Arrow Functions-------------------
+var firstName = 'Matilda'; //Var when hoisted puts the variable in the window object.
+
+const taha = {
+  firstName: 'Taha',
+  year: 1996,
+  calcAge: function () {
+    console.log(this); //'This' inside an object points to the object that called it
+    console.log(2037 - this.year);
+
+    const self = this; //This is a way to preserve the 'this' reference by assigning to a variable within the object literal scope itself.
+
+    // SOLUTION 1
+    // Even though this function is inside a METHOD it still acts as a regular function call and thus its 'this' is set to undefined.
+    /*  const isMillenial = function () {
+      // console.log(
+      //   this.year >= 1981 && this.year <= 1996
+      //     ? 'YOU ARE A MILLENIAL'
+      //     : 'YOU ARE NOT A MILLENIAL',
+      // );
+      console.log(
+        self.year >= 1981 && self.year <= 1996
+          ? 'YOU ARE A MILLENIAL'
+          : 'YOU ARE NOT A MILLENIAL',
+      );
+    }; */
+
+    //SOLUTION 2 [ES6+]
+    //If you use an arrow function then it uses the 'this' of its parent scope. And inside a METHOD the parent scope is the object literal itself. Allowing us access to the object literal's 'this'
+    const isMillenial = () =>
+      console.log(
+        this.year >= 1981 && this.year <= 1996
+          ? 'YOU ARE A MILLENIAL'
+          : 'YOU ARE NOT A MILLENIAL',
+      );
+    isMillenial();
+  },
+  // When you use the 'this' keyword in arrow functions it will use the parent scope 'this' which for an object literal its parent is global scope. So 'this' becomes window object
+  //DO NOT USE ARROW FUNCTIONS AS METHODS
+  greet: () => console.log(`Hey ${this.firstName}`),
+};
+taha.greet();
+taha.calcAge(1996);
+
+function addFunc(a, b) {
+  console.log(arguments);
+  return a + b;
+}
+
+const addExpr = function (a, b) {
+  console.log(arguments);
+  return a + b;
+};
+
+const addArrow = (a, b) => {
+  console.log(arguments);
+  return a + b;
+};
+
+addFunc(1, 2); //When sending the arguments to the function we can see them via the 'arguments' keyword
+addExpr(3, 4, 8, 12); // You can send more arguments than the paramters defined. In this case all arguments sent can be access by the 'arguments' keyword
+addArrow(5, 6); //In arrow methods the 'arguments' keyword is not defined and thus throws an error !
