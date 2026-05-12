@@ -286,10 +286,23 @@ for (let i = 0; i < books.length; i++) {
 } */
 
 //----------------SPREAD OPERATOR------------------------
-const bookAuthors = [...books[0].author, ...books[1].author];
+/* const bookAuthors = [...books[0].author, ...books[1].author];
 console.log(bookAuthors);
 
 function spellWord(word) {
   console.log(...word);
 }
-spellWord('JavaScript');
+spellWord('JavaScript'); */
+
+//----------------REST PATTTERN AND PARAMETERS------------------------
+const [mainKeyword, ...rest] = books[0].keywords;
+console.log(mainKeyword, rest);
+
+const { publisher: bookPublisher, ...restOfTheBook } = books[1];
+console.log(bookPublisher, restOfTheBook);
+
+function printBookAuthorsCount(title, ...authors) {
+  console.log(`The book "${title}" has ${authors.length} authors`);
+}
+
+printBookAuthorsCount('Algorithms', 'Robert Sedgewick', 'Kevin Wayne');
