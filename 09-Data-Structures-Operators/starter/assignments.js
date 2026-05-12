@@ -246,7 +246,7 @@ const [fiveStarRatings = 0, oneStarRatings = 0, threeStarRatings = 0] =
 console.log(fiveStarRatings, threeStarRatings, oneStarRatings); */
 
 //----------------OBJECT DESTRUCTURING------------------------
-const [{ title, author, ISBN }] = books;
+/* const [{ title, author, ISBN }] = books;
 console.log(title, author, ISBN);
 
 // const [{ keywords: tags }] = books;
@@ -283,4 +283,13 @@ printBookInfo({
 printBookInfo({ title: 'Algorithms', author: 'Robert Sedgewick' });
 for (let i = 0; i < books.length; i++) {
   printBookInfo(books[i]);
+} */
+
+//----------------SPREAD OPERATOR------------------------
+const bookAuthors = [...books[0].author, ...books[1].author];
+console.log(bookAuthors);
+
+function spellWord(word) {
+  console.log(...word);
 }
+spellWord('JavaScript');
