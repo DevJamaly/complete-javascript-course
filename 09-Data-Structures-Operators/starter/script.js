@@ -61,6 +61,12 @@ const restaurant = {
       `Order Recived! ${this.starterMenu[starterIndex]}, ${this.mainMenu[mainIndex]}. Will be delivered to ${address} at ${time}`,
     );
   },
+
+  orderPasta: function (ing1, ing2, ing3) {
+    console.log(
+      `Here is you delicious paste with ${ing1}, ${ing2} and ${ing3}`,
+    );
+  },
 };
 
 //----------------ARRAY DESTRUCTURING------------------------
@@ -120,7 +126,7 @@ console.log(first, second, third); //There is no 3rd element so it shows undefin
 console.log(first, second, third); */
 
 //----------------OBJECT DESTRUCTURING------------------------
-//When de-structuring objects we need to make sure that variables are named the same as properties and they will be assigned accordingly
+/* //When de-structuring objects we need to make sure that variables are named the same as properties and they will be assigned accordingly
 const { name, openingHours, categories } = restaurant;
 console.log(name, openingHours, categories);
 
@@ -174,4 +180,60 @@ restaurant.orderDelivery({
 restaurant.orderDelivery({
   address: 'Masakin Mohammediyah, Al Warqa 1',
   starterIndex: 1,
-});
+}); */
+
+//----------------SPREAD OPERATOR------------------------
+const arr = [7, 8, 9];
+const badNewArr = [1, 2, arr[0], arr[1], arr[2]];
+console.log(badNewArr);
+
+//The spread operator takes out the values from the array and appends it in the location provided
+//We can use the spread operator wherever we would manually write multiple values
+//The spread operator cannot be used instead of de-structuring since it doesnt create variables for us and just gives us all the individual values
+const newArr = [1, 2, ...arr];
+console.log(newArr);
+//We can also use the spread operator to print out the indiviual elements in the array
+console.log(...newArr);
+
+const updatedMenu = [...restaurant.mainMenu, 'Gnocci'];
+console.log(...updatedMenu);
+
+// shallow copy of arrays can be created using spread operators just like with objects
+const mainMenuCopy = [...restaurant.mainMenu];
+console.log(mainMenuCopy);
+
+//We can also merge two arrays together using the spread operator
+const mergedMenu = [...restaurant.mainMenu, ...restaurant.starterMenu];
+console.log(mergedMenu);
+
+//Spread operator works on all 'iterables'
+//Iterables : arrays, strings, maps, sets. NOT objects
+const str = 'Jonas';
+const letters = [...str, "'", 's'];
+console.log(...letters);
+
+//Here we are creating an array by prompting the user 3 times to enter ingredients data
+// const ingredients = [
+//   prompt("Let's make pasta! Ingredient 1?"),
+//   prompt("Let's make pasta! Ingredient 2?"),
+//   prompt("Let's make pasta! Ingredient 3?"),
+// ];
+//Then we use the spread operator to send the 3 ingredients as variables to the function seperately
+// restaurant.orderPasta(...ingredients);
+
+// OBJECTS
+//We can use the spread operator to create a shallow copy of the object and add new properties to it
+const newRestaurant = {
+  ...restaurant,
+  founder: 'Gordon Ramsay',
+  name: 'Yowzaa!',
+  foundedIn: 1998,
+  categories: [...restaurant.categories, 'Tomato'],
+};
+console.log(newRestaurant);
+console.log(restaurant);
+
+//Here we are making a shallow copy of the object. However since we just modify a primitive the changes are not reflected in both the original and the copy.
+const restaurantCopy = { ...restaurant };
+restaurantCopy.name = 'Bistro Italiano';
+console.log(restaurantCopy.name, restaurant.name);
