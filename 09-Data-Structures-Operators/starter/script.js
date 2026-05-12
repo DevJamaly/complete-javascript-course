@@ -67,6 +67,14 @@ const restaurant = {
       `Here is you delicious paste with ${ing1}, ${ing2} and ${ing3}`,
     );
   },
+
+  orderPizza: function (mainIngredient, ...otherIngredients) {
+    console.log(
+      `Customer ordered Pizza with ${mainIngredient} ${otherIngredients.length > 0 ? `and ${otherIngredients}` : `only`}`,
+    );
+    // console.log(mainIngredient);
+    // console.log(otherIngredients);
+  },
 };
 
 //----------------ARRAY DESTRUCTURING------------------------
@@ -183,7 +191,7 @@ restaurant.orderDelivery({
 }); */
 
 //----------------SPREAD OPERATOR------------------------
-const arr = [7, 8, 9];
+/* const arr = [7, 8, 9];
 const badNewArr = [1, 2, arr[0], arr[1], arr[2]];
 console.log(badNewArr);
 
@@ -236,4 +244,59 @@ console.log(restaurant);
 //Here we are making a shallow copy of the object. However since we just modify a primitive the changes are not reflected in both the original and the copy.
 const restaurantCopy = { ...restaurant };
 restaurantCopy.name = 'Bistro Italiano';
-console.log(restaurantCopy.name, restaurant.name);
+console.log(restaurantCopy.name, restaurant.name); */
+
+//----------------REST PATTTERN AND PARAMETERS------------------------
+//1)==========DESTRUCTURING=========
+//While spread operator expands an array into its individual elements the rest pattern uses the exact same syntax to collect multiple elements and condense them into an array
+const arr = [1, 2, ...[3, 4]]; //This is spread operator since its on the right side of '='
+console.log(arr);
+
+//This is rest syntax since on the left side of '='
+//Here using rest patterns takes the remaining elements of the array and combines them into the others array
+const [a, b, ...others] = [1, 2, 3, 4, 5];
+console.log(a, b, others);
+
+const allFoods = [...restaurant.mainMenu, ...restaurant.starterMenu];
+//The rest syntax gathers all the remaining elements and not any skipped ones. Thus it has to be last in the de-structuring assignment and there can only be one
+const [pizza, , risotto, ...otherFood] = [
+  ...restaurant.mainMenu,
+  ...restaurant.starterMenu,
+];
+console.log(allFoods);
+console.log(pizza, risotto, otherFood);
+
+//OBJECTS
+// const { sat, ...weekdays } = restaurant.openingHours;
+const {
+  openingHours: {
+    sat: {},
+    ...weekdays
+  },
+} = restaurant;
+console.log(weekdays);
+
+//2)==========FUNCTIONs=========
+//We will use REST parameters to get n number of arguments
+//Here the REST syntax in the parameter is taking all arguments and packing it into an array
+function add(...numbers) {
+  let sum = 0;
+  for (let i = 0; i < numbers.length; i++) sum += numbers[i];
+  console.log(sum);
+  return sum;
+}
+
+add(2, 3);
+add(5, 3, 7, 2);
+
+const x = [23, 5, 7];
+add(...x); //we use spread opterator to unpack the array to arguments
+
+restaurant.orderPizza(
+  'perpperoni',
+  'mushrooms',
+  'meatballs',
+  'pizza sauce',
+  'capsicum',
+);
+restaurant.orderPizza('mushrooms');
