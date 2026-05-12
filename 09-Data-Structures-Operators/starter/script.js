@@ -48,10 +48,23 @@ const restaurant = {
   order: function (starterIndex, mainIndex) {
     return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
   },
+
+  //In this function we are taking an object as a parameter and de-structuring it immediately to get the variables.
+  //We can also define default values for the de-structured variables
+  orderDelivery: function ({
+    starterIndex = 1,
+    mainIndex = 0,
+    time = '20:00',
+    address,
+  }) {
+    console.log(
+      `Order Recived! ${this.starterMenu[starterIndex]}, ${this.mainMenu[mainIndex]}. Will be delivered to ${address} at ${time}`,
+    );
+  },
 };
 
 //----------------ARRAY DESTRUCTURING------------------------
-//This is a method to break down array and extract data from it into variables
+/* //This is a method to break down array and extract data from it into variables
 const array = [2, 3, 4];
 const a = array[0];
 const b = array[1];
@@ -104,4 +117,61 @@ const unknown = [8, 9];
 let [first, second, third] = unknown;
 console.log(first, second, third); //There is no 3rd element so it shows undefined
 [first = 1, second = 1, third = 1] = unknown; //If we set default values then outOfBounds is not undefined
-console.log(first, second, third);
+console.log(first, second, third); */
+
+//----------------OBJECT DESTRUCTURING------------------------
+//When de-structuring objects we need to make sure that variables are named the same as properties and they will be assigned accordingly
+const { name, openingHours, categories } = restaurant;
+console.log(name, openingHours, categories);
+
+//We can give the property name as an alias and use it to initialize variables with different names.
+const {
+  name: restaurantName,
+  openingHours: hours,
+  categories: tags,
+} = restaurant;
+console.log(restaurantName, hours, tags);
+
+//We can even give default values to the destructured variables
+const { menu = [], starterMenu: starters = [] } = restaurant;
+console.log(menu, starters);
+
+//Mutating variables
+let a = 111;
+let b = 999;
+let first = 1;
+let second = 2;
+const obj = { a: 23, b: 7, c: 14 };
+
+//To mutate/assign values of a de-structured object to a existing variable we need to wrap the whole assignment in a circular brackets
+({ a, b } = obj);
+console.log(a, b);
+
+//We can also use aliasing to assign the de-structured values to differently names variables
+({ a: first, b: second } = obj);
+console.log(first, second);
+
+//Nested objects destructuring
+const {
+  openingHours: { fri: friday },
+} = restaurant;
+
+const {
+  openingHours: {
+    fri: { open: openingTime, close: closingTime },
+  },
+} = restaurant;
+
+console.log(friday, openingTime, closingTime);
+
+restaurant.orderDelivery({
+  time: '22:30',
+  address: 'Via del Sole, 21',
+  mainIndex: 2,
+  starterIndex: 2,
+});
+
+restaurant.orderDelivery({
+  address: 'Masakin Mohammediyah, Al Warqa 1',
+  starterIndex: 1,
+});
