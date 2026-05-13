@@ -302,7 +302,7 @@ restaurant.orderPizza(
 restaurant.orderPizza('mushrooms'); */
 
 //----------------SHORT CIRCUITING (&& AND ||)------------------------
-//logical operators can:
+/* //logical operators can:
 //1. use ANY data type
 //2. return ANY data type
 //3. they can do short-circuiting OR short-circuit evaluation
@@ -342,4 +342,22 @@ if (restaurant.orderPizza) {
 }
 
 //We do the same thing here as above if restauran.orderPizza is truthy (exists) then the next part is evaluated and returned calling the function
-restaurant.orderPizza && restaurant.orderPizza('mushrooms', 'spinach');
+restaurant.orderPizza && restaurant.orderPizza('mushrooms', 'spinach'); */
+
+//----------------NULLISH COALESCING OPERATOR------------------------
+//If the number of guests is zero then both condition checks will fail since 0 is falsey value
+restaurant.numGuests = 0;
+
+//Here we check if NumGuests exists in retaurant and if not then return 10
+const guests1 = restaurant.numGuests ? restaurant.numGuests : 10;
+console.log(guests1);
+
+//This does the same as above. NumGuests is falsey so it short-circuits OR and returns 10
+const guests2 = restaurant.numGuests || 10;
+console.log(guests2);
+
+//Nullish coalescing operator works with null-ish values rather than false-y values
+//Nullish values : null and undefined (NOT 0 or '')
+//Besides that it works the same as OR logical operator
+const guestCorrect = restaurant.numGuests ?? 10;
+console.log(guestCorrect);
