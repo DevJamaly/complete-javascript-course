@@ -295,7 +295,7 @@ function spellWord(word) {
 spellWord('JavaScript'); */
 
 //----------------REST PATTTERN AND PARAMETERS------------------------
-const [mainKeyword, ...rest] = books[0].keywords;
+/* const [mainKeyword, ...rest] = books[0].keywords;
 console.log(mainKeyword, rest);
 
 const { publisher: bookPublisher, ...restOfTheBook } = books[1];
@@ -305,4 +305,17 @@ function printBookAuthorsCount(title, ...authors) {
   console.log(`The book "${title}" has ${authors.length} authors`);
 }
 
-printBookAuthorsCount('Algorithms', 'Robert Sedgewick', 'Kevin Wayne');
+printBookAuthorsCount('Algorithms', 'Robert Sedgewick', 'Kevin Wayne'); */
+
+//----------------SHORT CIRCUITING (&& AND ||)------------------------
+
+function hasExamplesInJava(book) {
+  return book.programmingLanguage === 'Java' || 'No data available';
+}
+
+console.log(hasExamplesInJava(books[0]));
+console.log(hasExamplesInJava(books[1]));
+
+for (let i = 0; i < books.length; i++)
+  books[i].onlineContent &&
+    console.log(`"${books[i].title}" provides online content`);
