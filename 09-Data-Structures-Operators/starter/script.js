@@ -247,7 +247,7 @@ restaurantCopy.name = 'Bistro Italiano';
 console.log(restaurantCopy.name, restaurant.name); */
 
 //----------------REST PATTTERN AND PARAMETERS------------------------
-//1)==========DESTRUCTURING=========
+/* //1)==========DESTRUCTURING=========
 //While spread operator expands an array into its individual elements the rest pattern uses the exact same syntax to collect multiple elements and condense them into an array
 const arr = [1, 2, ...[3, 4]]; //This is spread operator since its on the right side of '='
 console.log(arr);
@@ -299,4 +299,47 @@ restaurant.orderPizza(
   'pizza sauce',
   'capsicum',
 );
-restaurant.orderPizza('mushrooms');
+restaurant.orderPizza('mushrooms'); */
+
+//----------------SHORT CIRCUITING (&& AND ||)------------------------
+//logical operators can:
+//1. use ANY data type
+//2. return ANY data type
+//3. they can do short-circuiting OR short-circuit evaluation
+
+console.log(`-----------OR------------`);
+//When using OR logical operator if the first operand is a truthy value then it will immediately return that
+console.log(3 || 'Taha'); //this will give 3 as the answer, showing us that we dont only have to use boolean values with these logical operators
+console.log('' || 'Taha'); //Will give Taha since empty string is a falsey value
+console.log(true || 0); //True is truthy value and will be returned immediately
+console.log(undefined || null); //Undefined is falsey value but since null (falsey) is the only one left that is returned
+
+//OR will keep short-circuiting until it gets to a truthy value and return that
+console.log(undefined || 0 || '' || null || 'Hello' || 23 || null);
+
+//If the number of guests is zero then both condition checks will fail since 0 is falsey value
+restaurant.numGuests = 0;
+
+//Here we check if NumGuests exists in retaurant and if not then return 10
+const guests1 = restaurant.numGuests ? restaurant.numGuests : 10;
+console.log(guests1);
+
+//This does the same as above. NumGuests is falsey so it short-circuits OR and returns 10
+const guests2 = restaurant.numGuests || 10;
+console.log(guests2);
+
+console.log(`-----------AND------------`);
+//The AND operator short-cricuits when the first value is falsey and returns that value immediately without even evaluating the next value
+console.log(0 && 'Taha'); //This will return 0 since 0 is falsey and its returned
+console.log(7 && 'Taha'); //This will return 'Taha' since 7 is truthy and so it moves to the next one and returns that
+
+//The AND operator keeps going on truthy values until it hits a falsey and returns that or hits the last value and returns that
+console.log('Hello' && 23 && null && 'taha');
+
+//Here we are checking if orderPizza (method) exists and then calling it
+if (restaurant.orderPizza) {
+  restaurant.orderPizza('mushrooms', 'spinach');
+}
+
+//We do the same thing here as above if restauran.orderPizza is truthy (exists) then the next part is evaluated and returned calling the function
+restaurant.orderPizza && restaurant.orderPizza('mushrooms', 'spinach');
