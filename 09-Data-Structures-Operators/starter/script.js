@@ -345,7 +345,7 @@ if (restaurant.orderPizza) {
 restaurant.orderPizza && restaurant.orderPizza('mushrooms', 'spinach'); */
 
 //----------------NULLISH COALESCING OPERATOR------------------------
-//If the number of guests is zero then both condition checks will fail since 0 is falsey value
+/* //If the number of guests is zero then both condition checks will fail since 0 is falsey value
 restaurant.numGuests = 0;
 
 //Here we check if NumGuests exists in retaurant and if not then return 10
@@ -360,4 +360,45 @@ console.log(guests2);
 //Nullish values : null and undefined (NOT 0 or '')
 //Besides that it works the same as OR logical operator
 const guestCorrect = restaurant.numGuests ?? 10;
-console.log(guestCorrect);
+console.log(guestCorrect); */
+
+//----------------DATA STRUCTURES AND MODERN OPERATORS------------------------
+const rest1 = {
+  name: 'Capri',
+  // numGuests: 20,
+  numGuests: 0,
+  isOpen: false,
+};
+const rest2 = {
+  name: 'La Piazza',
+  owner: 'Giovanni Rossi',
+  isOpen: true,
+};
+
+///-----LOGICAL OR ASSIGNMENT OPERATOR
+// //Here we are checking if restuarant has numGuests property and if not assign a default value
+// rest1.numGuests = rest1.numGuests || 10;
+
+// //Using the OR assignment operator we can do the same thing as above in shorthand
+// rest2.numGuests ||= 10;
+
+///-----NULLISH ASSIGNMENT OPERATOR
+rest1.numGuests ??= 10;
+rest2.numGuests ??= 10;
+
+///-----LOGICAL AND ASSIGNMENT OPERATOR
+//Here we short-circuting && and if the rest2owner exists (truthy) then we set it to anonymous
+// rest1.owner = rest1.owner && '<ANONYMOUS>';
+// rest2.owner = rest2.owner && '<ANONYMOUS>';
+
+//Logical AND assignemnt operator will assign a value to a variable if its truthy
+rest1.owner &&= '<ANONYMOUS>';
+rest2.owner &&= '<ANONYMOUS>';
+
+//IN CONCLUSION
+//AND will find true and assign it
+//OR will find false and assign it
+//Nullish will find null/undefined and assign it
+
+console.log(rest1);
+console.log(rest2);
