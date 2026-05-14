@@ -362,7 +362,7 @@ console.log(guests2);
 const guestCorrect = restaurant.numGuests ?? 10;
 console.log(guestCorrect); */
 
-//----------------DATA STRUCTURES AND MODERN OPERATORS------------------------
+//----------------MODERN OPERATORS------------------------
 const rest1 = {
   name: 'Capri',
   // numGuests: 20,

@@ -336,4 +336,10 @@ for (let i = 0; i < books.length; i++)
       `"${books[i].title}" provides no data about its online content`,
     ); */
 
-//----------------NULLISH COALESCING OPERATOR------------------------
+//----------------MODERN OPERATORS------------------------
+for (let i = 0; i < books.length; i++)
+  console.log(`${books[i].title}: ${books[i].edition}`);
+console.log(`=========================================================`);
+for (let i = 0; i < books.length; i++) books[i].edition ??= 1;
+for (let i = 0; i < books.length; i++)
+  console.log(`${books[i].title}: ${books[i].edition}`);
