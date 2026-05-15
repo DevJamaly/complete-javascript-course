@@ -403,4 +403,23 @@ rest2.owner &&= '<ANONYMOUS>';
 console.log(rest1);
 console.log(rest2); */
 
-//----------------TYPE HERE------------------------
+//----------------FOR OF LOOP------------------------
+const menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
+
+//This loop iterates over all the items in the array and gives them as elements.
+//Its abstracted so that we dont need to keep track of counters etc.
+//It also gives us access to continue and break
+for (const item of menu) {
+  console.log(item);
+}
+
+//The entries function returns an array that consits of array element wherein each elemnt has the array item and its index
+// console.log([...menu.entries()]);
+// for (const item of menu.entries()) {
+//   // console.log(item);
+//   console.log(`${item[0]}: ${item[1]}`);
+// }
+//We can de-structure the array item from entries as seperate variables for easier access
+for (const [i, item] of menu.entries()) {
+  console.log(`${i + 1}: ${item}`);
+}
