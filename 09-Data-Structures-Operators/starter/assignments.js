@@ -372,7 +372,7 @@ for (const [i, author] of allAuthors.entries()) {
 }*/
 
 //----------------ENHANCED OBJECT LIERALS------------------------
-const bookData = [
+/* const bookData = [
   ['title', 'Computer Networking: A Top-Down Approach'],
   ['author', ['James F. Kurose', 'Keith W. Ross']],
   ['publisher', 'Addison Wesley'],
@@ -393,4 +393,19 @@ const newBook2 = {
   author: ['Brian W. Kernighan', 'Dennis M. Ritchie'],
   pages,
 };
-console.log(newBook2);
+console.log(newBook2); */
+
+//----------------OPTIONAL CHAINING------------------------
+function getFirstKeyword(book) {
+  return book?.keywords?.[0];
+}
+
+const newBook2 = {
+  title: 'The C Programming Language',
+  author: ['Brian W. Kernighan', 'Dennis M. Ritchie'],
+  pages: 366,
+};
+
+for (const book of books)
+  console.log(`${book.title} first keyword: ${getFirstKeyword(book)}`);
+console.log(getFirstKeyword(newBook2));
