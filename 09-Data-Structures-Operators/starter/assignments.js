@@ -396,7 +396,7 @@ const newBook2 = {
 console.log(newBook2); */
 
 //----------------OPTIONAL CHAINING------------------------
-function getFirstKeyword(book) {
+/* function getFirstKeyword(book) {
   return book?.keywords?.[0];
 }
 
@@ -408,4 +408,23 @@ const newBook2 = {
 
 for (const book of books)
   console.log(`${book.title} first keyword: ${getFirstKeyword(book)}`);
-console.log(getFirstKeyword(newBook2));
+console.log(getFirstKeyword(newBook2)); */
+
+//----------------LOOPING OBJECTS------------------------
+const entries = [];
+
+const goodreadProperties = Object.keys(books[0]?.thirdParty?.goodreads);
+for (const property of goodreadProperties) {
+  entries.push([property]);
+}
+console.log(entries);
+
+const goodReadValues = Object.values(books[0]?.thirdParty?.goodreads);
+console.log([...goodReadValues.entries()]);
+for (const [index, value] of goodReadValues.entries()) {
+  entries[index].push(value);
+}
+console.log(entries);
+
+const entries2 = Object.entries(books[0]?.thirdParty?.goodreads);
+console.log(entries2);

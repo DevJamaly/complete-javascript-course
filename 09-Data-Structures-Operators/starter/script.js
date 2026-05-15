@@ -453,7 +453,7 @@ for (const [i, item] of menu.entries()) {
 //We can compute property names instead of having to write them down literally */
 
 //----------------OPTIONAL CHAINING------------------------
-// console.log(restaurant.openingHours.mon.open);
+/* // console.log(restaurant.openingHours.mon.open);
 //When we try to access nested property in an obect we need to make sure all parents exisit!
 console.log(restaurant.openingHours.mon && restaurant.openingHours.mon.open);
 
@@ -482,4 +482,31 @@ const users = [
 ];
 console.log(users[0]?.name ?? 'User array empty');
 console.log(users[1]?.name ?? 'User array only has one value');
-console.log(users[2]?.name ?? 'User array only has two value');
+console.log(users[2]?.name ?? 'User array only has two value'); */
+
+//----------------LOOPING OBJECTS------------------------
+//Object.keys returns an array of that object's property names
+const properties = Object.keys(openingHours);
+console.log(properties);
+
+// const openStr = `We are open on ${properties.length} days: ${properties.join(', ')}`;
+let openStr = `We are open on ${properties.length} days: `;
+
+for (const day of properties) {
+  openStr += `${day}, `;
+}
+console.log(openStr);
+
+//Object.values returns an array of that object's values only!
+// const values = Object.values(openingHours);
+const values = Object.values(restaurant);
+console.log(values);
+
+//Object.entries returns an array that contains the property name and values
+const entries = Object.entries(openingHours);
+console.log(entries);
+
+//Here we take the entries and de-structure it in the loop itself into variables for easy use
+for (const [propertyName, { open, close }] of entries) {
+  console.log(`On ${propertyName} we open at ${open} and close at ${close}`);
+}
