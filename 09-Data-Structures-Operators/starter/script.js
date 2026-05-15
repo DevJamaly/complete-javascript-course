@@ -363,7 +363,7 @@ const guestCorrect = restaurant.numGuests ?? 10;
 console.log(guestCorrect); */
 
 //----------------MODERN OPERATORS------------------------
-const rest1 = {
+/* const rest1 = {
   name: 'Capri',
   // numGuests: 20,
   numGuests: 0,
@@ -401,4 +401,6 @@ rest2.owner &&= '<ANONYMOUS>';
 //Nullish will find null/undefined and assign it
 
 console.log(rest1);
-console.log(rest2);
+console.log(rest2); */
+
+//----------------MODERN OPERATORS------------------------
