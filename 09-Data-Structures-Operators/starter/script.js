@@ -445,9 +445,41 @@ for (const [i, item] of menu.entries()) {
 } */
 
 //----------------ENHANCED OBJECT LITERALS------------------------
-//ES6 enhanced object literals allows us to add object literals into another just by using the same variable name
+/* //ES6 enhanced object literals allows us to add object literals into another just by using the same variable name
 
 //For methods now we dont need to declare the 'function' keyword !
 // order: function (p1, p2) {} --> order(p1,p2){}
 
-//We can compute property names instead of having to write them down literally
+//We can compute property names instead of having to write them down literally */
+
+//----------------OPTIONAL CHAINING------------------------
+// console.log(restaurant.openingHours.mon.open);
+//When we try to access nested property in an obect we need to make sure all parents exisit!
+console.log(restaurant.openingHours.mon && restaurant.openingHours.mon.open);
+
+//In ES6 we can use optional chaining to check if object is not null-ish if so then access it else return undefined making accessing nested properties or objects a lot more easier.
+console.log(restaurant?.openingHours?.mon?.open);
+
+for (const day of weekdays) {
+  // console.log(day);
+  const openingTime = restaurant?.openingHours?.[day]?.open;
+  console.log(
+    openingTime != null
+      ? `Restaurant opens at ${openingTime} on ${day}`
+      : `The restaurant doesnt open on ${day}`,
+  );
+}
+
+//Methods
+//We can check if moethods exist using the optional chaining and use the undefined result to show a default value using the nullish coalescing operator
+console.log(restaurant?.order?.(0, 1) ?? 'Method does not exist');
+console.log(restaurant?.orderRisotto?.(0, 1) ?? 'Method does not exist');
+
+//Array
+const users = [
+  { name: 'Taha', email: 'hello@tjamaly.com' },
+  { name: 'Jonas', email: 'hello@jonas.io' },
+];
+console.log(users[0]?.name ?? 'User array empty');
+console.log(users[1]?.name ?? 'User array only has one value');
+console.log(users[2]?.name ?? 'User array only has two value');
