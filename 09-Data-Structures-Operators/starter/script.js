@@ -485,7 +485,7 @@ console.log(users[1]?.name ?? 'User array only has one value');
 console.log(users[2]?.name ?? 'User array only has two value'); */
 
 //----------------LOOPING OBJECTS------------------------
-//Object.keys returns an array of that object's property names
+/* //Object.keys returns an array of that object's property names
 const properties = Object.keys(openingHours);
 console.log(properties);
 
@@ -509,4 +509,49 @@ console.log(entries);
 //Here we take the entries and de-structure it in the loop itself into variables for easy use
 for (const [propertyName, { open, close }] of entries) {
   console.log(`On ${propertyName} we open at ${open} and close at ${close}`);
+} */
+
+//----------------SETS------------------------
+//Sets are introduced in ES6
+//It is a collection of unique values and cannot have duplicates also the order is irreleveant since they are unique
+//Here the orders Set contains duplicates but those are ignored/deleted
+const ordersSet = new Set(['Pasta', 'Pizza', 'Pizza', 'Risotto', 'Pizza']);
+console.log(ordersSet);
+
+//Even a string is technically an array so we can use it to initialize a set
+console.log(new Set('Jonas'));
+
+//This will give us the length of the set (How many elements in it! REMEMBER all elements must be unique)
+console.log(ordersSet.size);
+//checks if the set contains the given element and returns true or false
+console.log(ordersSet.has('Pizza'));
+console.log(ordersSet.has('Bread'));
+//Add allows you to insert elements into the set (THEY MUST BE UNIQUE or are ignored !)
+ordersSet.add('Garlic Bread');
+ordersSet.add('Garlic Bread');
+console.log(ordersSet);
+//delete allows you to remove elments from the set
+ordersSet.delete('Risotto');
+ordersSet.delete('Potato');
+console.log(ordersSet);
+
+//Set does not have an index we can use to access elements
+//It doesnt make sense to retrieve values from a set since they are unique and un-ordered they are mainly used as a dictionary to check if it contains a certain value.
+console.log(ordersSet[0]);
+//Clear delets all elements in the set and resets it
+// ordersSet.clear();
+// console.log(ordersSet);
+
+//We can loop over the set! just like any other iterable
+for (const order of ordersSet) {
+  console.log(order);
 }
+
+//Example
+const staff = ['Waiter', 'Chef', 'Waiter', 'Manager', 'Chef', 'Waiter'];
+console.log(staff);
+//Here we create a new set using the staff array and then we use the spread operator to unpack it and create an array! This way all duplicates are removed and we get a unique elements array
+const staffUnique = [...new Set(staff)];
+console.log(staffUnique);
+console.log(new Set(staff).size);
+console.log(new Set('TahaShabbirJamaly').size);
