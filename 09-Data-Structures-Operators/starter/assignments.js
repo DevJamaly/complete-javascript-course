@@ -344,7 +344,7 @@ for (let i = 0; i < books.length; i++)
   console.log(`${books[i].title}: ${books[i].edition}`); */
 
 //----------------FOR OF LOOP------------------------
-let pageSum = 0;
+/*let pageSum = 0;
 for (const book of books) {
   console.log(`${book.title}: ${book.pages}`);
   pageSum += book.pages;
@@ -352,13 +352,13 @@ for (const book of books) {
 
 console.log(`Total pages: ${pageSum}`);
 
-/* let allAuthors = [];
-for (const { author } of books) {
-  const val = typeof author === 'string' && author;
-  if (val) allAuthors.push(val);
-  else allAuthors = [...allAuthors, ...author];
-}
-console.log(allAuthors); */
+// let allAuthors = [];
+// for (const { author } of books) {
+//   const val = typeof author === 'string' && author;
+//   if (val) allAuthors.push(val);
+//   else allAuthors = [...allAuthors, ...author];
+// }
+// console.log(allAuthors);
 
 const allAuthors = [];
 for (const { author } of books) {
@@ -369,4 +369,28 @@ console.log(allAuthors);
 
 for (const [i, author] of allAuthors.entries()) {
   console.log(`${i + 1}: ${author}`);
-}
+}*/
+
+//----------------ENHANCED OBJECT LIERALS------------------------
+const bookData = [
+  ['title', 'Computer Networking: A Top-Down Approach'],
+  ['author', ['James F. Kurose', 'Keith W. Ross']],
+  ['publisher', 'Addison Wesley'],
+];
+
+// Do the rest
+const newBook = {
+  [bookData[0][0]]: bookData[0][1],
+  [bookData[1][0]]: bookData[1][1],
+  [bookData[2][0]]: bookData[2][1],
+};
+console.log(newBook);
+
+const pages = 880;
+
+const newBook2 = {
+  title: 'The C Programming Language',
+  author: ['Brian W. Kernighan', 'Dennis M. Ritchie'],
+  pages,
+};
+console.log(newBook2);

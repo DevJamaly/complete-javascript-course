@@ -22,6 +22,38 @@ const mexicanFoods = new Set([
   'garlic',
 ]);
 
+const weekdays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+const openingHours = {
+  [weekdays[3]]: {
+    open: 12,
+    close: 22,
+  },
+  [weekdays[4]]: {
+    open: 11,
+    close: 23,
+  },
+  [`sat`]: {
+    open: 0, // Open 24 hours
+    close: 24,
+  },
+};
+
+// const openingHours = {
+//   thu: {
+//     open: 12,
+//     close: 22,
+//   },
+//   fri: {
+//     open: 11,
+//     close: 23,
+//   },
+//   sat: {
+//     open: 0, // Open 24 hours
+//     close: 24,
+//   },
+// };
+
 // Data needed for first part of the section
 const restaurant = {
   name: 'Classico Italiano',
@@ -30,22 +62,10 @@ const restaurant = {
   starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
   mainMenu: ['Pizza', 'Pasta', 'Risotto'],
 
-  openingHours: {
-    thu: {
-      open: 12,
-      close: 22,
-    },
-    fri: {
-      open: 11,
-      close: 23,
-    },
-    sat: {
-      open: 0, // Open 24 hours
-      close: 24,
-    },
-  },
+  //ES6 enhanced object literals allows us to add object literals into another just by using the same variable name
+  openingHours,
 
-  order: function (starterIndex, mainIndex) {
+  order(starterIndex, mainIndex) {
     return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
   },
 
@@ -404,7 +424,7 @@ console.log(rest1);
 console.log(rest2); */
 
 //----------------FOR OF LOOP------------------------
-const menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
+/* const menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
 
 //This loop iterates over all the items in the array and gives them as elements.
 //Its abstracted so that we dont need to keep track of counters etc.
@@ -422,4 +442,12 @@ for (const item of menu) {
 //We can de-structure the array item from entries as seperate variables for easier access
 for (const [i, item] of menu.entries()) {
   console.log(`${i + 1}: ${item}`);
-}
+} */
+
+//----------------ENHANCED OBJECT LITERALS------------------------
+//ES6 enhanced object literals allows us to add object literals into another just by using the same variable name
+
+//For methods now we dont need to declare the 'function' keyword !
+// order: function (p1, p2) {} --> order(p1,p2){}
+
+//We can compute property names instead of having to write them down literally
