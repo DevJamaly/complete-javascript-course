@@ -557,7 +557,7 @@ console.log(new Set(staff).size);
 console.log(new Set('TahaShabbirJamaly').size); */
 
 //----------------MODERN SETS------------------------
-//Finds the common elements between the two sets and returns a set with those elements
+/* //Finds the common elements between the two sets and returns a set with those elements
 //We can use this to find common elements within arrays! so just convert them to sets and use intersections.
 const commonFoods = italianFoods.intersection(mexicanFoods);
 console.log([...commonFoods]);
@@ -591,4 +591,64 @@ console.log(italianFoods.isSupersetOf(basics)); // true — italianFoods has eve
 // .isDisjointFrom(otherSet) Returns true if the two sets have zero elements in common — they're completely separate.
 const deserts = new Set(['tiramisu', 'churros']);
 console.log(deserts.isDisjointFrom(basics)); // true — no overlap at all
-console.log(italianFoods.isDisjointFrom(mexicanFoods)); // false — they share tomatoes and garlic
+console.log(italianFoods.isDisjointFrom(mexicanFoods)); // false — they share tomatoes and garlic */
+
+//----------------MAPS------------------------
+// Map is a data structure that stores key-value pairs, similar to objects, but with two key advantages: any value can be used as a key (numbers, booleans, objects, arrays — not just strings), and insertion order is always preserved.
+const restMap = new Map();
+
+//You can use set to add entries with key,value pairs and it returns the map!
+restMap.set('name', 'Classico Italiano');
+restMap.set(1, 'Firenze, Italy');
+console.log(restMap.set(2, 'Lisbon, Portugal'));
+//Since the set method returns the upadted map we can use it to chain adding entries
+restMap
+  .set('categories', ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'])
+  .set('open', 11)
+  .set('close', 23)
+  .set(true, 'We are open :D')
+  .set(false, 'We are close :(');
+console.log(restMap);
+
+//The get method can be used to get the value by passing the key as argument. The datatype of the key matters and must be the same!
+console.log(restMap.get('name'));
+console.log(restMap.get(true));
+console.log(restMap.get(1));
+//Here we are using the ability to have boolean as keys to code logic using logical operators
+const time = 21;
+console.log(
+  restMap.get(time > restMap.get('open') && time < restMap.get('close')),
+);
+
+//checks if the key exists in the map and return true or false
+console.log(restMap.has('categories'));
+
+//delete allows us to remove entries from the map! it return boolean for whether the deletion was sucessful or not !
+//Object properties can also be deleted using the delete operator but its an expensive and slow operation and is not recommended
+console.log(restMap.delete(2));
+console.log(restMap.size); // number of entries
+console.log(restMap.clear()); // wipe everything
+
+const arr = [1, 2];
+// restMap.set([1, 2], 'Test');
+restMap.set(arr, 'Test');
+console.log(restMap);
+console.log(restMap.get([1, 2])); //Doesnt work because the arrays are objects and the 2 arrays are different objects and thus different references !
+console.log(restMap.get(arr)); //This now works because we are passing the same reference
+
+//This line uses a DOM element as a key — something only a Map can do.
+restMap.set(document.querySelector('h1'), 'Heading');
+console.log(restMap);
+
+//The most practical use case is storing metadata or state about DOM elements without touching the elements themselves.
+//Instead of stuffing extra data into the element via custom attributes like data-click-count, you keep it cleanly stored in the Map and just use the element as the lookup key. The element is the reference — so as long as it exists in the DOM, you can always retrieve its associated data with elementMap.get(btn).
+// const elementMap = new Map();
+
+// const btn = document.querySelector('button');
+// elementMap.set(btn, { clickCount: 0, isDisabled: false });
+
+// btn.addEventListener('click', () => {
+//   const data = elementMap.get(btn);
+//   data.clickCount++;
+//   console.log(`Clicked ${data.clickCount} times`);
+// });
