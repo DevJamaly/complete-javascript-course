@@ -463,3 +463,11 @@ console.log(bookMap.size);
 console.log(
   bookMap.has('author') ? 'The author is known' : 'The author is unkown',
 );
+
+const firstBookMap = new Map(Object.entries(books[0]));
+console.log(firstBookMap);
+
+for (const [key, value] of firstBookMap) {
+  if (typeof value === 'number')
+    console.log(`Property(${key}) has numerical value : ${value}`);
+}
