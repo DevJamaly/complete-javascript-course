@@ -512,7 +512,7 @@ for (const [propertyName, { open, close }] of entries) {
 } */
 
 //----------------SETS------------------------
-//Sets are introduced in ES6
+/* //Sets are introduced in ES6
 //It is a collection of unique values and cannot have duplicates also the order is irreleveant since they are unique
 //Here the orders Set contains duplicates but those are ignored/deleted
 const ordersSet = new Set(['Pasta', 'Pizza', 'Pizza', 'Risotto', 'Pizza']);
@@ -554,4 +554,41 @@ console.log(staff);
 const staffUnique = [...new Set(staff)];
 console.log(staffUnique);
 console.log(new Set(staff).size);
-console.log(new Set('TahaShabbirJamaly').size);
+console.log(new Set('TahaShabbirJamaly').size); */
+
+//----------------MODERN SETS------------------------
+//Finds the common elements between the two sets and returns a set with those elements
+//We can use this to find common elements within arrays! so just convert them to sets and use intersections.
+const commonFoods = italianFoods.intersection(mexicanFoods);
+console.log([...commonFoods]);
+console.log(`Intersection: `, commonFoods);
+
+//The union method takes all the unique elements from either sets and combines them into one set.
+const foodFusion = italianFoods.union(mexicanFoods);
+//Here we merge both arrays using spread operator, conver it to set and then back to array by using spread operator on the new set created!
+const foodFusionArr = [...new Set([...italianFoods, ...mexicanFoods])];
+console.log(foodFusionArr);
+
+//The difference method gives us the unique elements present in the calling set and not in the argument set! It returns a set with those unique elements
+//Here the order of what set is calling and which is argument matters.It will return the unique values of the one calling and remove any that exist in the argument set
+const uniqueItalian = italianFoods.difference(mexicanFoods);
+const uniqueMexican = mexicanFoods.difference(italianFoods);
+console.log(uniqueItalian, uniqueMexican);
+
+//The symmetric difference method gives us the elements which
+const uniqueItalianMexicanFoods =
+  italianFoods.symmetricDifference(mexicanFoods);
+console.log(uniqueItalianMexicanFoods);
+
+//There are methods which allow us to know if a set is part of another set (3methods)
+// .isSubsetOf(otherSet) Returns true if every element in the calling set exists in otherSet. Think of it as asking "am I fully contained within you?"
+const basics = new Set(['tomatoes', 'garlic']);
+console.log(basics.isSubsetOf(italianFoods)); // true — both exist in italianFoods
+
+// .isSupersetOf(otherSet) The reverse — returns true if the calling set contains all elements of otherSet. "Do I fully contain you?"
+console.log(italianFoods.isSupersetOf(basics)); // true — italianFoods has everything basics has
+
+// .isDisjointFrom(otherSet) Returns true if the two sets have zero elements in common — they're completely separate.
+const deserts = new Set(['tiramisu', 'churros']);
+console.log(deserts.isDisjointFrom(basics)); // true — no overlap at all
+console.log(italianFoods.isDisjointFrom(mexicanFoods)); // false — they share tomatoes and garlic
