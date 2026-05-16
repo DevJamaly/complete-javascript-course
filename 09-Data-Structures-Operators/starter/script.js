@@ -652,3 +652,34 @@ console.log(restMap);
 //   data.clickCount++;
 //   console.log(`Clicked ${data.clickCount} times`);
 // });
+
+const question = new Map([
+  ['question', 'What is the best programming language in the world ?'],
+  [1, 'C'],
+  [2, 'Java'],
+  [3, 'JavaScript'],
+  ['correct', 3],
+  [true, 'Correct 🎉'],
+  [false, 'Try again!'],
+]);
+console.log(question);
+
+//The map initialization and structure is very similar to object.entries which consts of an array containing elements each with a key(property) and a value
+console.log(Object.entries(openingHours));
+// You can convert an object to a map very simply by initialzing a new map and using the Object.entries as the argument
+const hoursMap = new Map(Object.entries(openingHours));
+console.log(hoursMap);
+
+//Quiz app
+console.log(question.get('question'));
+for (const [key, value] of question) {
+  if (typeof key === 'number') console.log(`Answer ${key}: ${value}`);
+}
+const answer = Number.parseInt(prompt('Select one of the answers 1,2 or 3'));
+console.log(question.get(answer === question.get('correct')));
+
+//Convert map to an array by just using spread operator an unpacking the map into an array
+console.log([...question]);
+console.log([...question.entries()]);
+console.log([...question.keys()]);
+console.log([...question.values()]);
