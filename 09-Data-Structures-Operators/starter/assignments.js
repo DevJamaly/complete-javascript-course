@@ -446,3 +446,20 @@ const uniqueKeywordsArr = [...uniqueKeywords];
 console.log(uniqueKeywordsArr);
 uniqueKeywords.clear();
 console.log(uniqueKeywords); */
+
+//----------------MAPS------------------------
+const bookMap = new Map([
+  ['title', 'Clean Code'],
+  ['author', 'Robert C. Martin'],
+]);
+// bookMap.set('title', 'Clean Code');
+// bookMap.set('author', 'Robert C. Martin');
+console.log(bookMap);
+
+bookMap.set('page', 464);
+console.log(bookMap);
+console.log(`${bookMap.get('title')} by ${bookMap.get('author')}`);
+console.log(bookMap.size);
+console.log(
+  bookMap.has('author') ? 'The author is known' : 'The author is unkown',
+);
