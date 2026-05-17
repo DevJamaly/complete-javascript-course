@@ -473,7 +473,7 @@ for (const [key, value] of firstBookMap) {
 } */
 
 //----------------STRINGS------------------------
-const ISBN = books[0].ISBN;
+/* const ISBN = books[0].ISBN;
 console.log(ISBN[6], ISBN[4], ISBN[9], ISBN[8]);
 
 const quote =
@@ -533,4 +533,22 @@ function logBookTheme(bookTitle) {
 
 for (const { title } of books) {
   logBookTheme(title);
+} */
+
+function logBookCategories(categories) {
+  categories = categories.toLowerCase().trim().split(';');
+  for (const cat of categories) console.log(cat);
 }
+
+const bookCategories =
+  'science;computing;computer science;algorithms;business;operating systems;networking;electronics';
+logBookCategories(bookCategories);
+
+function getKeywordsAsString(books) {
+  const keywords = [];
+  for (const book of books) {
+    keywords.push(...book.keywords);
+  }
+  return [...new Set(keywords)].join(';');
+}
+console.log(getKeywordsAsString(books));
