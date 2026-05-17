@@ -685,7 +685,7 @@ console.log([...question.keys()]);
 console.log([...question.values()]); */
 
 //----------------STRINGS------------------------
-const airline = 'TAP Air Portugal';
+/* const airline = 'TAP Air Portugal';
 const plane = 'A320';
 
 console.log(plane[0]);
@@ -802,4 +802,54 @@ const checkBaggage = function (items) {
 };
 checkBaggage('I have a laptop, some Food and a pocket kNiFe');
 checkBaggage('I have some soCks and Camera');
-checkBaggage('Got some snaCKs and a Gun for protection');
+checkBaggage('Got some snaCKs and a Gun for protection'); */
+
+//Split and Join
+//Split breaks the string into an array of substrings based on the divider string
+console.log('a+very+nice+string'.split('+'));
+console.log('Taha Shabbir Dama'.split(' '));
+const [firstName, lastName] = 'Taha Dama'.split(' ');
+console.log(firstName, lastName);
+const newName = ['Mr.', firstName, lastName.toUpperCase()].join(' ');
+console.log(newName);
+
+function capitalizeNames(name) {
+  console.log(name);
+  const names = name.toLowerCase().trim().split(' ');
+  console.log(names);
+  const namesUpper = [];
+  // for (let n of names) namesUpper.push(n[0].toUpperCase() + n.slice(1));
+  for (let i = 0; i < names.length; i++)
+    names[i] = names[i].replace(names[i][0], names[i][0].toUpperCase());
+  // names = names.map(word => word[0].toUpperCase() + word.slice(1));
+  // name = names.join(' ');
+  // console.log(namesUpper.join(' '));
+  console.log(names.join(' '));
+}
+capitalizeNames('jessica ann smith davies');
+capitalizeNames('tAha shAbbIr Jamaly');
+
+//Padding a string
+const message = 'Go to gate 23!';
+console.log(message.padStart(25, '+').padEnd(35, '-'));
+
+function maskCreditCard(number) {
+  let ccString = number + '';
+  ccString = ccString.slice(-4).padStart(ccString.length, '*');
+  return ccString;
+}
+
+console.log(maskCreditCard(2345672635478234));
+console.log(maskCreditCard('5634892764091824'));
+
+//REPEAT
+const message2 = 'Bad weather... All Departures delayed \n';
+console.log(message2.repeat(5));
+
+function planesInLine(n) {
+  console.log(`There are ${n} planes in line ${'✈️'.repeat(n)}`);
+}
+
+planesInLine(8);
+planesInLine(3);
+planesInLine(18);
