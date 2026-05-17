@@ -594,7 +594,7 @@ console.log(deserts.isDisjointFrom(basics)); // true — no overlap at all
 console.log(italianFoods.isDisjointFrom(mexicanFoods)); // false — they share tomatoes and garlic */
 
 //----------------MAPS------------------------
-// Map is a data structure that stores key-value pairs, similar to objects, but with two key advantages: any value can be used as a key (numbers, booleans, objects, arrays — not just strings), and insertion order is always preserved.
+/* // Map is a data structure that stores key-value pairs, similar to objects, but with two key advantages: any value can be used as a key (numbers, booleans, objects, arrays — not just strings), and insertion order is always preserved.
 const restMap = new Map();
 
 //You can use set to add entries with key,value pairs and it returns the map!
@@ -682,4 +682,55 @@ console.log(question.get(answer === question.get('correct')));
 console.log([...question]);
 console.log([...question.entries()]);
 console.log([...question.keys()]);
-console.log([...question.values()]);
+console.log([...question.values()]); */
+
+//----------------STRINGS------------------------
+const airline = 'TAP Air Portugal';
+const plane = 'A320';
+
+console.log(plane[0]);
+console.log(plane[1]);
+console.log(plane[2]);
+console.log('B737'[0]);
+console.log(airline.length);
+console.log('B737'.length);
+
+//indexOf returns the index of the first occurence of the given substring or -1 if it doesnt exist
+console.log(airline.indexOf('r'));
+//indexOf returns the index of the last occurence of the given substring or -1 if it doesnt exist
+console.log(airline.lastIndexOf('r'));
+//Remember the searching of substring is case sensitive
+console.log(airline.indexOf('Portugal'));
+//slice returns a substring and takes a start and end index
+//note that it returns a new string and doesnt mutate the original string. You cannot mutate primitive string!
+console.log(airline.slice(4));
+//It starts(inclusive) at index 4 and ends(exclusive) at index 6
+//The length of the substring will always be end-start => 7-4=3
+console.log(airline.slice(4, 7));
+console.log(airline.slice(0, airline.indexOf(' '))); //From beginning to first space (first word)
+console.log(airline.slice(airline.lastIndexOf(' ') + 1)); //From last space +1 (to remove space) to end of string (last word)
+//giving a negative start/end position will start the index reverse from the end
+//So -2 is the same as length - 2
+console.log(airline.slice(-2));
+console.log(airline.slice(1, -1));
+
+function checkMiddleSeat(seat) {
+  //B ane E are middle seats
+  const seatID = seat.slice(-1);
+  if (seatID === 'B' || seatID === 'E')
+    console.log('You got the middle seat 😒');
+  else console.log(`You got lucky 😎`);
+}
+
+checkMiddleSeat('11B');
+checkMiddleSeat('23C');
+checkMiddleSeat('3E');
+
+// When you access a method or property on a string primitive in JavaScript (like "hello".toUpperCase()), JS temporarily wraps that primitive in a String object — this is called boxing — giving it access to all the methods on String.prototype. The moment the operation is done, that wrapper object is thrown away. This exists because primitives are intentionally lightweight (just raw values in memory), but the language still wants them to behave conveniently like objects when needed, so boxing quietly bridges that gap without you ever having to think about it.
+console.log('hello'.toUpperCase());
+// JS secretly does:
+console.log(new String('hello').toUpperCase()); // → "HELLO"
+// then immediately discards the wrapper object
+console.log(typeof new String('taha'));
+//REMEMBER! all string methods return a primitive string
+console.log(typeof new String('taha').toUpperCase());

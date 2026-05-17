@@ -448,7 +448,7 @@ uniqueKeywords.clear();
 console.log(uniqueKeywords); */
 
 //----------------MAPS------------------------
-const bookMap = new Map([
+/* const bookMap = new Map([
   ['title', 'Clean Code'],
   ['author', 'Robert C. Martin'],
 ]);
@@ -470,4 +470,6 @@ console.log(firstBookMap);
 for (const [key, value] of firstBookMap) {
   if (typeof value === 'number')
     console.log(`Property(${key}) has numerical value : ${value}`);
-}
+} */
+
+//----------------STRINGS------------------------
