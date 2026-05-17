@@ -493,3 +493,44 @@ const isContributor = function (authorName) {
 };
 console.log(isContributor('Julie Sussman (Contributor)'));
 console.log(isContributor('Robert Sedgewick'));
+
+function normalizeAuthorName(authorName) {
+  console.log(authorName);
+  authorName = authorName.toLowerCase().replace('(contributor)', '').trim();
+  const surnameIndex = authorName.indexOf(' ') + 1;
+
+  authorName =
+    authorName[0].toUpperCase() +
+    authorName.slice(1, surnameIndex) +
+    authorName[surnameIndex].toUpperCase() +
+    authorName.slice(surnameIndex + 1);
+
+  console.log(authorName);
+}
+
+normalizeAuthorName('  JuliE sussMan (Contributor)    ');
+
+const newBookTitle = books[1]?.title?.replace('Programs', 'Software');
+console.log(newBookTitle);
+
+function logBookTheme(bookTitle) {
+  console.log(`========================================================`);
+  console.log(bookTitle);
+  bookTitle = bookTitle.toLowerCase().trim();
+  if (bookTitle.startsWith('computer'))
+    console.log(`This book is about computers 💻`);
+  else if (bookTitle.includes('structures') && bookTitle.includes('algorithms'))
+    console.log(`This book is about algorithms and data structures 🔎`);
+  else if (
+    bookTitle.endsWith('system') ||
+    (bookTitle.endsWith('systems') && !bookTitle.includes('operating'))
+  )
+    console.log(
+      `This book is about some systems, but definitely not about operating systems!!`,
+    );
+  console.log(`/////////////////////////////////////////////////////////`);
+}
+
+for (const { title } of books) {
+  logBookTheme(title);
+}
