@@ -533,7 +533,7 @@ function logBookTheme(bookTitle) {
 
 for (const { title } of books) {
   logBookTheme(title);
-} */
+}
 
 function logBookCategories(categories) {
   categories = categories.toLowerCase().trim().split(';');
@@ -552,3 +552,4 @@ function getKeywordsAsString(books) {
   return [...new Set(keywords)].join(';');
 }
 console.log(getKeywordsAsString(books));
+*/
