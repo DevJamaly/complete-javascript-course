@@ -802,7 +802,7 @@ const checkBaggage = function (items) {
 };
 checkBaggage('I have a laptop, some Food and a pocket kNiFe');
 checkBaggage('I have some soCks and Camera');
-checkBaggage('Got some snaCKs and a Gun for protection'); */
+checkBaggage('Got some snaCKs and a Gun for protection');
 
 //Split and Join
 //Split breaks the string into an array of substrings based on the divider string
@@ -853,3 +853,28 @@ function planesInLine(n) {
 planesInLine(8);
 planesInLine(3);
 planesInLine(18);
+*/
+
+//----------------STRINGS CHALLENGE------------------------
+const flightsData = flights
+  .toLowerCase()
+  .split('+')
+  .map(word => word.trim().slice(1));
+// console.log(flightsData);
+
+const getCode = str => str.slice(0, 3).toUpperCase();
+
+for (const flightData of flightsData) {
+  let [type, from, to, time] = flightData.split(';');
+  type = type
+    .split('_')
+    .map(word => word.replace(word[0], word[0].toUpperCase()))
+    .join(' ');
+  type = type.startsWith('Delayed') ? '🔴 ' + type : type.trim();
+  from = getCode(from);
+  to = getCode(to);
+  time = time.replace(':', 'h');
+  const output = `${type} from ${from} to ${to} (${time})`.padStart(50, ' ');
+  console.log(output);
+  // console.log(type, from, to, time);
+}
