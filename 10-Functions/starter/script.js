@@ -66,7 +66,7 @@ console.log(taha);
 checkIn(flight, taha); //So when we checkIn the value in the original is no longer the same as before ! */
 
 //=====================HIGHER ORDER FUNCTIONs=====================
-//Callback functions make it easy to split and re-use code
+/* //Callback functions make it easy to split and re-use code
 //Callback functions allow us to create abstraction
 
 // LOW-LEVEL functions: handle one specific transformation detail
@@ -102,4 +102,27 @@ document.body.addEventListener('click', logHighFive);
 
 // forEach is a higher-order function — it takes logHighFive as a callback
 // and automatically calls it once for each element in the array
-['Jonas', 'Martha', 'Adam'].forEach(logHighFive);
+['Jonas', 'Martha', 'Adam'].forEach(logHighFive); */
+
+//=====================RETURNING FUNCTIONs=====================
+// greet returns a NEW function — this is called a "closure"
+// the returned function remembers 'greeting' even after greet() has finished
+const greet = function (greeting) {
+  return function (name) {
+    console.log(`${greeting} ${name}`);
+  };
+};
+
+//this is the greeting function in arrow format! its a lot more confusing
+const greetArrow = greeting => name => console.log(`${greeting} ${name}`);
+
+// greeterHey is now the returned function, with 'greeting' locked in as 'Hey'
+const greeterHey = greet('Hey');
+
+// calling greeterHey only needs 'name' — it already remembers 'Hey'
+greeterHey('Jonas'); // Hey Jonas
+greeterHey('Steven'); // Hey Steven
+
+//we can call the greet function and chain calling the return function in one line
+greet('Hello')('Taha');
+greetArrow('Wagwan')('Broski!!');
