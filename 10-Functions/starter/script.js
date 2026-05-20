@@ -105,7 +105,7 @@ document.body.addEventListener('click', logHighFive);
 ['Jonas', 'Martha', 'Adam'].forEach(logHighFive); */
 
 //=====================RETURNING FUNCTIONs=====================
-// greet returns a NEW function — this is called a "closure"
+/* // greet returns a NEW function — this is called a "closure"
 // the returned function remembers 'greeting' even after greet() has finished
 const greet = function (greeting) {
   return function (name) {
@@ -125,4 +125,4 @@ greeterHey('Steven'); // Hey Steven
 
 //we can call the greet function and chain calling the return function in one line
 greet('Hello')('Taha');
-greetArrow('Wagwan')('Broski!!');
+greetArrow('Wagwan')('Broski!!'); */
