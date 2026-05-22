@@ -126,3 +126,61 @@ greeterHey('Steven'); // Hey Steven
 //we can call the greet function and chain calling the return function in one line
 greet('Hello')('Taha');
 greetArrow('Wagwan')('Broski!!'); */
+
+//=====================CALL & APPLY METHODS=====================
+const lufthansa = {
+  airline: 'Lufthansa',
+  iataCode: 'LH',
+  bookings: [],
+
+  // 'this' here refers to the object that calls the method (lufthansa)
+  book(flightNum, name) {
+    console.log(
+      `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`,
+    );
+    this.bookings.push({
+      flight: `${this.iataCode} ${flightNum}`,
+      name,
+    });
+  },
+};
+
+lufthansa.book(239, 'Taha Dama');
+lufthansa.book(635, 'John Smith');
+console.log(lufthansa);
+
+const eurowing = {
+  airline: 'Eurowings',
+  iataCode: 'EW',
+  bookings: [],
+};
+
+// Copying the book method into the global scope as a standalone function
+// it is now a regular function, NOT a method — so 'this' is undefined
+const book = lufthansa.book;
+
+// book(23, 'Sarah Williams'); // ❌ 'this' is undefined — would throw a TypeError
+
+// .call() manually sets 'this' to eurowings, then passes the arguments
+// this lets us reuse lufthansa's book method on a completely different object
+book.call(eurowing, 23, 'SarahWilliams');
+console.log(eurowing);
+book.call(lufthansa, 239, 'Mary Cooper');
+console.log(lufthansa);
+
+const swiss = {
+  airline: 'Swiss Air',
+  iataCode: 'LX',
+  bookings: [],
+};
+
+book.call(swiss, 583, 'John Hardman');
+console.log(swiss);
+
+// .apply() works exactly like .call() but takes arguments as an ARRAY
+// instead of passing them one by one
+const flightData = [583, 'George Cooper'];
+book.apply(swiss, flightData);
+console.log(swiss);
+// .apply() is considered outdated — the modern alternative is .call() + spread operator
+book.call(swiss, ...flightData);
