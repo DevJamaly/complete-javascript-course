@@ -128,7 +128,7 @@ greet('Hello')('Taha');
 greetArrow('Wagwan')('Broski!!'); */
 
 //=====================CALL & APPLY METHODS=====================
-const lufthansa = {
+/* const lufthansa = {
   airline: 'Lufthansa',
   iataCode: 'LH',
   bookings: [],
@@ -183,10 +183,10 @@ const flightData = [583, 'George Cooper'];
 book.apply(swiss, flightData);
 console.log(swiss);
 // .apply() is considered outdated — the modern alternative is .call() + spread operator
-book.call(swiss, ...flightData);
+book.call(swiss, ...flightData); */
 
 //=====================BIND METHODS=====================
-// book.call(eurowing, 23, 'Sarah Williams');
+/* // book.call(eurowing, 23, 'Sarah Williams');
 // bind() returns a new function with `this` permanently set — doesn't call immediately
 const bookEW = book.bind(eurowing); // bookEW is now always bound to eurowing
 const bookLH = book.bind(lufthansa);
@@ -233,4 +233,103 @@ const customTaxFn = function (taxRate) {
 
 // addIncomeTax is the returned inner function, with taxRate = 0.38 baked in
 const addIncomeTax = customTaxFn(0.38);
-console.log(addIncomeTax(100));
+console.log(addIncomeTax(100)); */
+
+//=====================IIFE=====================
+/* // Normal function — called once manually, still accessible in scope
+const runOnce = function () {
+  console.log('This will never run again!');
+};
+
+runOnce();
+
+// IIFE — wrapping in () makes it an expression, the final () calls it immediately
+// Variables inside are scoped here and unreachable from outside (data encapsulation)
+(function () {
+  console.log('This will never run again, For realz this time!');
+  const isPrivate = 23;
+})();
+
+// console.log(isPrivate);
+
+// Arrow function version of IIFE — same concept
+(() => console.log('This arrow function will also never run again!'))();
+
+// Modern alternative — blocks {} also scope let/const (no IIFE needed)
+{
+  const isPrivate = 23; // block-scoped, gone after }
+  var notPrivate = 46; // var ignores blocks, leaks to outer scope
+}
+
+// console.log(isPrivate); // ReferenceError
+console.log(notPrivate); // 46 — var escapes the block */
+
+//=====================CLOSURES=====================
+// a closure is a function that remembers the variables of its birthplace even after that scope is gone.
+// passengerCount is private — nobody can touch it directly, only booker can.
+
+// secureBooking's local scope will be "closed over" by the returned function
+const secureBooking = function () {
+  let passengerCount = 0;
+
+  // This returned function keeps access to passengerCount even after secureBooking finishes
+  return function () {
+    passengerCount++;
+    console.log(`${passengerCount} passengers`);
+  };
+};
+
+// secureBooking has finished executing, but passengerCount lives on inside booker
+const booker = secureBooking();
+
+booker(); // 1 passengers
+booker(); // 2 passengers
+booker(); // 3 passengers — passengerCount persists across calls, but is inaccessible from outside
+
+// console.dir lets you inspect the closure and see [[Scopes]] -> Closure -> passengerCount
+console.dir(booker);
+
+// Example 1 — closureFn is declared in outer scope, but assigned inside other functions
+let closureFn;
+
+const assignClosureA = function () {
+  const numA = 23;
+  // closureFn closes over numA — remembers this scope even after assignClosureA finishes
+  closureFn = function () {
+    console.log(numA * 2);
+  };
+};
+
+const assignClosureB = function () {
+  const numB = 777;
+  // Re-assigning closureFn — it now closes over numB instead
+  closureFn = function () {
+    console.log(numB * 2);
+  };
+};
+
+assignClosureA();
+closureFn(); // 46 — closes over numA (23)
+console.dir(closureFn); // [[Scopes]] shows Closure -> numA
+
+// closureFn is re-assigned — old closure (numA) is gone, replaced by numB
+assignClosureB();
+closureFn(); // 1554 — closes over numB (777)
+console.dir(closureFn); // [[Scopes]] shows Closure -> numB
+
+// Example 2 — setTimeout callback closes over n and perGroup
+const boardPassengers = function (n, wait) {
+  const perGroup = n / 3;
+
+  // This callback runs AFTER boardPassengers finishes — but still accesses n and perGroup via closure
+  setTimeout(function () {
+    console.log(`We are now boarding all ${n} passengers`);
+    console.log(`There are 3 groups, each with ${perGroup} passengers`);
+  }, wait * 1000);
+
+  console.log(`Will start boarding in ${wait} seconds`);
+};
+
+// This outer perGroup is ignored — closure has priority over same-named outer variables
+const perGroup = 1000;
+boardPassengers(180, 3);
