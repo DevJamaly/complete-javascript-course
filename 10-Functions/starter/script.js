@@ -184,3 +184,53 @@ book.apply(swiss, flightData);
 console.log(swiss);
 // .apply() is considered outdated — the modern alternative is .call() + spread operator
 book.call(swiss, ...flightData);
+
+//=====================BIND METHODS=====================
+// book.call(eurowing, 23, 'Sarah Williams');
+// bind() returns a new function with `this` permanently set — doesn't call immediately
+const bookEW = book.bind(eurowing); // bookEW is now always bound to eurowing
+const bookLH = book.bind(lufthansa);
+const bookLX = book.bind(swiss);
+
+bookEW(23, 'Sarah Williams'); // call the bound function normally
+console.log(eurowing);
+
+// PARTIAL APPLICATION — pre-setting arguments, not just `this`
+// The first arg (flightNum = 23) is locked in. Only the passenger name is needed later.
+const bookEW23 = book.bind(eurowing, 23); //Partial application
+bookEW23('John Spielman');
+
+lufthansa.planes = 300;
+lufthansa.buyPlane = function () {
+  console.log(this);
+  this.planes++;
+  console.log(this.planes);
+};
+
+//Here the this is button element
+// Without bind, `this` inside buyPlane would be the button element (event listener behavior)
+// document.querySelector('.buy').addEventListener('click', lufthansa.buyPlane);
+
+// addEventListener sets `this` to the DOM element — bind() fixes it back to lufthansa
+document
+  .querySelector('.buy')
+  .addEventListener('click', lufthansa.buyPlane.bind(lufthansa));
+
+const addTax = (rate, value) => value + value * rate;
+console.log(addTax(0.1, 200));
+
+// Pass `null` as `this` (arrow functions ignore it anyway) and pre-set rate to 0.23
+// addVAT is now a specialized version of addTax — only needs the value
+const addVAT = addTax.bind(null, 0.23);
+console.log(addVAT(100));
+
+// Same idea as bind partial application, but using a closure instead
+const customTaxFn = function (taxRate) {
+  return function (value) {
+    return value + value * taxRate; // taxRate is remembered via closure
+  };
+};
+
+// addIncomeTax is the returned inner function, with taxRate = 0.38 baked in
+const addIncomeTax = customTaxFn(0.38);
+console.log(addIncomeTax(100));
