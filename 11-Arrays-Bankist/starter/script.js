@@ -108,7 +108,7 @@ console.log(letters.join('-')); // → 'a-b-c-d-e-f-g-h-i-j'
 console.log(letters); // array is unchanged */
 
 //==================THE AT METHOD=================
-// .at() method — Introduced in ES2022
+/* // .at() method — Introduced in ES2022
 // Works on both arrays and strings
 // Main advantage: supports negative indexing (counts from the end)
 
@@ -125,4 +125,34 @@ console.log(arr.at(-1)); // cleanest — negative index counts from end → 64
 
 // .at() also works on strings
 console.log('jonas'.at(0)); // → 'j'
-console.log('jonas'.at(-1)); // → 's' (last character)
+console.log('jonas'.at(-1)); // → 's' (last character) */
+
+//==================ARRAYS FOR EACH=================
+// Both loops do the same thing — iterate over an array with index + value
+// movements.entries() returns [index, value] pairs → we destructure as [i, movement]
+
+// FOR...OF — use when you need break / continue
+for (const [i, movement] of movements.entries()) {
+  console.log(
+    `Movement ${i + 1}: ${
+      movement > 0
+        ? `you deposited ${movement}`
+        : `you withdrew ${Math.abs(movement)}`
+    }`,
+  );
+}
+
+console.log(`------------FOR EACH-----------------`);
+
+// forEach — use for simple iteration when you don't need break / continue
+// callback receives: (currentValue, index, fullArray) — you can ignore any of them
+// forEach always loops through EVERY element, no way to stop it early
+movements.forEach((movement, i, arr) => {
+  console.log(
+    `Movement ${i + 1}: ${
+      movement > 0
+        ? `You deposited ${movement}`
+        : `You withdrew ${Math.abs(movement)}`
+    }`,
+  );
+});
