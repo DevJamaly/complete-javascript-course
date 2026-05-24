@@ -76,7 +76,7 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 /////////////////////////////////////////////////
 
 //==================SIMPLE ARRAY METHODS=================
-let arr = ['a', 'b', 'c', 'd', 'e'];
+/* let arr = ['a', 'b', 'c', 'd', 'e'];
 
 // SLICE — extracts a portion, does NOT mutate original
 console.log(arr.slice(2)); // from index 2 to end → ['c','d','e']
@@ -105,4 +105,24 @@ console.log(letters); // → ['a','b','c','d','e','f','g','h','i','j']
 
 // JOIN — joins all elements into a string with a separator, does NOT mutate
 console.log(letters.join('-')); // → 'a-b-c-d-e-f-g-h-i-j'
-console.log(letters); // array is unchanged
+console.log(letters); // array is unchanged */
+
+//==================THE AT METHOD=================
+// .at() method — Introduced in ES2022
+// Works on both arrays and strings
+// Main advantage: supports negative indexing (counts from the end)
+
+const arr = [23, 11, 64];
+
+// Classic bracket notation vs .at() — both do the same thing
+console.log(arr[0]); // → 23
+console.log(arr.at(0)); // → 23
+
+// Getting the last element — 3 ways, .at() is the cleanest
+console.log(arr[arr.length - 1]); // classic, verbose
+console.log(arr.slice(-1)[0]); // works but hacky
+console.log(arr.at(-1)); // cleanest — negative index counts from end → 64
+
+// .at() also works on strings
+console.log('jonas'.at(0)); // → 'j'
+console.log('jonas'.at(-1)); // → 's' (last character)
