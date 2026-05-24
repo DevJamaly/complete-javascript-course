@@ -32,7 +32,7 @@ BONUS TEST DATA 2: [1, 5, 3, 9, 6, 1]
 GOOD LUCK 😀
 */
 
-const poll = {
+/* const poll = {
   question: 'What is your favourite programming language?',
   options: ['0: Javascript', '1: Python', '2: Rust', '3: C++'],
   answers: new Array(4).fill(0),
@@ -71,4 +71,30 @@ const displayResults2 = displayResults.bind(testPoll2);
 displayResults.call(testPoll1);
 displayResults.call(testPoll1, 'string');
 displayResults2();
-displayResults2('string');
+displayResults2('string'); */
+
+//===================CODING CHALLENGE 2===============================
+/* 
+This is more of a thinking challenge than a coding challenge 🤓
+
+Take the IIFE below and at the end of the function, attach an event listener that changes the color of the selected h1 element ('header') to blue, each time the BODY element is clicked. Do NOT select the h1 element again!
+
+And now explain to YOURSELF (or someone around you) WHY this worked! Take all the time you need. Think about WHEN exactly the callback function is executed, and what that means for the variables involved in this example.
+
+GOOD LUCK 😀
+*/
+
+(function () {
+  const header = document.querySelector('h1');
+  console.log(header);
+  header.style.color = 'red';
+
+  document.querySelector('body').addEventListener('click', () => {
+    const randomColor =
+      '#' +
+      Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, '0');
+    header.style.color = randomColor;
+  });
+})();

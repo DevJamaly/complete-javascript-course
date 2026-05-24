@@ -265,7 +265,7 @@ runOnce();
 console.log(notPrivate); // 46 — var escapes the block */
 
 //=====================CLOSURES=====================
-// a closure is a function that remembers the variables of its birthplace even after that scope is gone.
+/* // a closure is a function that remembers the variables of its birthplace even after that scope is gone.
 // passengerCount is private — nobody can touch it directly, only booker can.
 
 // secureBooking's local scope will be "closed over" by the returned function
@@ -332,4 +332,4 @@ const boardPassengers = function (n, wait) {
 
 // This outer perGroup is ignored — closure has priority over same-named outer variables
 const perGroup = 1000;
-boardPassengers(180, 3);
+boardPassengers(180, 3); */
