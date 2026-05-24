@@ -74,3 +74,35 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+
+//==================SIMPLE ARRAY METHODS=================
+let arr = ['a', 'b', 'c', 'd', 'e'];
+
+// SLICE — extracts a portion, does NOT mutate original
+console.log(arr.slice(2)); // from index 2 to end → ['c','d','e']
+console.log(arr.slice(2, 4)); // from index 2 up to (not including) 4 → ['c','d']
+console.log(arr.slice(-2)); // last 2 elements → ['d','e']
+console.log(arr.slice(-1)); // last 1 element → ['e']
+console.log(arr.slice(1, -2)); // from index 1, exclude last 2 → ['b','c']
+console.log(arr.slice()); // shallow copy of full array
+console.log([...arr]); // same shallow copy using spread
+
+// SPLICE — extracts elements but MUTATES the original array
+// console.log(arr.splice(2));   // removes everything from index 2 onwards
+// console.log(arr.splice(-1));  // removes last element
+console.log(arr.splice(1, 2)); // removes 2 elements starting at index 1 → ['b','c']
+console.log(arr); // original is now mutated → ['a','d','e']
+
+// REVERSE — reverses in place, MUTATES the original array
+arr = ['a', 'b', 'c', 'd', 'e'];
+const arr2 = ['j', 'i', 'h', 'g', 'f'];
+console.log(arr2.reverse()); // → ['f','g','h','i','j']
+console.log(arr2); // arr2 itself is also mutated
+
+// CONCAT — merges two arrays, does NOT mutate either
+const letters = arr.concat(arr2); // same as [...arr, ...arr2]
+console.log(letters); // → ['a','b','c','d','e','f','g','h','i','j']
+
+// JOIN — joins all elements into a string with a separator, does NOT mutate
+console.log(letters.join('-')); // → 'a-b-c-d-e-f-g-h-i-j'
+console.log(letters); // array is unchanged
