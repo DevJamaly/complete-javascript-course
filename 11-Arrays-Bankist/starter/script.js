@@ -128,7 +128,7 @@ console.log('jonas'.at(0)); // → 'j'
 console.log('jonas'.at(-1)); // → 's' (last character) */
 
 //==================ARRAYS FOR EACH=================
-// Both loops do the same thing — iterate over an array with index + value
+/* // Both loops do the same thing — iterate over an array with index + value
 // movements.entries() returns [index, value] pairs → we destructure as [i, movement]
 
 // FOR...OF — use when you need break / continue
@@ -155,4 +155,31 @@ movements.forEach((movement, i, arr) => {
         : `You withdrew ${Math.abs(movement)}`
     }`,
   );
-});
+}); */
+
+//==================MAP ARRAYS=================
+const EUR_TO_USD = 1.1;
+
+// map() transforms every element and returns a NEW array — original is untouched
+const movementsUSD = movements.map(mov => mov * EUR_TO_USD);
+
+console.log(movements); // original — unchanged
+console.log(movementsUSD); // new array with converted values
+
+// Same result as above, but using a manual for..of loop
+// map() is just the cleaner, more expressive version of this pattern
+const movementsUSD2 = [];
+for (const mov of movements) {
+  movementsUSD2.push(mov * EUR_TO_USD);
+}
+console.log(movements);
+console.log(movementsUSD2);
+
+// map() gets 3 args: current element, index, full array
+// Here we use mov and i to build a human-readable description per transaction
+// Math.abs() strips the minus sign so we don't print "withdrew -200"
+const movementDesriptions = movements.map(
+  (mov, i, arr) =>
+    `Movement ${i + 1}: you ${mov > 0 ? 'deposited' : 'withdrew'} ${Math.abs(mov)}`,
+);
+console.log(movementDesriptions);
