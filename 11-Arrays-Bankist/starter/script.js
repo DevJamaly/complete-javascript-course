@@ -158,7 +158,7 @@ movements.forEach((movement, i, arr) => {
 }); */
 
 //==================MAP ARRAYS=================
-const EUR_TO_USD = 1.1;
+/* const EUR_TO_USD = 1.1;
 
 // map() transforms every element and returns a NEW array — original is untouched
 const movementsUSD = movements.map(mov => mov * EUR_TO_USD);
@@ -182,4 +182,22 @@ const movementDesriptions = movements.map(
   (mov, i, arr) =>
     `Movement ${i + 1}: you ${mov > 0 ? 'deposited' : 'withdrew'} ${Math.abs(mov)}`,
 );
-console.log(movementDesriptions);
+console.log(movementDesriptions); */
+
+//==================FILTER ARRAYS=================
+// filter() returns a NEW array with only elements that pass the condition
+// positive movements = deposits
+const deposits = movements.filter(mov => mov > 0);
+console.log(deposits);
+
+// negative movements = withdrawals
+const withdrawals = movements.filter(mov => mov < 0);
+console.log(withdrawals);
+
+// Same result as deposits above, but with a manual for..of loop
+// filter() is preferred — shorter, chainable, and fits the functional style
+const desposisFor = [];
+for (const mov of movements) {
+  if (mov > 0) desposisFor.push(mov);
+}
+console.log(desposisFor);
