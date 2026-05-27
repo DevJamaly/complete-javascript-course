@@ -223,3 +223,13 @@ console.log(balance);
 let balance2 = 0;
 for (const mov of movements) balance2 += mov;
 console.log(balance2);
+
+// reduce() isn't just for summing — it can compute ANY single value
+// here we use it to find the largest number in the array
+// logic: if current element beats the running max, it becomes the new max
+// starting value is movements[0] instead of 0 — important! using 0 would break if all values are negative
+const max = movements.reduce(
+  (max, curr) => (curr > max ? curr : max),
+  movements[0],
+);
+console.log(max);
