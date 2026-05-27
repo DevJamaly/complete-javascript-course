@@ -185,7 +185,7 @@ const movementDesriptions = movements.map(
 console.log(movementDesriptions); */
 
 //==================FILTER ARRAYS=================
-// filter() returns a NEW array with only elements that pass the condition
+/* // filter() returns a NEW array with only elements that pass the condition
 // positive movements = deposits
 const deposits = movements.filter(mov => mov > 0);
 console.log(deposits);
@@ -200,4 +200,26 @@ const desposisFor = [];
 for (const mov of movements) {
   if (mov > 0) desposisFor.push(mov);
 }
-console.log(desposisFor);
+console.log(desposisFor); */
+
+//==================REDUCE ARRAYS=================
+console.log(movements);
+
+// reduce() collapses the entire array into a single value
+// acc = running total, curr = current element, 0 = starting value of acc
+
+// Using reduce with a function expression call
+// const balance = movements.reduce(function (accumulator, current, i, array) {
+//   console.log(`Iteration ${i}: ${accumulator}`);
+//   return accumulator + current;
+// }, 0);
+
+//Using reduce with an arrow function
+const balance = movements.reduce((acc, curr) => acc + curr, 0);
+console.log(balance);
+
+// Same result — manual running total with a for..of loop
+// reduce() is the cleaner version of exactly this pattern
+let balance2 = 0;
+for (const mov of movements) balance2 += mov;
+console.log(balance2);
