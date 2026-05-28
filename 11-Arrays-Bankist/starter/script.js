@@ -203,7 +203,7 @@ for (const mov of movements) {
 console.log(desposisFor); */
 
 //==================REDUCE ARRAYS=================
-console.log(movements);
+/* console.log(movements);
 
 // reduce() collapses the entire array into a single value
 // acc = running total, curr = current element, 0 = starting value of acc
@@ -232,4 +232,20 @@ const max = movements.reduce(
   (max, curr) => (curr > max ? curr : max),
   movements[0],
 );
-console.log(max);
+console.log(max); */
+
+//==================CHAINING ARRAY METHODs=================
+const EUR_TO_USD = 1.1;
+
+// Method chaining — each method passes its result to the next
+// Step 1: filter()  — keep only deposits (positive values)
+// Step 2: map()     — convert each deposit from EUR to USD
+// Step 3: reduce()  — sum them all into one total
+const totalDepositInUSD = movements
+  .filter(mov => mov > 0)
+  .map(mov => mov * EUR_TO_USD)
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(totalDepositInUSD);
+
+// Chaining can hurt performance on large arrays — each method loops through the array again
+// Never chain methods that mutate the original array (e.g. splice, reverse) — it causes unpredictable bugs
