@@ -272,7 +272,7 @@ for (const account of accounts) {
 console.log(accountFor); */
 
 //==================FIND LAST IN ARRAY=================
-console.log(movements);
+/* console.log(movements);
 
 // findLast() — same as find() but searches from the END of the array
 // useful when you want the most recent match, not the first one
@@ -296,4 +296,26 @@ const latestLargeMovementIndex = movements.findLastIndex(
 // e.g. if it's the last element, result is 1 (1 movement ago)
 console.log(
   `Your latest largest movement ${largestMov} was ${movements.length - latestLargeMovementIndex} movements ago`,
-);
+); */
+
+//==================SOME & EVERY=================
+console.log(movements);
+
+// includes() — checks if an EXACT value exists in the array, returns true/false
+console.log(movements.includes(-130));
+
+// some() — returns true if AT LEAST ONE element passes the condition
+// like includes() but with a condition instead of exact match
+const anyDeposits = movements.some(mov => mov > 0);
+console.log(anyDeposits);
+
+// every() — returns true only if ALL elements pass the condition
+console.log(movements.every(mov => mov > 0)); // mixed array — false
+console.log(account4.movements.every(mov => mov > 0)); // all deposits — true
+
+// callbacks can be stored in a variable and reused across multiple methods
+// keeps code DRY — define the condition once, use it anywhere
+const deposit = mov => mov > 0;
+console.log(movements.some(deposit)); // any deposits?
+console.log(movements.every(deposit)); // all deposits?
+console.log(movements.filter(deposit)); // which ones are deposits?
