@@ -319,3 +319,33 @@ const deposit = mov => mov > 0;
 console.log(movements.some(deposit)); // any deposits?
 console.log(movements.every(deposit)); // all deposits?
 console.log(movements.filter(deposit)); // which ones are deposits?
+
+//==================FLAT & FLAT MAP=================
+const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+console.log(arr.flat()); // flat() removes one level of nesting by default
+
+const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+console.log(arrDeep.flat(2)); // pass a depth argument to flatten deeper levels
+
+// Step 1: map() extracts the movements array from each account -> array of arrays
+const accountMovements = accounts.map(acc => acc.movements);
+// Step 2: flat() merges them all into one single array
+const allMovements = accountMovements.flat();
+console.log(accountMovements);
+console.log(allMovements);
+// Step 3: reduce() sums everything up
+const overallBalance = allMovements.reduce((sum, mov) => sum + mov);
+console.log(overallBalance);
+
+// Same as above but chained — cleaner but same 3 steps
+const overallBalanceChained = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((sum, mov) => sum + mov);
+console.log(overallBalanceChained);
+
+// flatMap() = map() + flat() in one method — more performant, but only flattens ONE level deep
+const overallBalanceOptimal = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((sum, mov) => sum + mov);
+console.log(overallBalanceOptimal);
