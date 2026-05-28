@@ -235,7 +235,7 @@ const max = movements.reduce(
 console.log(max); */
 
 //==================CHAINING ARRAY METHODs=================
-const EUR_TO_USD = 1.1;
+/* const EUR_TO_USD = 1.1;
 
 // Method chaining — each method passes its result to the next
 // Step 1: filter()  — keep only deposits (positive values)
@@ -248,4 +248,25 @@ const totalDepositInUSD = movements
 console.log(totalDepositInUSD);
 
 // Chaining can hurt performance on large arrays — each method loops through the array again
-// Never chain methods that mutate the original array (e.g. splice, reverse) — it causes unpredictable bugs
+// Never chain methods that mutate the original array (e.g. splice, reverse) — it causes unpredictable bugs */
+
+//==================FIND IN ARRAY=================
+// find() returns the FIRST element that passes the condition — not an array, just the element itself
+// unlike filter() which returns ALL matches as a new array
+const firstWithdrawal = movements.find(mov => mov < 0);
+console.log(movements);
+console.log(firstWithdrawal);
+
+// practical use case — find a specific object in an array by a property value
+// stops as soon as it finds the first match
+console.log(accounts);
+const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account);
+
+// same result as above but with a manual for..of loop
+// find() is the cleaner version of this pattern
+let accountFor;
+for (const account of accounts) {
+  if (account.owner === 'Jessica Davis') accountFor = account;
+}
+console.log(accountFor);
