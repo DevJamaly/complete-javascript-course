@@ -251,7 +251,7 @@ console.log(totalDepositInUSD);
 // Never chain methods that mutate the original array (e.g. splice, reverse) — it causes unpredictable bugs */
 
 //==================FIND IN ARRAY=================
-// find() returns the FIRST element that passes the condition — not an array, just the element itself
+/* // find() returns the FIRST element that passes the condition — not an array, just the element itself
 // unlike filter() which returns ALL matches as a new array
 const firstWithdrawal = movements.find(mov => mov < 0);
 console.log(movements);
@@ -269,4 +269,31 @@ let accountFor;
 for (const account of accounts) {
   if (account.owner === 'Jessica Davis') accountFor = account;
 }
-console.log(accountFor);
+console.log(accountFor); */
+
+//==================FIND LAST IN ARRAY=================
+console.log(movements);
+
+// findLast() — same as find() but searches from the END of the array
+// useful when you want the most recent match, not the first one
+const lastWithdrawal = movements.findLast(mov => mov < 0);
+console.log(lastWithdrawal);
+
+// Step 1: find the largest movement by absolute value (ignores +/- sign)
+// Math.abs() used so withdrawals aren't disqualified just for being negative
+const largestMov = movements.reduce(
+  (max, curr) => (Math.abs(max) < Math.abs(curr) ? curr : max),
+  movements[0],
+);
+
+// Step 2: findLastIndex() — like findIndex() but from the END
+// gets the index of the most recent occurrence of that largest movement
+const latestLargeMovementIndex = movements.findLastIndex(
+  mov => mov === largestMov,
+);
+
+// Step 3: convert index to "how many movements ago" for a human-readable message
+// e.g. if it's the last element, result is 1 (1 movement ago)
+console.log(
+  `Your latest largest movement ${largestMov} was ${movements.length - latestLargeMovementIndex} movements ago`,
+);
