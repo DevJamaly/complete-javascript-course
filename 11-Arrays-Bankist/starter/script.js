@@ -627,7 +627,7 @@ labelBalance.addEventListener('click', event => {
 }); */
 
 //==================NON DESTRUCTIVE ALTERNATIVES=================
-console.log(movements);
+/* console.log(movements);
 
 // --- 3 ways to reverse an array ---
 // const reversedMovements = movements.reverse();        // ❌ Mutates original
@@ -660,3 +660,78 @@ console.log(schedule); // original unchanged
 const newMovements = movements.with(1, 2000); // ✅ Returns new array with only that index changed
 console.log(newMovements); // updated copy
 console.log(movements); // original unchanged
+ */
+//==================ARRAY PRACTICE=================
+//1. Get the total money depositedi in the bank
+const totalDeposit = accounts
+  .flatMap(acc => acc.movements)
+  .filter(trans => trans > 0)
+  .reduce((sum, curr) => sum + curr, 0);
+console.log(totalDeposit);
+
+//2. Count how many deposits there have been with atleast 1000 dollars
+const depositCount = accounts
+  .flatMap(acc => acc.movements)
+  .filter(mov => mov >= 1000).length;
+console.log(depositCount);
+
+const depositCountReduced = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((count, curr) => (curr >= 1000 ? ++count : count), 0); //we cannot use count++ since it increments but still returns the same value!
+// .reduce((count, curr) => (curr >= 1000 ? count + 1 : count), 0);
+console.log(depositCountReduced);
+
+//3. Create an object which contains the sum of the deposits and withdrawals
+const { deposits, withdrawals } = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    (sums, curr) => {
+      // curr > 0 ? (sums.deposits += curr) : (sums.withdrawals += curr);
+      sums[curr > 0 ? 'deposits' : 'withdrawals'] += curr;
+      return sums;
+    },
+    { deposits: 0, withdrawals: 0 },
+  );
+console.log(deposits, withdrawals);
+
+//4. Convert any string to a title case, where first letter of each word is capitalized
+// this is a nice title -> This Is a Nice Title
+const convertTitleCase = function (str) {
+  const exceptions = new Set([
+    // Articles
+    'a',
+    'an',
+    'the',
+    // Coordinating conjunctions
+    'and',
+    'but',
+    'or',
+    'nor',
+    'for',
+    'so',
+    'yet',
+    // Short prepositions
+    'at',
+    'by',
+    'in',
+    'of',
+    'on',
+    'to',
+    'up',
+    'as',
+    'via',
+  ]);
+  const capitalize = word => word[0].toUpperCase() + word.slice(1);
+
+  return str
+    .toLowerCase()
+    .trim()
+    .split(' ')
+    .map((word, i) =>
+      i === 0 || !exceptions.has(word) ? capitalize(word) : word,
+    )
+    .join(' ');
+};
+console.log(convertTitleCase('this is a nice title'));
+console.log(convertTitleCase('this is a LONG title but not too long'));
+console.log(convertTitleCase('and here is another title with an EXAMPLE'));
