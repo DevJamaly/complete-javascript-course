@@ -10,6 +10,7 @@ const account1 = {
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+  type: 'premium',
 };
 
 const account2 = {
@@ -17,6 +18,7 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+  type: 'standard',
 };
 
 const account3 = {
@@ -24,6 +26,7 @@ const account3 = {
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
   pin: 3333,
+  type: 'premium',
 };
 
 const account4 = {
@@ -31,6 +34,7 @@ const account4 = {
   movements: [430, 1000, 700, 50, 90],
   interestRate: 1,
   pin: 4444,
+  type: 'basic',
 };
 
 const accounts = [account1, account2, account3, account4];
@@ -494,3 +498,59 @@ const sorted = original.sort(); // original is now ALSO sorted!
 const safeSorted = [...original].sort((a, b) => a - b); */
 
 //==================ARRAY GROUPING=================
+// Object.groupBy(array, callback)
+// Splits an array into groups based on whatever label you return from the callback
+
+//1. GROUP BY POSITIVE/NEGATIVE
+console.log(movements);
+const groupedMovements = Object.groupBy(movements, mov =>
+  mov > 0 ? 'deposits' : 'withdrawals',
+);
+console.log(groupedMovements);
+
+// 2. GROUP BY ACTIVITY LEVEL
+const groupedByActivity = Object.groupBy(accounts, acc => {
+  const movementCount = acc.movements.length;
+  if (movementCount >= 8) return 'very active';
+  if (movementCount >= 4) return 'active';
+  if (movementCount >= 1) return 'moderate';
+  return 'inactive';
+});
+console.log(groupedByActivity);
+
+//3. GROUP BY TYPE
+// ({ type }) is just shorthand for acc => acc.type
+// Destructures 'type' directly from each account object
+const groupedByType = Object.groupBy(accounts, ({ type }) => type);
+console.log(groupedByType);
+
+//4. REAL WORLD
+// E-commerce — group orders by status
+const orders = [
+  { id: 1, item: 'Shoes', status: 'delivered' },
+  { id: 2, item: 'Watch', status: 'pending' },
+  { id: 3, item: 'Bag', status: 'delivered' },
+  { id: 4, item: 'Phone', status: 'cancelled' },
+];
+
+const byStatus = Object.groupBy(orders, ({ status }) => status);
+console.log(byStatus);
+
+//CONTACTS: Group by First Letter
+const contacts = ['Alice', 'Bob', 'Anna', 'Charlie', 'Brian'];
+
+const byLetter = Object.groupBy(contacts, name => name[0]);
+console.log(byLetter);
+
+// FOOTBALL SQUAD: Group by Position
+const squad = [
+  { name: 'Ter Stegen', position: 'GK' },
+  { name: 'Araújo', position: 'DEF' },
+  { name: 'Pedri', position: 'MID' },
+  { name: 'Gavi', position: 'MID' },
+  { name: 'Lewandowski', position: 'FWD' },
+  { name: 'Yamal', position: 'FWD' },
+];
+
+const byPosition = Object.groupBy(squad, ({ position }) => position);
+console.log(byPosition);
