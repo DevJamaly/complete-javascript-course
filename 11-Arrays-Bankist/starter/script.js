@@ -498,7 +498,7 @@ const sorted = original.sort(); // original is now ALSO sorted!
 const safeSorted = [...original].sort((a, b) => a - b); */
 
 //==================ARRAY GROUPING=================
-// Object.groupBy(array, callback)
+/* // Object.groupBy(array, callback)
 // Splits an array into groups based on whatever label you return from the callback
 
 //1. GROUP BY POSITIVE/NEGATIVE
@@ -553,4 +553,75 @@ const squad = [
 ];
 
 const byPosition = Object.groupBy(squad, ({ position }) => position);
-console.log(byPosition);
+console.log(byPosition); */
+
+//==================CREATING AND FILLING ARRAYS=================
+// --- new Array() behavior ---
+const numbersArr = new Array(1, 2, 3, 4, 5, 6, 7, 8); // Multiple args → fills array with those values
+console.log(numbersArr);
+
+const x = new Array(7); // Single number arg → creates empty array of that LENGTH (not value!)
+console.log(x);
+console.log(x.map(() => 5)); // ❌ map() skips empty slots — still returns 7 empty slots
+
+// --- fill(value, start, end) ---
+// x.fill(1);          // Would fill ALL slots with 1
+x.fill(1, 3, 5); // Fills slots 3 & 4 (end index is exclusive)
+console.log(x);
+
+numbersArr.fill(23, 4, 6); // Overwrites indexes 4 & 5 with 23
+console.log(numbersArr);
+
+// --- Array.from() ---
+// Array.from({ length: n }, mapFn) — creates + fills an array in one step
+// (unlike new Array(n) which leaves empty slots that map() can't iterate)
+
+const y = Array.from({ length: 7 }, () => 1); // [1, 1, 1, 1, 1, 1, 1]
+const z = Array.from({ length: 7 }, (_, i) => i + 1); // [1, 2, 3, 4, 5, 6, 7] — _ is unused element, i is index
+console.log(y);
+console.log(z);
+
+// Practical example: 100 random dice rolls (1–6)
+const diceRolls = Array.from({ length: 100 }, () =>
+  Math.floor(Math.random() * 6 + 1),
+);
+console.log(diceRolls);
+
+// --- Renders bank account movements to the DOM ---
+const displayMovements = function (movements, sort = false) {
+  console.log(movements);
+  containerMovements.innerHTML = ''; // Clear existing entries before re-rendering
+
+  // If sort=true, sort a COPY (slice()) to avoid mutating the original array
+  const movementsSorted = sort
+    ? movements.slice().sort((a, b) => a - b)
+    : movements;
+
+  movementsSorted.forEach((move, i) => {
+    const type = move > 0 ? 'deposit' : 'withdrawal'; // Classify each movement
+    const html = `<div class="movements__row">
+          <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+          <div class="movements__date">3 days ago</div>
+          <div class="movements__value">${move}€</div>
+        </div>`;
+    containerMovements.insertAdjacentHTML('afterbegin', html); // Prepend so newest appears on top
+  });
+};
+displayMovements(account1.movements);
+
+// --- Reads displayed movement values back from the DOM on balance click ---
+labelBalance.addEventListener('click', event => {
+  const nodes = document.querySelectorAll('.movements__value'); // Returns a NodeList (not an Array)
+  console.log(nodes);
+
+  // nodes.map(el => el.textContent); // ❌ NodeList has no .map() — must convert first
+
+  const movementsUI = Array.from(nodes); // ✅ Option 1: Array.from() converts NodeList → Array
+  const movementsUI2 = [...nodes]; // ✅ Option 2: spread operator does the same thing
+
+  // Strip the '€' symbol and convert strings to numbers
+  const movementValues = movementsUI.map(el =>
+    Number(el.textContent.replace('€', '')),
+  );
+  console.log(movementValues);
+});
