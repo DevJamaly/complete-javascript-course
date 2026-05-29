@@ -351,7 +351,7 @@ const overallBalanceOptimal = accounts
 console.log(overallBalanceOptimal); */
 
 //==================SORTING ARRAYS=================
-const owners = ['Jonmas', 'Zack', 'Adam', 'Mark'];
+/* const owners = ['Jonmas', 'Zack', 'Adam', 'Mark'];
 owners.sort(); // alphabetical, works fine — but mutates the original array!
 console.log(owners); // ['Adam', 'Jonmas', 'Mark', 'Zack']
 
@@ -383,4 +383,114 @@ movements.sort((a, b) => a - b); // ascending
 console.log(movements);
 movements.sort((a, b) => b - a); // descending
 console.log(movements);
-// Why it works: positive/negative result naturally tells sort() what to do
+// Why it works: positive/negative result naturally tells sort() what to do */
+
+/*
+// =============================================
+// THE GOLDEN RULE
+// =============================================
+// (a, b) => a - b   →  ASCENDING  (small → big)
+// (a, b) => b - a   →  DESCENDING (big → small)
+// =============================================
+
+// ========== 1. NUMBERS ==========
+const prices = [199, 45, 899, 12, 340];
+
+prices.sort((a, b) => a - b); // [12, 45, 199, 340, 899]
+prices.sort((a, b) => b - a); // [899, 340, 199, 45, 12]
+
+// Real world: E-commerce "Sort by Price"
+
+
+// ========== 2. STRINGS ==========
+const names = ['Zack', 'adam', 'Mike', 'bella'];
+
+names.sort(); // ⚠️ Capital letters sort BEFORE lowercase (Z before a)
+              // ['Mike', 'Zack', 'adam', 'bella']
+
+names.sort((a, b) => a.localeCompare(b)); // ✅ Correct alphabetical
+                                           // ['adam', 'bella', 'Mike', 'Zack']
+
+// Real world: Dropdown menus, contact lists, country selectors
+
+
+// ========== 3. DATES ==========
+const events = [
+  { name: 'Conference', date: new Date('2024-06-15') },
+  { name: 'Workshop',   date: new Date('2024-01-03') },
+  { name: 'Meetup',     date: new Date('2024-11-20') },
+];
+
+// Earliest first
+events.sort((a, b) => a.date - b.date);
+// [Workshop (Jan), Conference (Jun), Meetup (Nov)]
+
+// Latest first
+events.sort((a, b) => b.date - a.date);
+// [Meetup (Nov), Conference (Jun), Workshop (Jan)]
+
+// Real world: Notification feeds, calendar apps, transaction history
+
+
+// ========== 4. OBJECTS BY A PROPERTY ==========
+const products = [
+  { name: 'Laptop',  price: 1200, rating: 4.2 },
+  { name: 'Mouse',   price: 25,   rating: 4.8 },
+  { name: 'Monitor', price: 450,  rating: 3.9 },
+];
+
+// Sort by price
+products.sort((a, b) => a.price - b.price);
+// Mouse → Monitor → Laptop
+
+// Sort by rating
+products.sort((a, b) => b.rating - a.rating);
+// Mouse (4.8) → Laptop (4.2) → Monitor (3.9)
+
+// Sort by name alphabetically
+products.sort((a, b) => a.name.localeCompare(b.name));
+// Laptop → Monitor → Mouse
+
+// Real world: Product listings, leaderboards, admin dashboards
+
+
+// ========== 5. BOOLEANS (push items to end/front) ==========
+const tasks = [
+  { task: 'Buy groceries', done: true  },
+  { task: 'Do laundry',    done: false },
+  { task: 'Call bank',     done: true  },
+  { task: 'Fix bug',       done: false },
+];
+
+// Incomplete tasks first (false before true)
+tasks.sort((a, b) => a.done - b.done);
+// [Do laundry, Fix bug, Buy groceries, Call bank]
+
+// Real world: Todo apps (completed tasks sink to the bottom)
+
+
+// ========== 6. CUSTOM PRIORITY ORDER ==========
+const tickets = [
+  { id: 1, priority: 'Low'    },
+  { id: 2, priority: 'High'   },
+  { id: 3, priority: 'Medium' },
+  { id: 4, priority: 'High'   },
+];
+
+// You define the rank yourself
+const priorityRank = { High: 1, Medium: 2, Low: 3 };
+
+tickets.sort((a, b) => priorityRank[a.priority] - priorityRank[b.priority]);
+// High → High → Medium → Low
+
+// Real world: Support ticket systems, project management tools
+
+
+// ========== ⚠️ IMPORTANT: SORT MUTATES ==========
+const original = [3, 1, 2];
+const sorted = original.sort(); // original is now ALSO sorted!
+
+// Safe approach: copy first, then sort
+const safeSorted = [...original].sort((a, b) => a - b); */
+
+//==================ARRAY GROUPING=================
