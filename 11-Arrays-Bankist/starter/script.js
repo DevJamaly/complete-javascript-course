@@ -299,7 +299,7 @@ console.log(
 ); */
 
 //==================SOME & EVERY=================
-console.log(movements);
+/* console.log(movements);
 
 // includes() — checks if an EXACT value exists in the array, returns true/false
 console.log(movements.includes(-130));
@@ -318,10 +318,10 @@ console.log(account4.movements.every(mov => mov > 0)); // all deposits — true
 const deposit = mov => mov > 0;
 console.log(movements.some(deposit)); // any deposits?
 console.log(movements.every(deposit)); // all deposits?
-console.log(movements.filter(deposit)); // which ones are deposits?
+console.log(movements.filter(deposit)); // which ones are deposits? */
 
 //==================FLAT & FLAT MAP=================
-const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+/* const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
 console.log(arr.flat()); // flat() removes one level of nesting by default
 
 const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
@@ -348,4 +348,39 @@ console.log(overallBalanceChained);
 const overallBalanceOptimal = accounts
   .flatMap(acc => acc.movements)
   .reduce((sum, mov) => sum + mov);
-console.log(overallBalanceOptimal);
+console.log(overallBalanceOptimal); */
+
+//==================SORTING ARRAYS=================
+const owners = ['Jonmas', 'Zack', 'Adam', 'Mark'];
+owners.sort(); // alphabetical, works fine — but mutates the original array!
+console.log(owners); // ['Adam', 'Jonmas', 'Mark', 'Zack']
+
+//Numbers
+console.log(movements);
+// ⚠️ Default .sort() converts numbers to strings first — gives wrong order
+console.log(movements.sort()); // BAD: don't use this for numbers
+
+// HOW THE COMPARATOR WORKS:
+// .sort() compares two elements at a time: the one it's looking at (a) and the next one (b)
+// Return NEGATIVE → keep order  (a stays before b)
+// Return POSITIVE → swap order  (b moves before a)
+// Ascending (smallest → largest)
+movements.sort((a, b) => {
+  if (a > b) return 1; // a is bigger → swap (push a forward)
+  if (b > a) return -1; // b is bigger → keep (b should be ahead anyway)
+});
+console.log(movements);
+
+// Descending (largest → smallest)
+movements.sort((a, b) => {
+  if (a > b) return -1; // a is bigger → keep (a should be ahead)
+  if (b > a) return 1; // b is bigger → swap (push b forward)
+});
+console.log(movements);
+
+// 💡 SHORTCUT for numbers (same result, less code):
+movements.sort((a, b) => a - b); // ascending
+console.log(movements);
+movements.sort((a, b) => b - a); // descending
+console.log(movements);
+// Why it works: positive/negative result naturally tells sort() what to do
