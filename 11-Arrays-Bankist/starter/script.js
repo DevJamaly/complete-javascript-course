@@ -556,7 +556,7 @@ const byPosition = Object.groupBy(squad, ({ position }) => position);
 console.log(byPosition); */
 
 //==================CREATING AND FILLING ARRAYS=================
-// --- new Array() behavior ---
+/* // --- new Array() behavior ---
 const numbersArr = new Array(1, 2, 3, 4, 5, 6, 7, 8); // Multiple args → fills array with those values
 console.log(numbersArr);
 
@@ -624,4 +624,39 @@ labelBalance.addEventListener('click', event => {
     Number(el.textContent.replace('€', '')),
   );
   console.log(movementValues);
-});
+}); */
+
+//==================NON DESTRUCTIVE ALTERNATIVES=================
+console.log(movements);
+
+// --- 3 ways to reverse an array ---
+// const reversedMovements = movements.reverse();        // ❌ Mutates original
+// const reversedMovements = movements.slice().reverse();// ✅ Old workaround: copy first, then reverse
+const reversedMovements = movements.toReversed(); // ✅ Modern (ES2023): returns new reversed array, original untouched
+console.log(movements); // unchanged
+console.log(reversedMovements); // reversed copy
+
+// --- toSorted() — non-mutating sort ---
+// Real-world: display a leaderboard by score without reordering the original player list
+const players = [
+  { name: 'Ali', score: 45 },
+  { name: 'Sara', score: 90 },
+  { name: 'Omar', score: 70 },
+  { name: 'John', score: 32 },
+];
+const leaderboard = players.toSorted((a, b) => b.score - a.score); // highest first
+console.log(leaderboard); // Sara, Omar, Ali
+console.log(players); // original order preserved
+
+// --- toSpliced(start, deleteCount, ...items) — non-mutating splice ---
+// Real-world: remove a cancelled event from a schedule without mutating the original
+const schedule = ['Meeting', 'Lunch', 'Workshop', 'Review'];
+const updatedSchedule = schedule.toSpliced(1, 1); // remove 'Lunch'
+console.log(updatedSchedule); // ['Meeting', 'Workshop', 'Review']
+console.log(schedule); // original unchanged
+
+// --- with(index, value) — non-mutating single-element update ---
+// const movements[1] = 2000;          // ❌ Mutates original
+const newMovements = movements.with(1, 2000); // ✅ Returns new array with only that index changed
+console.log(newMovements); // updated copy
+console.log(movements); // original unchanged
