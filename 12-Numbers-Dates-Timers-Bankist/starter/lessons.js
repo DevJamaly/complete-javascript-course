@@ -103,3 +103,47 @@ console.log((2.3458).toFixed(2));   // "2.35"  — rounds to 2 decimals → stri
 console.log(+(2.3458).toFixed(2));  // 2.35   — unary + converts the string back to a number */
 
 //=====================THE REMAINDER OPERATOR=========================
+// ── REMAINDER OPERATOR (%) ───────────────────────────────────────────────────
+// % returns what's LEFT OVER after division, not the division result itself
+console.log(5 % 2); // 1 — 5 = (2×2) + 1 leftover
+console.log(5 / 2); // 2.5 — actual division result
+
+console.log(8 % 3); // 2 — 8 = (3×2) + 2 leftover
+console.log(8 / 3); // 2.666...
+
+// ── EVEN / ODD CHECK ─────────────────────────────────────────────────────────
+// Core idea: even numbers always divide by 2 with 0 remainder
+console.log(6 % 2 === 0 ? 'isEven' : 'isOdd'); // isEven — 0 remainder
+console.log(7 % 2 === 0 ? 'isEven' : 'isOdd'); // isOdd  — 1 remainder
+
+const isEven = n => n % 2 === 0;
+console.log(`8 is ${isEven(8) ? 'even' : 'odd'}`); // even
+console.log(`23 is ${isEven(23) ? 'even' : 'odd'}`); // odd
+console.log(`514 is ${isEven(514) ? 'even' : 'odd'}`); // even
+
+// ── REAL WORLD USE CASE: styling every nth row ────────────────────────────────
+// i % 2 === 0 catches every even index (0, 2, 4...) — classic zebra striping
+document.querySelector('body').addEventListener('click', event => {
+  const movementRows = Array.from(document.querySelectorAll('.movements__row'));
+  movementRows.forEach((row, i) => {
+    if (i % 2 === 0) row.style.backgroundColor = '#123456'; // stripe even rows
+  });
+});
+
+// ── REAL WORLD USE CASE: round robin (cycling through an array endlessly) ─────
+// Problem: you have N items but want to loop back to index 0 after the last one
+// Solution: currentIndex % array.length always keeps you within bounds
+
+const servers = ['Server A', 'Server B', 'Server C'];
+let requestCount = 0;
+
+const getNextServer = () => servers[requestCount++ % servers.length];
+//  request 0 → 0 % 3 = 0 → 'Server A'
+//  request 1 → 1 % 3 = 1 → 'Server B'
+//  request 2 → 2 % 3 = 2 → 'Server C'
+//  request 3 → 3 % 3 = 0 → 'Server A' ← wraps back around
+
+console.log(getNextServer()); // Server A
+console.log(getNextServer()); // Server B
+console.log(getNextServer()); // Server C
+console.log(getNextServer()); // Server A — back to start
