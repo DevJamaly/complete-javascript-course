@@ -319,3 +319,14 @@ console.log(
   `Action performed on: ${logDate.getDate()}/${logDate.getMonth() + 1}/${logDate.getFullYear()}`,
 );
 // +1 on getMonth() because it's 0-indexed — easy bug to miss */
+
+//=====================CALCULATING WITH DATES=========================
+const future = new Date(2037, 10, 19, 15, 23); // Nov 19 2037, 15:23
+const now = new Date('Tue Jun 02 2026 12:40:26 GMT+0400 (Gulf Standard Time)');
+console.log(+future);
+
+const calcDaysPassed = (date1, date2) => Math.abs(date2 - date1);
+const days1 = calcDaysPassed(new Date(2026, 5, 2), new Date(2026, 5, 12));
+console.log(days1 / (1000 * 60 * 60 * 24));
+const days2 = calcDaysPassed(new Date(2026, 5, 12), new Date(2026, 5, 2));
+console.log(days2 / (1000 * 60 * 60 * 24));
