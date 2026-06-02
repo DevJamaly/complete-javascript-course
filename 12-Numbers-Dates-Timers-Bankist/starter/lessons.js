@@ -340,7 +340,7 @@ console.log(days2 / (1000 * 60 * 60 * 24)); // 10 — same result, Math.abs hand
 //=====================INTERNATIONALIZATION=========================
 
 // ── Intl.DateTimeFormat ───────────────────────────────────────────────────────
-// Built-in API for locale-aware date formatting — no libraries needed
+/* // Built-in API for locale-aware date formatting — no libraries needed
 const now = new Date();
 
 const options = {
@@ -395,4 +395,72 @@ cities.forEach(({ label, locale, timeZone }) => {
 });
 // Dubai:    1:00 PM
 // London:   10:00 AM
-// New York: 5:00 AM
+// New York: 5:00 AM */
+
+// ── Intl.NumberFormat ─────────────────────────────────────────────────────────
+// Formats numbers according to locale rules — commas, decimals, currency symbols, units
+const num = 3884674.38;
+
+const options = {
+  style: 'currency', // 'decimal' | 'currency' | 'percent' | 'unit'
+  unit: 'celsius', // only applies when style: 'unit' — ignored here since style is 'currency'
+  currency: 'EUR', // required when style: 'currency' — doesn't convert, only formats the symbol
+  useGrouping: true, // thousands separator — true by default (3,884,674 vs 3884674)
+};
+
+// Same number, same currency — only the FORMAT changes per locale
+console.log(num);
+console.log(`US:      ${new Intl.NumberFormat('en-US', options).format(num)}`); // €3,884,674.38
+console.log(`Germany: ${new Intl.NumberFormat('de-DE', options).format(num)}`); // 3.884.674,38 €  — dot/comma swapped, symbol after
+console.log(`Syria:   ${new Intl.NumberFormat('ar-SY', options).format(num)}`); // ٣٬٨٨٤٬٦٧٤٫٣٨ € — arabic numerals
+
+// Auto-detect user's locale from browser
+console.log(
+  `${navigator.locale}: ${new Intl.NumberFormat(navigator.locale, options).format(num)}`,
+);
+
+// ── REAL WORLD EXAMPLE 1: Fintech dashboard (multi-currency display) ──────────
+const portfolio = [
+  { asset: 'AAPL', value: 187450.75, currency: 'USD', locale: 'en-US' },
+  { asset: 'BMW', value: 95230.5, currency: 'EUR', locale: 'de-DE' },
+  { asset: 'ADNOC', value: 500000, currency: 'AED', locale: 'ar-AE' },
+];
+
+portfolio.forEach(({ asset, value, currency, locale }) => {
+  const formatted = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+  }).format(value);
+  console.log(`${asset}: ${formatted}`);
+});
+// AAPL:  $187,450.75
+// BMW:   95.230,50 €
+// ADNOC: ٥٠٠٬٠٠٠٫٠٠ د.إ.‏
+
+// ── REAL WORLD EXAMPLE 2: Weather / fitness app (unit formatting) ─────────────
+const temp = 36.6;
+const speed = 120;
+
+// style: 'unit' handles the unit label AND locale formatting in one shot
+console.log(
+  new Intl.NumberFormat('en-US', { style: 'unit', unit: 'celsius' }).format(
+    temp,
+  ),
+); // 36.6°C
+console.log(
+  new Intl.NumberFormat('en-US', { style: 'unit', unit: 'fahrenheit' }).format(
+    temp,
+  ),
+); // 36.6°F
+console.log(
+  new Intl.NumberFormat('en-US', {
+    style: 'unit',
+    unit: 'kilometer-per-hour',
+  }).format(speed),
+); // 120 km/h
+console.log(
+  new Intl.NumberFormat('en-US', {
+    style: 'unit',
+    unit: 'mile-per-hour',
+  }).format(speed),
+); // 120 mph
