@@ -397,7 +397,7 @@ cities.forEach(({ label, locale, timeZone }) => {
 // London:   10:00 AM
 // New York: 5:00 AM */
 
-// ── Intl.NumberFormat ─────────────────────────────────────────────────────────
+/* // ── Intl.NumberFormat ─────────────────────────────────────────────────────────
 // Formats numbers according to locale rules — commas, decimals, currency symbols, units
 const num = 3884674.38;
 
@@ -463,4 +463,78 @@ console.log(
     style: 'unit',
     unit: 'mile-per-hour',
   }).format(speed),
-); // 120 mph
+); // 120 mph */
+
+//=====================TIMERS=========================
+// ── setTimeout ────────────────────────────────────────────────────────────────
+// Runs a callback ONCE after a delay (ms)
+// IMPORTANT: does NOT pause code — registers the timer and moves on immediately
+// Think of it as: "do this later, but keep going now"
+
+const ingredients = ['olives', 'spinach', 'cheddar'];
+
+// setTimeout(callback, delay, ...args) — anything after delay gets passed to the callback
+const pizzaTimer = setTimeout(
+  (...toppings) => {
+    console.log(`HERE IS YOUR PIZZA 🍕 with ${toppings.join(', ')} `);
+  },
+  3000, // 3 second delay
+  ...ingredients, // spread passes each ingredient as a separate argument to callback
+);
+
+console.log(`Waiting.....`); // runs IMMEDIATELY — doesn't wait for the timer
+
+// clearTimeout() cancels the timer if it hasn't fired yet
+// Once 3s passes and callback runs, clearTimeout does nothing
+if (ingredients.includes('spinach')) {
+  console.log(`Your Pizza had spinach!🤢 Cancelling the order!`);
+  clearTimeout(pizzaTimer); // timer cancelled — callback never runs
+}
+
+// ── setInterval ───────────────────────────────────────────────────────────────
+// Runs a callback REPEATEDLY every n ms until clearInterval() is called
+// Each tick is independent — it doesn't care what happened in the previous one
+
+let i = 0;
+setInterval(() => {
+  // console.log(++i);  // simple counter tick — uncomment to see interval count
+  const formattedClock = new Intl.DateTimeFormat('en-US', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  }).format(new Date()); // new Date() called fresh every tick = always current time
+  console.log(formattedClock); // prints current time every second like a live clock
+}, 1000); // fires every 1000ms (1 second)
+
+// ── REAL WORLD EXAMPLE 1: Auto-logout warning (setTimeout) ───────────────────
+// Banks warn you before ending an idle session
+let logoutTimer;
+
+const resetTimer = () => {
+  clearTimeout(logoutTimer); // cancel previous timer on any user activity
+  logoutTimer = setTimeout(
+    () => {
+      console.log('Session expired due to inactivity. Logging out...');
+      // logout logic here
+    },
+    5 * 60 * 1000,
+  ); // 5 minutes of inactivity
+};
+
+document.addEventListener('mousemove', resetTimer); // reset on any movement
+document.addEventListener('keypress', resetTimer); // reset on any keypress
+
+// ── REAL WORLD EXAMPLE 2: Live data polling (setInterval) ─────────────────────
+// Dashboards refresh data periodically without the user doing anything
+const refreshInterval = setInterval(async () => {
+  const price = await fetch('/api/btc-price').then(r => r.json());
+  console.log(`BTC: $${price}`); // updates every 10s automatically
+}, 10_000);
+
+// Always store the interval ID so you can stop it when the user leaves the page
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) clearInterval(refreshInterval); // stop polling when tab is backgrounded
+});
