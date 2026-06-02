@@ -466,7 +466,7 @@ console.log(
 ); // 120 mph */
 
 //=====================TIMERS=========================
-// ── setTimeout ────────────────────────────────────────────────────────────────
+/* // ── setTimeout ────────────────────────────────────────────────────────────────
 // Runs a callback ONCE after a delay (ms)
 // IMPORTANT: does NOT pause code — registers the timer and moves on immediately
 // Think of it as: "do this later, but keep going now"
@@ -537,4 +537,4 @@ const refreshInterval = setInterval(async () => {
 // Always store the interval ID so you can stop it when the user leaves the page
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) clearInterval(refreshInterval); // stop polling when tab is backgrounded
-});
+}); */

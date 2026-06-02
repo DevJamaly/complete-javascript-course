@@ -182,6 +182,8 @@ const createUsernames = function (accs) {
 createUsernames(accounts);
 
 const updateUI = function (acc) {
+  startLogoutTimer();
+
   // Display movements
   displayMovements(acc);
 
@@ -192,14 +194,36 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 
+let timer = null;
+const startLogoutTimer = function () {
+  const tick = function () {
+    // In each call, print the remaining time in the UI
+    const min = String(Math.floor(time / 60)).padStart(2, '0');
+    const sec = String(Math.floor(time % 60)).padStart(2, '0');
+    labelTimer.textContent = `${min}:${sec}`;
+
+    //On reaching 0 stop the time and logout the user
+    if (time <= 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = 'Login to get started';
+      containerApp.style.opacity = 0;
+    }
+
+    time--;
+  };
+
+  clearInterval(timer);
+  //Set time to 5 minutes
+  let time = 60 * 5;
+  tick();
+
+  //Call timer every second
+  timer = setInterval(tick, 1000);
+};
+
 ///////////////////////////////////////
 // Event handlers
 let currentAccount;
-
-//Fake always logged in
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -236,6 +260,7 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginPin.blur();
 
     // Update UI
+    startLogoutTimer();
     updateUI(currentAccount);
   }
 });
