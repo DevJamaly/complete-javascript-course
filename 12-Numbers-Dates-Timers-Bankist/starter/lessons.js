@@ -242,7 +242,7 @@ const interest = (totalSupply * interestRate) / 10_000n; // exact — no float d
 console.log(interest); // 3150000000n — exactly $31,500,000.00 */
 
 //=====================CREATING DATES=========================
-// Three rules worth remembering:
+/* // Three rules worth remembering:
 
 // Month is always 0-indexed — 10 = November, add +1 when displaying
 // Use ISO strings for storage — consistent, timezone-safe, universally parseable
@@ -318,4 +318,4 @@ const logDate = new Date(auditLog.timestamp);
 console.log(
   `Action performed on: ${logDate.getDate()}/${logDate.getMonth() + 1}/${logDate.getFullYear()}`,
 );
-// +1 on getMonth() because it's 0-indexed — easy bug to miss
+// +1 on getMonth() because it's 0-indexed — easy bug to miss */
