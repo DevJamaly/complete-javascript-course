@@ -103,7 +103,7 @@ console.log((2.3458).toFixed(2));   // "2.35"  — rounds to 2 decimals → stri
 console.log(+(2.3458).toFixed(2));  // 2.35   — unary + converts the string back to a number */
 
 //=====================THE REMAINDER OPERATOR=========================
-// ── REMAINDER OPERATOR (%) ───────────────────────────────────────────────────
+/* // ── REMAINDER OPERATOR (%) ───────────────────────────────────────────────────
 // % returns what's LEFT OVER after division, not the division result itself
 console.log(5 % 2); // 1 — 5 = (2×2) + 1 leftover
 console.log(5 / 2); // 2.5 — actual division result
@@ -146,4 +146,41 @@ const getNextServer = () => servers[requestCount++ % servers.length];
 console.log(getNextServer()); // Server A
 console.log(getNextServer()); // Server B
 console.log(getNextServer()); // Server C
-console.log(getNextServer()); // Server A — back to start
+console.log(getNextServer()); // Server A — back to start */
+
+//=====================NUMERIC SEPERATORS=========================
+// ── NUMERIC SEPARATORS ───────────────────────────────────────────────────────
+// Underscores (_) can be placed anywhere in a number to improve readability
+// They are purely visual — JS ignores them completely at runtime
+
+// Without separator: hard to tell if this is 287 billion or 28 billion
+const diameter = 287_460_000_000; // 287460000000 — much easier to read
+console.log(diameter); // 287460000000 — underscore is stripped, number is normal
+
+const price = 345_99; // could represent 345.99 (cents notation: 34599 cents)
+console.log(price); // 34599
+
+// Same value, different readability intent — JS doesn't care, both equal 1500
+const transferFee1 = 15_00; // read as: 15 dollars, 00 cents
+const transferFee2 = 1_500; // read as: one thousand five hundred
+
+const PI = 3.14_15; // works on decimals too — no effect on the actual value
+console.log(PI); // 3.1415
+
+// ⚠️ SEPARATORS ONLY WORK IN CODE — not in strings or parsed input
+console.log(Number('230000')); // 230000 — works fine
+console.log(Number('230_000')); // NaN    — Number() doesn't understand underscores in strings
+console.log(parseInt('230_000')); // 230  — stops parsing at the underscore
+
+// ── REAL WORLD EXAMPLE 1: Finance / large monetary values ────────────────────
+const nationalDebt = 33_000_000_000_000; // $33 trillion — instantly readable
+const annualBudget = 4_000_000_000; // $4 billion
+const employeeSalary = 120_000; // $120,000
+
+// ── REAL WORLD EXAMPLE 2: Permissions / bitmasks ─────────────────────────────
+// Binary flags are often written in groups for readability
+const READ = 0b100; // bit flags are hard to read without grouping
+const WRITE = 0b010;
+const EXECUTE = 0b001;
+
+const FILE_PERMISSIONS = 0b1111_1111_1111; // 12 bits — grouped in 4s, much clearer
