@@ -81,15 +81,12 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // Functions
 
-const formatMovementDate = function (date) {
+const formatMovementDate = function (date, locale) {
   const calcDaysPassed = (date1, date2) =>
     Math.floor(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
 
   const movDate = new Date(date);
   const now = new Date();
-  const day = `${movDate.getDate()}`.padStart(2, 0);
-  const month = `${movDate.getMonth() + 1}`.padStart(2, '0');
-  const year = movDate.getFullYear();
 
   const daysPassed = calcDaysPassed(now, movDate);
   console.log(daysPassed);
@@ -97,7 +94,7 @@ const formatMovementDate = function (date) {
   if (daysPassed === 0) return 'Today';
   else if (daysPassed === 1) return 'Yesterday';
   else if (daysPassed <= 7) return `${daysPassed} days ago`;
-  else return `${day}/${month}/${year}`;
+  else return new Intl.DateTimeFormat(locale).format(movDate);
 };
 
 const displayMovements = function (acc, sort = false) {
@@ -121,7 +118,7 @@ const displayMovements = function (acc, sort = false) {
     const { movement: mov, date } = obj;
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
-    const displayDate = formatMovementDate(date);
+    const displayDate = formatMovementDate(date, acc.locale);
 
     const html = `
       <div class="movements__row">
@@ -213,12 +210,17 @@ btnLogin.addEventListener('click', function (e) {
 
     //create current date and time
     const now = new Date();
-    const day = `${now.getDate()}`.padStart(2, 0);
-    const month = `${now.getMonth() + 1}`.padStart(2, '0');
-    const year = now.getFullYear();
-    const hour = `${now.getHours()}`.padStart(2, '0');
-    const mins = `${now.getMinutes()}`.padStart(2, '0');
-    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${mins}`;
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    };
+    const locale = currentAccount.locale;
+    const intlDate = new Intl.DateTimeFormat(locale, options).format(now);
+    console.log(intlDate);
+    labelDate.textContent = intlDate;
 
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
