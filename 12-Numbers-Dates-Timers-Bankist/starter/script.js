@@ -84,14 +84,25 @@ const inputClosePin = document.querySelector('.form__input--pin');
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
-  const movs = sort
-    ? acc.movements.slice().sort((a, b) => a - b)
-    : acc.movements;
+  const combinedMovDates = acc.movements.map((mov, i) => ({
+    movement: mov,
+    date: acc.movementsDates[i],
+  }));
+  console.log(combinedMovDates);
 
-  movs.forEach(function (mov, i) {
+  // const movs = sort
+  //   ? acc.movements.slice().sort((a, b) => a - b)
+  //   : acc.movements;
+  if (sort) {
+    combinedMovDates.sort((a, b) => a.movement - b.movement);
+    console.log(combinedMovDates);
+  }
+
+  combinedMovDates.forEach(function (obj, i) {
+    const { movement: mov, date } = obj;
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
-    const now = new Date(acc.movementsDates[i]);
+    const now = new Date(date);
     const day = `${now.getDate()}`.padStart(2, 0);
     const month = `${now.getMonth() + 1}`.padStart(2, '0');
     const year = now.getFullYear();
