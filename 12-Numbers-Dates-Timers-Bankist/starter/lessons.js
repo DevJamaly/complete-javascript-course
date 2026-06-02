@@ -186,7 +186,7 @@ const EXECUTE = 0b001;
 const FILE_PERMISSIONS = 0b1111_1111_1111; // 12 bits — grouped in 4s, much clearer */
 
 //=====================BIG INT=========================
-// ── WHY BigInt EXISTS ─────────────────────────────────────────────────────────
+/* // ── WHY BigInt EXISTS ─────────────────────────────────────────────────────────
 // Regular JS numbers (64-bit float) can only safely represent integers up to 2^53 - 1
 // Beyond that, precision is lost and results become unreliable
 console.log(2 ** 53 - 1); // 9007199254740991 — the ceiling
@@ -239,4 +239,83 @@ const userId = BigInt('9007199254740993'); // safe way: pass as string to avoid 
 const totalSupply = 1_000_000_000_00n; // $1 billion in cents (avoids 0.1+0.2 float issue)
 const interestRate = 315n; // 3.15% stored as integer (315 basis points)
 const interest = (totalSupply * interestRate) / 10_000n; // exact — no float drift
-console.log(interest); // 3150000000n — exactly $31,500,000.00
+console.log(interest); // 3150000000n — exactly $31,500,000.00 */
+
+//=====================CREATING DATES=========================
+// Three rules worth remembering:
+
+// Month is always 0-indexed — 10 = November, add +1 when displaying
+// Use ISO strings for storage — consistent, timezone-safe, universally parseable
+// Use timestamps (.getTime()) for math — subtracting two dates gives you milliseconds, which you can then convert to anything
+
+// ── CREATING DATES ────────────────────────────────────────────────────────────
+// 4 ways to create a date — all use the Date constructor
+
+const now = new Date(); // current date & time at moment of execution
+console.log(now);
+
+// From a date string — JS tries to parse it (can be unreliable with custom formats)
+console.log(new Date('Tue Jun 02 2026 10:51:53')); // reliable — JS-generated string format
+console.log(new Date('December 24, 2015')); // works but avoid — parsing is browser-dependent
+
+// From an ISO string (safest string format — always use this for storing/passing dates)
+console.log(account1.movementsDates[0]); // '2019-11-18T21:31:17.178Z' — raw ISO string
+console.log(new Date(account1.movementsDates[0])); // parsed into a proper Date object
+
+// From explicit values: new Date(year, month, day, hour, min, sec)
+// ⚠️ month is 0-indexed — 0 = January, 10 = November, 11 = December
+console.log(new Date(2037, 10, 19, 15, 23, 5)); // Nov 19 2037, 15:23:05
+console.log(new Date(2037, 10, 33, 15, 23, 5)); // day 33 overflows → Dec 03 (JS auto-corrects)
+
+// From a timestamp (milliseconds since Jan 1, 1970 — "Unix Epoch")
+console.log(new Date(0)); // Jan 01 1970 — the origin point (epoch)
+console.log(new Date(3 * 24 * 60 * 60 * 1000)); // 3 days after epoch (3days × 24h × 60m × 60s × 1000ms)
+console.log(3 * 24 * 60 * 60 * 1000); // 259200000 — this number IS the timestamp
+
+// ── WORKING WITH DATES ────────────────────────────────────────────────────────
+const future = new Date(2037, 10, 19, 15, 23); // Nov 19 2037, 15:23
+console.log(future);
+
+// Getters — extract individual components from a date
+console.log(future.getFullYear()); // 2037 — always use getFullYear(), never getYear() (deprecated)
+console.log(future.getMonth()); // 10   — 0-indexed, so 10 = November ⚠️
+console.log(future.getDate()); // 19   — day of the month
+console.log(future.getDay()); // 4    — day of week (0 = Sunday, 4 = Thursday)
+console.log(future.getHours()); // 15
+console.log(future.getMinutes()); // 23
+console.log(future.getSeconds()); // 0
+
+console.log(future.toISOString()); // '2037-11-19T13:23:00.000Z' — standardized string, best for storing
+console.log(future.getTime()); // timestamp in ms — use for date math (subtraction, comparison)
+
+// Convert timestamp back to a Date object
+console.log(new Date(future.getTime())); // same date — useful for cloning a date
+
+console.log(Date.now()); // current timestamp in ms — lightweight alternative to new Date() when you just need the number
+
+// Setters — mutate the date directly
+future.setFullYear(2040);
+console.log(future); // same date but year changed to 2040 (setMonth, setDate etc. also exist)
+
+// ── REAL WORLD EXAMPLE 1: Days until an event ────────────────────────────────
+// Subtract two timestamps and convert ms → days
+const eventDate = new Date(2026, 11, 25); // Dec 25 2026
+const today = new Date();
+const msPerDay = 24 * 60 * 60 * 1000;
+const daysLeft = Math.ceil((eventDate.getTime() - today.getTime()) / msPerDay);
+console.log(`${daysLeft} days until Christmas`);
+
+// ── REAL WORLD EXAMPLE 2: Logging & auditing ─────────────────────────────────
+// Store ISO strings in DB, convert back to Date only when displaying
+const auditLog = {
+  action: 'User login',
+  userId: 'u_4821',
+  timestamp: new Date().toISOString(), // '2026-06-02T10:51:53.000Z' — stored in DB
+};
+
+// Later, when displaying to user:
+const logDate = new Date(auditLog.timestamp);
+console.log(
+  `Action performed on: ${logDate.getDate()}/${logDate.getMonth() + 1}/${logDate.getFullYear()}`,
+);
+// +1 on getMonth() because it's 0-indexed — easy bug to miss
