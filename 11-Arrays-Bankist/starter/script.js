@@ -161,6 +161,23 @@ movements.forEach((movement, i, arr) => {
   );
 }); */
 
+//==================SETS & MAPS FOR EACH=================
+/* // Maps preserve insertion order and allow any key type
+currencies.forEach(function (value, key, map) {
+  // Map's forEach: callback receives (value, key, map) — note value comes first
+  console.log(`${key}:${value}`);
+});
+
+// Set: like an array but automatically removes duplicates
+const currenciesUnique = new Set(['USD', 'GBP', 'USD', 'EUR', 'EUR']);
+// → Set(3) { 'USD', 'GBP', 'EUR' }  (duplicates dropped)
+console.log(currenciesUnique);
+
+currenciesUnique.forEach((value, _, map) => {
+  // Set's forEach also passes (value, key, set), but key === value in a Set
+  // _ is used to intentionally ignore the key parameter
+  console.log(`${value}:${value}`); */
+
 //==================MAP ARRAYS=================
 /* const EUR_TO_USD = 1.1;
 
