@@ -29,3 +29,22 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+//Smooth scrolling
+
+//Page Navigation
+//1. Add event listener to common parent
+//2. Determine what element orginated the event
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  e.preventDefault();
+  const target = e.target;
+  console.log(`target: ${target}`);
+
+  //Matching strategy
+  if (target.classList.contains('nav__link')) {
+    console.log('link');
+
+    const id = target.getAttribute('href');
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  }
+});

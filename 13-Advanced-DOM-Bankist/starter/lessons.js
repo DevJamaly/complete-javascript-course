@@ -234,3 +234,35 @@ document.querySelector('.nav').addEventListener(
 // Bubbling (bottom → up): .nav__link → .nav__links → .nav
 
 // By default all listeners use bubbling. The .nav listener here opts into capturing with true, so it jumps ahead of the queue and runs first.
+
+//====================EVENT DELEGATION====================
+// ---- NAIVE APPROACH (commented out) ----
+// Attaches a separate listener to EACH .nav__link element
+// Problem: if there are 10 links, you create 10 listeners — wasteful
+// document.querySelectorAll('.nav__link').forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+//     console.log(`Clicked: ${e.target}`);
+//     const id = this.getAttribute('href');
+//     console.log(id);
+//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+//   });
+// });
+
+// ---- EVENT DELEGATION (better approach) ----
+// 1. One listener on the parent (.nav__links) instead of one per child
+// 2. Clicks on children bubble up to the parent, so we catch them all here
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  e.preventDefault();
+  const target = e.target; // the actual element that was clicked
+  console.log(`target: ${target}`);
+
+  // Guard check: bubbling means ANY click inside .nav__links reaches here
+  // (e.g. clicking the gap between links). Only act if a .nav__link was clicked.
+  if (target.classList.contains('nav__link')) {
+    console.log('link');
+
+    const id = target.getAttribute('href'); // e.g. "#section--1"
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  }
+});
