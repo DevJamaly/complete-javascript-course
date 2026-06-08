@@ -305,7 +305,7 @@ console.log(h1.parentElement.children);
 }); */
 
 //====================TABBED COMPONENT====================
-const operation = document.querySelector('.operations');
+/* const operation = document.querySelector('.operations');
 console.log(operation.innerHTML);
 
 const tabs = document.querySelectorAll('.operations__tab');
@@ -343,4 +343,15 @@ tabsContainer.addEventListener('click', function (e) {
       content.classList.add('operations__content--active'); // show matched panel
     else content.classList.remove('operations__content--active'); // hide all others
   });
+}); */
+
+//====================REALTIME STYLING====================
+const nav = document.querySelector('.nav');
+const navLinks = document.querySelectorAll('.nav__link');
+
+nav.addEventListener('mouseover', function (e) {
+  if (!e.target.classList.contains('nav__link')) return;
+  console.log(e.target);
 });
+
+nav.addEventListener('mouseout', function (e) {});
