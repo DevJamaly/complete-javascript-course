@@ -162,7 +162,7 @@ btnScrollTo.addEventListener('click', function (event) {
 }); */
 
 //====================EVENT HANDLERS====================
-// Select the first <h1> element in the DOM
+/* // Select the first <h1> element in the DOM
 const h1 = document.querySelector('h1');
 
 // Define the event handler as a named function (not anonymous)
@@ -186,4 +186,51 @@ setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 5000);
 // Downside: only one handler per event type; assigning again overwrites the previous one
 // h1.onmouseenter = function (e) {
 //   alert('addEventListener: Great! You are reading the heading :D');
-// };
+// }; */
+
+//====================EVENT BUBBLING====================
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+
+const randomColor = () =>
+  `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+console.log(randomColor());
+
+// CAPTURING PHASE: .nav fires first (listener set to true below)
+// BUBBLING PHASE: click travels UP → .nav__link → .nav__links → .nav
+
+document.querySelector('.nav__link').addEventListener('click', function (e) {
+  // e.target = element that was actually clicked (always .nav__link here)
+  // e.currentTarget = element this listener is attached to (same as `this`)
+  console.log(`LINK: ${e.target} | CURRENT: ${e.currentTarget}`);
+  this.style.backgroundColor = randomColor();
+
+  // Stops the event from bubbling up to .nav__links and .nav
+  // Without this, all three listeners would fire on a .nav__link click
+  e.stopPropagation();
+});
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  // e.target can be .nav__link (click originated there and bubbled up)
+  // e.currentTarget is always .nav__links (where this listener lives)
+  console.log(`LINK: ${e.target} | CURRENT: ${e.currentTarget}`);
+  this.style.backgroundColor = randomColor();
+});
+
+document.querySelector('.nav').addEventListener(
+  'click',
+  function (e) {
+    console.log(`LINK: ${e.target} | CURRENT: ${e.currentTarget}`);
+    this.style.backgroundColor = randomColor();
+  },
+  true, // ← 3rd arg `true` = use CAPTURING phase (fires before bubbling listeners)
+  // So .nav fires FIRST even though it's the outermost element
+);
+
+// The mental model:
+
+// Capturing (top → down): .nav → .nav__links → .nav__link
+// Target: the clicked element fires
+// Bubbling (bottom → up): .nav__link → .nav__links → .nav
+
+// By default all listeners use bubbling. The .nav listener here opts into capturing with true, so it jumps ahead of the queue and runs first.
