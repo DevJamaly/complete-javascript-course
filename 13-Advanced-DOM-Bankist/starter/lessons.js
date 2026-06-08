@@ -189,7 +189,7 @@ setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 5000);
 // }; */
 
 //====================EVENT BUBBLING====================
-const randomInt = (min, max) =>
+/* const randomInt = (min, max) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
 const randomColor = () =>
@@ -233,10 +233,10 @@ document.querySelector('.nav').addEventListener(
 // Target: the clicked element fires
 // Bubbling (bottom → up): .nav__link → .nav__links → .nav
 
-// By default all listeners use bubbling. The .nav listener here opts into capturing with true, so it jumps ahead of the queue and runs first.
+// By default all listeners use bubbling. The .nav listener here opts into capturing with true, so it jumps ahead of the queue and runs first. */
 
 //====================EVENT DELEGATION====================
-// ---- NAIVE APPROACH (commented out) ----
+/* // ---- NAIVE APPROACH (commented out) ----
 // Attaches a separate listener to EACH .nav__link element
 // Problem: if there are 10 links, you create 10 listeners — wasteful
 // document.querySelectorAll('.nav__link').forEach(function (el) {
@@ -265,4 +265,41 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
     const id = target.getAttribute('href'); // e.g. "#section--1"
     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
   }
+}); */
+
+//====================DOM TRAVERSAL====================
+const h1 = document.querySelector('h1');
+
+// ---- TRAVERSING DOWN (children) ----
+console.log(h1.querySelectorAll('.highlight')); // finds ALL .highlight descendants, no matter how deeply nested
+console.log(h1.childNodes); // every node: elements, text nodes, comments — rarely useful
+console.log(h1.children); // only direct child ELEMENTS, not text/comment nodes
+
+h1.firstElementChild.style.color = 'cyan'; // first direct child element
+h1.lastElementChild.style.color = 'orangered'; // last direct child element
+
+// ---- TRAVERSING UP (parents) ----
+console.log(h1.parentNode); // immediate parent node (includes non-element nodes)
+console.log(h1.parentElement); // immediate parent element — almost always use this over parentNode
+
+// .closest() = opposite of querySelectorAll
+// walks UP the tree and returns the nearest ancestor matching the selector
+// (also matches the element itself — see below)
+console.log(h1.closest('.header'));
+h1.closest('.header').style.background = 'var(--gradient-secondary)'; // finds ancestor .header
+h1.closest('h1').style.background = 'var(--gradient-primary)'; // matches h1 itself — closest() is self-inclusive
+
+// ---- TRAVERSING SIDEWAYS (siblings) ----
+// JS only gives you direct prev/next — no "get all siblings" built-in
+console.log(h1.previousElementSibling); // sibling element directly before h1
+console.log(h1.nextElementSibling); // sibling element directly after h1
+
+console.log(h1.previousSibling); // previous node (could be a text/whitespace node)
+console.log(h1.nextSibling); // next node (could be a text/whitespace node)
+
+// ---- ALL SIBLINGS workaround ----
+// Go up to parent, grab all its children, filter out h1 itself
+console.log(h1.parentElement.children);
+[...h1.parentElement.children].forEach(function (el) {
+  if (el !== h1) el.style.transform = 'scale(0.5)'; // shrinks every sibling, leaves h1 alone
 });
