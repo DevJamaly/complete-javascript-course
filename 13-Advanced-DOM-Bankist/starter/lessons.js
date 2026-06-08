@@ -268,7 +268,7 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 }); */
 
 //====================DOM TRAVERSAL====================
-const h1 = document.querySelector('h1');
+/* const h1 = document.querySelector('h1');
 
 // ---- TRAVERSING DOWN (children) ----
 console.log(h1.querySelectorAll('.highlight')); // finds ALL .highlight descendants, no matter how deeply nested
@@ -302,4 +302,45 @@ console.log(h1.nextSibling); // next node (could be a text/whitespace node)
 console.log(h1.parentElement.children);
 [...h1.parentElement.children].forEach(function (el) {
   if (el !== h1) el.style.transform = 'scale(0.5)'; // shrinks every sibling, leaves h1 alone
+}); */
+
+//====================TABBED COMPONENT====================
+const operation = document.querySelector('.operations');
+console.log(operation.innerHTML);
+
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+// Event delegation — one listener on the container instead of one per tab
+tabsContainer.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  // Tabs have a <span> inside them — clicking the span makes e.target the span, not the tab
+  // .closest() walks up from wherever the click landed and finds the actual tab button
+  const tabClicked = e.target.closest('.operations__tab');
+
+  // Guard clause 1: click landed in the container but not on any tab (e.g. a gap)
+  if (tabClicked == null) return;
+
+  // Guard clause 2: tab is already active, nothing to do
+  if (tabClicked.classList.contains('operations__tab--active')) return;
+
+  // ---- Activate tab button ----
+  // Remove active class from all sibling tabs, then add it only to the clicked one
+  [...tabClicked.parentElement.children].forEach(tab =>
+    tab.classList.remove('operations__tab--active'),
+  );
+  tabClicked.classList.add('operations__tab--active');
+
+  // ---- Activate matching content panel ----
+  // data-tab="1" on the button links it to .operations__content--1
+  // This is the data attribute pattern: HTML holds the mapping, JS reads it
+  const tabID = tabClicked.getAttribute('data-tab');
+
+  tabsContent.forEach(content => {
+    if (content.classList.contains(`operations__content--${tabID}`))
+      content.classList.add('operations__content--active'); // show matched panel
+    else content.classList.remove('operations__content--active'); // hide all others
+  });
 });
