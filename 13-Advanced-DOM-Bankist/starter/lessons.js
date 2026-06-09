@@ -346,7 +346,7 @@ tabsContainer.addEventListener('click', function (e) {
 }); */
 
 //====================REALTIME STYLING====================
-const nav = document.querySelector('.nav');
+/* const nav = document.querySelector('.nav');
 const navLinks = document.querySelectorAll('.nav__link');
 
 // Defined as a regular function (not arrow) so that `this` can be set by .bind()
@@ -371,4 +371,25 @@ const handleNavHover = function (e, opacity) {
 // ✅ bind returns a NEW function with `this` locked to 0.5
 // When the event fires: handleNavHover(e) runs, and inside, this === 0.5
 nav.addEventListener('mouseover', handleNavHover.bind(0.5));
-nav.addEventListener('mouseout', handleNavHover.bind(1));
+nav.addEventListener('mouseout', handleNavHover.bind(1)); */
+
+//====================STICKY NAVIGATION====================
+const section1 = document.getElementById('section--1');
+const navBar = document.querySelector('.nav');
+
+// getBoundingClientRect() returns the element's position RELATIVE to the viewport
+// .top = distance from the top of the viewport to the top of section1
+// Captured ONCE at page load, when section1 is at its natural position
+const initalCoord = section1.getBoundingClientRect();
+
+window.addEventListener('scroll', function (e) {
+  console.log(window.scrollY); // how many px the page has been scrolled from the very top
+  console.log(initalCoord); // static snapshot — same value every time
+
+  // scrollY > initalCoord.top means: user has scrolled PAST where section1 starts
+  // → make nav sticky
+  // scrollY ≤ initalCoord.top means: user is still ABOVE section1
+  // → remove sticky
+  if (window.scrollY > initalCoord.top) navBar.classList.add('sticky');
+  else navBar.classList.remove('sticky');
+});
