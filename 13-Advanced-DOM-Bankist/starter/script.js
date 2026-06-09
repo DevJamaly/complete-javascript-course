@@ -82,3 +82,24 @@ tabsContainer.addEventListener('click', function (e) {
     else content.classList.remove('operations__content--active');
   });
 });
+
+//Nav hover handling
+const nav = document.querySelector('.nav');
+const navLinks = document.querySelectorAll('.nav__link');
+
+const handleNavHover = function (e, opacity) {
+  console.log(this);
+  opacity = this;
+  if (!e.target.classList.contains('nav__link')) return;
+  const link = e.target;
+  console.log(link);
+  const siblings = nav.querySelectorAll('.nav__link');
+  const logo = nav.querySelector('.nav__logo');
+  [...siblings, logo].forEach(el => {
+    if (el !== link) el.style.opacity = opacity;
+  });
+};
+
+// Passing 'argument' into handler
+nav.addEventListener('mouseover', handleNavHover.bind(0.5));
+nav.addEventListener('mouseout', handleNavHover.bind(1));

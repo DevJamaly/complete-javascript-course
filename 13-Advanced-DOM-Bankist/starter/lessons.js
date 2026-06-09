@@ -349,9 +349,26 @@ tabsContainer.addEventListener('click', function (e) {
 const nav = document.querySelector('.nav');
 const navLinks = document.querySelectorAll('.nav__link');
 
-nav.addEventListener('mouseover', function (e) {
-  if (!e.target.classList.contains('nav__link')) return;
-  console.log(e.target);
-});
+// Defined as a regular function (not arrow) so that `this` can be set by .bind()
+const handleNavHover = function (e, opacity) {
+  // `this` is not the element here — it's whatever was passed into .bind()
+  // i.e. 0.5 on mouseover, 1 on mouseout
+  console.log(this);
+  opacity = this; // grab the bound value — the `opacity` parameter above is never actually used
 
-nav.addEventListener('mouseout', function (e) {});
+  if (!e.target.classList.contains('nav__link')) return; // guard: ignore clicks on non-links
+
+  const link = e.target; // the specific nav link being hovered
+  const siblings = nav.querySelectorAll('.nav__link');
+  const logo = nav.querySelector('.nav__logo');
+
+  // Fade everything except the hovered link
+  [...siblings, logo].forEach(el => {
+    if (el !== link) el.style.opacity = opacity;
+  });
+};
+
+// ✅ bind returns a NEW function with `this` locked to 0.5
+// When the event fires: handleNavHover(e) runs, and inside, this === 0.5
+nav.addEventListener('mouseover', handleNavHover.bind(0.5));
+nav.addEventListener('mouseout', handleNavHover.bind(1));
