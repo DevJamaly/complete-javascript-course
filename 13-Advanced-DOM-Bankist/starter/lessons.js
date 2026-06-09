@@ -374,7 +374,7 @@ nav.addEventListener('mouseover', handleNavHover.bind(0.5));
 nav.addEventListener('mouseout', handleNavHover.bind(1)); */
 
 //====================STICKY NAVIGATION====================
-const section1 = document.getElementById('section--1');
+/* const section1 = document.getElementById('section--1');
 const navBar = document.querySelector('.nav');
 
 // getBoundingClientRect() returns the element's position RELATIVE to the viewport
@@ -392,4 +392,88 @@ window.addEventListener('scroll', function (e) {
   // → remove sticky
   if (window.scrollY > initalCoord.top) navBar.classList.add('sticky');
   else navBar.classList.remove('sticky');
-});
+}); */
+
+//====================INTERSECTION OBSERVER API====================
+const section1 = document.getElementById('section--1');
+
+// Callback fires when section1 crosses a threshold — NOT on every scroll event
+// `entries` = array of IntersectionObserverEntry objects (one per observed element)
+// `observer` = the observer instance itself (useful if you want to unobserve inside the callback)
+const obsCallback = function (entries, observer) {
+  entries.forEach(entry => {
+    console.log(entry);
+    // Each `entry` contains:
+    // entry.isIntersecting → true/false: is the element currently visible?
+    // entry.intersectionRatio → how much of the element is visible (0.0 to 1.0)
+    // entry.target → the actual DOM element being observed
+    // entry.boundingClientRect → element's size and position
+    // entry.rootBounds → size of the root (viewport in this case)
+  });
+};
+
+const obsOptions = {
+  root: null, // null = use the viewport as the container to observe against
+  // could be any scrollable element e.g. document.querySelector('.modal')
+  threshold: [0, 0.2], // callback fires at TWO points:
+  // 0   → when even 1px of section1 enters/leaves the viewport
+  // 0.2 → when 20% of section1 is visible/hidden
+  // threshold: 1 would mean 100% of element must be visible
+};
+
+const observer = new IntersectionObserver(obsCallback, obsOptions);
+observer.observe(section1); // start watching section1
+// observer.unobserve(section1) → stop watching a specific element
+// observer.disconnect()       → stop the observer entirely
+
+// Real world example 1 — lazy loading images as they scroll into view:
+// const lazyImages = document.querySelectorAll('img[data-src]');
+// // Images start with a blurred placeholder in `src`, real URL stored in `data-src`
+
+// const loadImage = function (entries, observer) {
+//   const [entry] = entries;
+//   if (!entry.isIntersecting) return;
+
+//   // Swap placeholder with real image once it's near the viewport
+//   entry.target.src = entry.target.dataset.src;
+
+//   // Remove blur filter only AFTER the real image has finished loading
+//   entry.target.addEventListener('load', () =>
+//     entry.target.classList.remove('lazy-img'),
+//   );
+
+//   observer.unobserve(entry.target); // job done, stop watching this image
+// };
+
+// const imageObserver = new IntersectionObserver(loadImage, {
+//   root: null,
+//   threshold: 0,
+//   rootMargin: '200px', // start loading 200px BEFORE the image enters viewport
+//   // so user never sees the placeholder
+// });
+
+// lazyImages.forEach(img => imageObserver.observe(img));
+
+// Real world example 2 — Reveal sections on scroll (fade + slide up animation):
+// const sections = document.querySelectorAll('.section');
+
+// const revealSection = function (entries, observer) {
+//   const [entry] = entries;
+//   if (!entry.isIntersecting) return;
+
+//   // Remove the hidden class once section enters viewport → CSS handles the animation
+//   entry.target.classList.remove('section--hidden');
+
+//   observer.unobserve(entry.target); // only animate once, no need to keep watching
+// };
+
+// const sectionObserver = new IntersectionObserver(revealSection, {
+//   root: null,
+//   threshold: 0.15, // wait until 15% of the section is visible before revealing
+//   // prevents animation triggering too early
+// });
+
+// sections.forEach(section => {
+//   sectionObserver.observe(section);
+//   section.classList.add('section--hidden'); // hide all sections upfront
+// });
