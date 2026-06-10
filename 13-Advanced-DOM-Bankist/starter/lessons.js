@@ -504,3 +504,30 @@ sections.forEach(section => {
   section.classList.add('section--hidden');
   sectionObserver.observe(section);
 });
+
+//----------------------------------------
+// Lazy loading images
+const imageTargets = document.querySelectorAll('img[data-src]'); // attribute selector — only grabs imgs marked for lazy loading
+console.log(imageTargets);
+
+const loadImg = function (entries, observer) {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting || !entry.target) return;
+
+    entry.target.src = entry.target.dataset.src; // swap placeholder src → real src, triggering the browser fetch
+
+    // src swap is non-blocking — image downloads async, so wait for 'load' before removing blur
+    entry.target.addEventListener('load', e => {
+      entry.target.classList.remove('lazy-img'); // remove blur/filter only once image is fully downloaded
+    });
+
+    observer.unobserve(entry.target); // one-shot, same as before
+  });
+};
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0, // lower threshold than sections — start loading before fully in view
+});
+
+imageTargets.forEach(img => imgObserver.observe(img));
