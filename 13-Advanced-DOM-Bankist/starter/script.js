@@ -122,3 +122,23 @@ const headerObserver = new IntersectionObserver(
   headerObserverOptions,
 );
 headerObserver.observe(header);
+
+// Reveal animation for section scrolling
+const sections = document.querySelectorAll('section');
+const revealSection = function (entries, observer) {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    console.log(entry);
+    entry.target?.classList.remove('section--hidden');
+    observer.unobserve(entry.target);
+  });
+};
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.2,
+});
+
+sections.forEach(section => {
+  section.classList.add('section--hidden');
+  sectionObserver.observe(section);
+});
