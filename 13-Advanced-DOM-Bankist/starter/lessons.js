@@ -395,7 +395,7 @@ window.addEventListener('scroll', function (e) {
 }); */
 
 //====================INTERSECTION OBSERVER API====================
-const section1 = document.getElementById('section--1');
+/* const section1 = document.getElementById('section--1');
 
 // Callback fires when section1 crosses a threshold — NOT on every scroll event
 // `entries` = array of IntersectionObserverEntry objects (one per observed element)
@@ -476,4 +476,6 @@ observer.observe(section1); // start watching section1
 // sections.forEach(section => {
 //   sectionObserver.observe(section);
 //   section.classList.add('section--hidden'); // hide all sections upfront
-// });
+// }); */
+
+//
