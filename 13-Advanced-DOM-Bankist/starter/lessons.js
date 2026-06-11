@@ -534,7 +534,7 @@ imageTargets.forEach(img => imgObserver.observe(img));
  */
 
 //====================SLIDER COMPONENT====================
-// Cache all DOM elements upfront — avoids repeated querying
+/* // Cache all DOM elements upfront — avoids repeated querying
 const allSlides = document.querySelectorAll('.slide');
 const slider = document.querySelector('.slider');
 const btnLeft = document.querySelector('.slider__btn--left');
@@ -607,4 +607,47 @@ dotContainer.addEventListener('click', e => {
   if (!target.classList.contains('dots__dot')) return; // clicked the container gap, not a dot — bail
   currentSlide = Number(target.dataset.slide); // read slide index from the dot's data attribute
   goToSlide(currentSlide);
+}); */
+
+//====================DOM LIFECYCLE====================
+/* // Fires as soon as the HTML is fully parsed and the DOM tree is built.
+// Does NOT wait for images, stylesheets, or external resources to load.
+// Use this when your JS needs to access/manipulate DOM elements —
+// ensures elements exist before your code tries to find them.
+//
+// Real-world example: A form validation script that attaches listeners
+// to inputs. If you run it before DOMContentLoaded, querySelector returns
+// null because the inputs don't exist in the DOM yet.
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log(`HTML Parsed and DOM tree built`, e);
 });
+
+// Fires when EVERYTHING on the page has fully loaded —
+// HTML, CSS, images, fonts, iframes, scripts, all external resources.
+// Slower to fire than DOMContentLoaded. Use only when you actually
+// need those resources to be ready.
+//
+// Real-world example: A photo gallery that calculates image dimensions
+// to build a masonry layout. You need actual image sizes, which are
+// only available after images have loaded — DOMContentLoaded is too early.
+window.addEventListener('load', function (e) {
+  console.log(`Page fully loaded`, e);
+});
+
+// Fires just before the user leaves the page —
+// tab close, refresh, navigation away, browser close.
+// e.preventDefault() + e.returnValue = '' triggers the browser's
+// built-in "Are you sure you want to leave?" dialog.
+// Note: You cannot customize the dialog message — browsers hardcode it
+// for security (to prevent scam popups).
+// Best practice: Only attach this listener when there's actually
+// unsaved work, not on every page load.
+//
+// Real-world example: A user is halfway through filling a long form
+// (job application, checkout) and accidentally hits refresh.
+// The prompt gives them a chance to cancel and save their progress.
+window.addEventListener('beforeunload', function (e) {
+  e.preventDefault();
+  console.log(`User is leaving the page`, e);
+  e.returnValue = ''; // required for the dialog to show — legacy browsers need this explicitly set
+}); */
