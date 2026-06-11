@@ -45,7 +45,7 @@ console.log(jack instanceof Person); // true
 console.log(taha instanceof Person); // false
  */
 //===================PROTOTYPES====================
-const Person = function (firstName, birthYear) {
+/* const Person = function (firstName, birthYear) {
   this.firstName = firstName;
   this.birthYear = birthYear;
 };
@@ -95,4 +95,66 @@ console.log(jonas.hasOwnProperty('firstName'));
 
 // false — species lives on Person.prototype, not on jonas.
 // Jonas can ACCESS it by walking the chain, but he doesn't OWN it.
-console.log(jonas.hasOwnProperty('species'));
+console.log(jonas.hasOwnProperty('species')); */
+
+//===================PROTOTYPE INHERITANCE====================
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  return 2037 - this.birthYear;
+};
+
+Person.prototype.printInfo = function () {
+  console.log(`Hi i am ${this.firstName} and i am ${this.calcAge()} years old`);
+};
+
+const jonas = new Person('Jonas', 1991);
+const matilda = new Person('Matilda', 2017);
+Person.prototype.species = 'Homo Sapiens';
+console.log(jonas.species, matilda.species);
+
+// Climbing the chain manually: Person.prototype → Object.prototype → null
+console.log(jonas.__proto__); // Person.prototype — methods like calcAge live here
+console.log(jonas.__proto__.__proto__); // Object.prototype — top of chain, hasOwnProperty etc. live here
+console.log(jonas.__proto__.__proto__.__proto__); // null — chain ends here
+
+// .constructor points back to the function that created this prototype
+//console.dir lists properties of a JS object
+console.dir(Person.prototype.constructor); // logs Person() itself — circular reference back to the constructor
+
+const arr = [3, 4, 3, 6, 6, 8, 9, 12, 3, 8];
+// Arrays also follow the prototype chain — arr → Array.prototype → Object.prototype → null
+console.log(arr.__proto__); // Array.prototype — where map, filter, reduce etc. live
+console.log(arr.__proto__ === Array.prototype); // true — confirms the link
+console.log(arr.__proto__.__proto__); // Object.prototype — arrays are objects too
+console.log(arr.__proto__.__proto__.__proto__); // null
+
+//DO NOT DO THIS !
+// Extending built-in prototypes pollutes ALL arrays globally — breaks third-party code and future JS updates
+Array.prototype.unique = function () {
+  return [...new Set(this)];
+};
+console.log(arr.unique());
+
+// DOM elements have a deep chain — each level adds more specific behaviour
+const h1 = document.querySelector('h1');
+console.dir(h1); //h1
+console.dir(h1.__proto__); //HTMLHeadingElement
+console.dir(h1.__proto__.__proto__); //HTMLElement
+console.dir(h1.__proto__.__proto__.__proto__); //Element
+console.dir(h1.__proto__.__proto__.__proto__.__proto__); //Node
+console.dir(h1.__proto__.__proto__.__proto__.__proto__.__proto__); //EventTarget — addEventListener lives here
+console.dir(h1.__proto__.__proto__.__proto__.__proto__.__proto__.__proto__); //Object
+console.dir(
+  h1.__proto__.__proto__.__proto__.__proto__.__proto__.__proto__.__proto__,
+); //null
+
+// Functions are objects too — they have their own prototype chain
+const incrementor = x => x + 1;
+console.dir(incrementor); //incrementor()
+console.dir(incrementor.__proto__); //anonymous — Function.prototype (call, bind, apply live here)
+console.dir(incrementor.__proto__.__proto__); //Object — functions are objects at the end of the day
+console.dir(incrementor.__proto__.__proto__.__proto__); //null
