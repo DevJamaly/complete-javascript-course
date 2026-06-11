@@ -395,7 +395,7 @@ window.addEventListener('scroll', function (e) {
 }); */
 
 //====================INTERSECTION OBSERVER API====================
-// const section1 = document.getElementById('section--1');
+/* // const section1 = document.getElementById('section--1');
 
 // // Callback fires when section1 crosses a threshold — NOT on every scroll event
 // // `entries` = array of IntersectionObserverEntry objects (one per observed element)
@@ -531,3 +531,80 @@ const imgObserver = new IntersectionObserver(loadImg, {
 });
 
 imageTargets.forEach(img => imgObserver.observe(img));
+ */
+
+//====================SLIDER COMPONENT====================
+// Cache all DOM elements upfront — avoids repeated querying
+const allSlides = document.querySelectorAll('.slide');
+const slider = document.querySelector('.slider');
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+const dotContainer = document.querySelector('.dots');
+
+let dots = []; // will hold dot buttons after createDots() runs
+let currentSlide = 0; // tracks which slide is active (0-indexed)
+
+// slider.style.transform = 'scale(0.4) translateX(-2500px)';
+// slider.style.overflow = 'visible';
+
+// Dynamically creates one dot button per slide and injects into DOM
+const createDots = function () {
+  allSlides.forEach((_, i) => {
+    // _ = slide element (unused), i = index
+    dotContainer.insertAdjacentHTML(
+      'beforeend', // inserts as last child inside dotContainer
+      `<button class='dots__dot' data-slide='${i}'> </button>`, // data-slide links dot to its slide index
+    );
+  });
+  dots = dotContainer.querySelectorAll('.dots__dot'); // re-query after injection so dots is populated
+};
+
+// Marks the dot matching `index` as active, removes active from all others
+const highlightDot = function (index) {
+  dots.forEach(dot => {
+    if (Number(dot.dataset.slide) === index)
+      // dataset values are strings — cast to Number to compare
+      dot.classList.add('dots__dot--active');
+    else dot.classList.remove('dots__dot--active');
+  });
+};
+
+// Moves all slides by shifting their translateX — current slide lands at 0%, others offset by ±100%
+// e.g. slide 0 at index 2 active: translateX(-200%), 100% steps between slides
+const goToSlide = index => {
+  allSlides.forEach((slide, i) => {
+    slide.style.transform = `translateX(${(i - index) * 100}%)`;
+  });
+  highlightDot(index); // keep dots in sync on every slide change
+};
+
+// Advances slide by direction (+1 = right, -1 = left), wraps around using modulo
+const changeSlide = dir => {
+  currentSlide = (currentSlide + dir + allSlides.length) % allSlides.length;
+  // + allSlides.length prevents negative modulo when going left from slide 0
+  goToSlide(currentSlide);
+};
+
+btnLeft.addEventListener('click', () => changeSlide(-1));
+btnRight.addEventListener('click', () => changeSlide(1));
+
+// Keyboard navigation — short-circuit &&: if key matches, calls changeSlide as side effect
+document.addEventListener('keydown', e => {
+  (e.key.toLowerCase() === 'arrowright' && changeSlide(1)) ||
+    (e.key.toLocaleLowerCase() === 'arrowleft' && changeSlide(-1));
+  // if (e.key.toLowerCase() === 'arrowleft') changeSlide(-1);
+  // if (e.key.toLowerCase() === 'arrowright') changeSlide(1);
+});
+
+// Init — build dots first, then set initial slide positions
+createDots();
+goToSlide(0);
+
+// Event delegation — one listener on container instead of one per dot
+// Checks if the clicked element is actually a dot before acting (guard clause)
+dotContainer.addEventListener('click', e => {
+  const target = e.target;
+  if (!target.classList.contains('dots__dot')) return; // clicked the container gap, not a dot — bail
+  currentSlide = Number(target.dataset.slide); // read slide index from the dot's data attribute
+  goToSlide(currentSlide);
+});
