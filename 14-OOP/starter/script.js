@@ -98,7 +98,7 @@ console.log(jonas.hasOwnProperty('firstName'));
 console.log(jonas.hasOwnProperty('species')); */
 
 //===================PROTOTYPE INHERITANCE====================
-const Person = function (firstName, birthYear) {
+/* const Person = function (firstName, birthYear) {
   this.firstName = firstName;
   this.birthYear = birthYear;
 };
@@ -158,3 +158,6 @@ console.dir(incrementor); //incrementor()
 console.dir(incrementor.__proto__); //anonymous — Function.prototype (call, bind, apply live here)
 console.dir(incrementor.__proto__.__proto__); //Object — functions are objects at the end of the day
 console.dir(incrementor.__proto__.__proto__.__proto__); //null
+ */
+
+//===================PROTOTYPE INHERITANCE====================
