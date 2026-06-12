@@ -280,7 +280,7 @@ const walter = new Person('Walter White', 1965);
 console.log(walter); */
 
 // ===================STATIC METHODS====================
-// Array.from is a STATIC method — it lives on Array itself, not on array instances
+/* // Array.from is a STATIC method — it lives on Array itself, not on array instances
 // that's why arr.from() below fails: instances don't inherit static methods
 console.log(Array.from(document.querySelectorAll('h1'))); // converts NodeList → real array
 
@@ -329,4 +329,40 @@ Person.hey(); // ✅ works — called on the constructor directly
 
 const jonas = new Person('Jonas', 1994);
 console.log(jonas);
-jonas.hey(); // ❌ TypeError — hey() is on Person, not Person.prototype, so instances can't reach it
+jonas.hey(); // ❌ TypeError — hey() is on Person, not Person.prototype, so instances can't reach it */
+
+// ===================OBJECT CREATE====================
+const PersonProto = {
+  species: 'Homo Sapiens',
+
+  calcAge() {
+    return 2037 - this.birthYear;
+  },
+
+  // init is NOT a constructor — it's just a regular method that sets data on `this`
+  // `this` will be whatever object calls it (steven, sarah, etc.)
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+// Object.create creates a brand-new EMPTY object and sets its prototype to PersonProto
+// no `new`, no constructor — just: "make an empty object whose __proto__ points here"
+const steven = Object.create(PersonProto);
+
+// since Object.create gives us a blank object, we set data manually
+steven.firstName = 'Steven';
+steven.birthYear = 1993;
+
+console.log(steven); // { firstName: 'Steven', birthYear: 1993 }
+console.log(steven.calcAge()); // calcAge not on steven → JS walks up to PersonProto → found
+console.log(steven.__proto__); // PersonProto itself — confirms the link
+
+const sarah = Object.create(PersonProto);
+// init() does exactly what we did manually above for steven
+// sarah.init(...) means `this` inside init = sarah, so it writes onto sarah
+sarah.init('Sarah', 1979);
+
+console.log(sarah);
+console.log(sarah.calcAge());
