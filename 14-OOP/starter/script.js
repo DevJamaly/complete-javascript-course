@@ -332,7 +332,7 @@ console.log(jonas);
 jonas.hey(); // ❌ TypeError — hey() is on Person, not Person.prototype, so instances can't reach it */
 
 // ===================OBJECT CREATE====================
-const PersonProto = {
+/* const PersonProto = {
   species: 'Homo Sapiens',
 
   calcAge() {
@@ -365,4 +365,71 @@ const sarah = Object.create(PersonProto);
 sarah.init('Sarah', 1979);
 
 console.log(sarah);
-console.log(sarah.calcAge());
+console.log(sarah.calcAge()); */
+
+// ===================Class Inheritance====================
+// Constructor function — works like a C# class. 'this' refers to the new object being created.
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+// Methods live on the prototype, not the object itself.
+// This means ALL Person instances share one copy of calcAge in memory instead of each having their own.
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  // Like calling base() in C# — runs Person's constructor but using Student's 'this'.
+  // Without this, mike would have 'course' but no 'firstName' or 'birthYear'.
+  Person.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+// Manually wire Student into Person's prototype chain — this is what 'extends' does in ES6 classes.
+// Side effect: the new Student.prototype has no own 'constructor' property (covered below).
+Student.prototype = Object.create(Person.prototype);
+
+// Must be AFTER Object.create — anything added before would be on the old Student.prototype, which just got replaced.
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.firstName} and I study ${this.course}`);
+};
+
+// 'new' creates a blank object, sets its __proto__ to Student.prototype, runs the constructor, then returns the object.
+const mike = new Student('Mike', 2020, 'Computer Science');
+console.log(mike);
+mike.introduce();
+mike.calcAge(); // 'calcAge' isn't on mike or Student.prototype — JS walks up the chain and finds it on Person.prototype.
+
+// Walking the prototype chain manually — each step is one level "up" toward Object.
+console.log(mike.__proto__); // Student.prototype → has 'introduce'. DevTools labels it "Person" because constructor is broken (see below).
+console.log(mike.__proto__.__proto__); // Person.prototype → has 'calcAge'
+console.log(mike.__proto__.__proto__.__proto__); // Object.prototype → all built-in methods (__defineGetter__, hasOwnProperty, etc.)
+console.log(mike.__proto__.__proto__.__proto__.__proto__); // null → end of the chain
+
+// BUG: Object.create replaced Student.prototype with a blank object that has no own 'constructor'.
+// JS walks up the chain and finds Person.prototype.constructor = Person — incorrect.
+console.dir(Student.prototype.constructor);
+
+// instanceof checks the [[Prototype]] chain, NOT the constructor property — so it's unaffected by the bug above.
+console.log(mike instanceof Student); // true — Student.prototype exists in mike's chain
+console.log(mike instanceof Person); // true — Person.prototype exists in mike's chain
+console.log(mike instanceof Object); // true — Object.prototype exists in mike's chain
+
+// FIX: manually restore the constructor reference so Student.prototype correctly points back to Student.
+Student.prototype.constructor = Student;
+
+console.dir(Student.prototype.constructor); // now correctly shows Student
+
+// instanceof results are unchanged — the chain itself was never broken, only the label was.
+console.log(mike instanceof Student);
+console.log(mike instanceof Person);
+console.log(mike instanceof Object);
+
+// Same chain as before — fixing constructor only added a label, it didn't change the actual prototype links.
+// DevTools still shows "Person {introduce: f}" because it labels by __proto__.constructor (one level up), not own constructor.
+console.log(mike.__proto__);
+console.log(mike.__proto__.__proto__);
+console.log(mike.__proto__.__proto__.__proto__);
+console.log(mike.__proto__.__proto__.__proto__.__proto__);
