@@ -210,4 +210,123 @@ jessica.printInfo();
 // 2. First-class citizens — can be passed into and returned from functions
 // 3. Always run in strict mode — no accidental globals or silent errors */
 
-// =================== ES6 Classes ====================
+// ===================SETTER & GETTERS====================
+/* const account = {
+  owner: 'francis',
+  transactions: [200, 580, -160, 450, 770],
+
+  // GETTER — accessed like a property (account.latest), but runs a function under the hood
+  // use case: compute/derive a value on the fly without storing it separately
+  get latest() {
+    return this.transactions.slice(-1).pop();
+  },
+
+  // SETTER — triggered by assignment syntax (account.latest = 50)
+  // use case: intercept a write and do something with the value (here, push it)
+  set latest(trn) {
+    this.transactions.push(trn);
+  },
+};
+
+console.log(account.latest);
+account.latest = 50;
+console.log(account.transactions);
+
+class Person {
+  constructor(fullName, birthYear) {
+    // this.firstName = firstName;
+    this.fullName = fullName; // hits the setter below immediately
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  printInfo() {
+    console.log(`Hi I am ${this.firstName} and i am a ${this.species}`);
+  }
+
+  // GETTER — lets you use jessica.age instead of jessica.age()
+  // reads like a stored value, but recalculates every time it's accessed
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  // SETTER — intercepts this.fullName = '...' (including the constructor assignment above)
+  // use case: validate input before storing it
+  // writes to this._fullName instead of this.fullName to avoid calling itself recursively
+  set fullName(name) {
+    console.log(name);
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name`);
+  }
+
+  // GETTER — paired with the setter above so the outside world still reads it as .fullName
+  // without this, jessica.fullName would be undefined (only _fullName exists on the object)
+  get fullName() {
+    return this._fullName;
+  }
+}
+
+Person.prototype.species = 'Homo Sapiens';
+
+const jessica = new Person('Jessica Davis', 1996);
+console.log(jessica);
+console.log(jessica.fullName);
+console.log(jessica.age);
+
+const walter = new Person('Walter White', 1965);
+console.log(walter); */
+
+// ===================STATIC METHODS====================
+// Array.from is a STATIC method — it lives on Array itself, not on array instances
+// that's why arr.from() below fails: instances don't inherit static methods
+console.log(Array.from(document.querySelectorAll('h1'))); // converts NodeList → real array
+
+const arr = [];
+// console.log(arr.from([1, 2, 3, 4, 5, 6])); // ❌ TypeError: arr.from is not a function
+
+class PersonClass {
+  constructor(fullName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  printInfo() {
+    console.log(`Hi I am ${this.firstName} and i am a ${this.species}`);
+  }
+
+  // static: belongs to PersonClass itself, NOT on PersonClass.prototype
+  // instances can never access this — same principle as Array.from
+  static hey() {
+    console.log(`Hey there from person class!`);
+  }
+}
+
+PersonClass.hey(); // ✅ works — called on the class itself
+// new PersonClass('x', 1990).hey() // ❌ would throw — instances don't get static methods
+
+// ─────────────────────────────────────────────
+
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+// Manually doing what `static` does inside a class — attaching directly to the constructor
+// `this` inside hey() refers to Person (the function object it's called on), not an instance
+Person.hey = function () {
+  console.log(`Hey there from person constructor ! `);
+  console.log(this); // logs the Person constructor function itself
+};
+
+Person.hey(); // ✅ works — called on the constructor directly
+
+const jonas = new Person('Jonas', 1994);
+console.log(jonas);
+jonas.hey(); // ❌ TypeError — hey() is on Person, not Person.prototype, so instances can't reach it
