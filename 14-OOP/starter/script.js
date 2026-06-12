@@ -44,6 +44,7 @@ console.log(jack instanceof Person); // true
 // taha is a primitive string, not linked to Person.prototype
 console.log(taha instanceof Person); // false
  */
+
 //===================PROTOTYPES====================
 /* const Person = function (firstName, birthYear) {
   this.firstName = firstName;
@@ -160,4 +161,53 @@ console.dir(incrementor.__proto__.__proto__); //Object — functions are objects
 console.dir(incrementor.__proto__.__proto__.__proto__); //null
  */
 
-//===================PROTOTYPE INHERITANCE====================
+// =================== ES6 Classes ====================
+/* // Syntactic sugar over prototypal inheritance — classes don't introduce a new OOP model
+// Under the hood it's still prototypes, just cleaner syntax
+
+// class expression (same as a function expression — assigned to a variable)
+const PersonEx = class {};
+
+// class declaration (same as a function declaration)
+class Person {
+  species = 'Homo Sapiens'; // public field — set directly on each instance, NOT on prototype
+
+  constructor(firstName, birthYear) {
+    // runs automatically when `new Person()` is called
+    // `this` refers to the newly created instance
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  // Methods defined here are added to Person.prototype — shared across all instances
+  // NOT copied to each instance, saving memory
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  printInfo() {
+    console.log(`Hi I am ${this.firstName} and i am a ${this.species}`);
+  }
+}
+
+const jessica = new Person('Jessica', 1996);
+console.log(jessica);
+jessica.calcAge();
+
+// confirms that jessica's prototype IS Person.prototype
+// this is how jessica can access calcAge(), greet() etc.
+console.log(jessica.__proto__ === Person.prototype); // true
+
+// you can still manually add methods to the prototype outside the class — works the same way
+Person.prototype.greet = function () {
+  console.log(`Hey ${this.firstName}`);
+};
+jessica.greet();
+jessica.printInfo();
+
+// Key things to know about classes:
+// 1. Not hoisted — unlike function declarations, you can't use a class before it's defined
+// 2. First-class citizens — can be passed into and returned from functions
+// 3. Always run in strict mode — no accidental globals or silent errors */
+
+// =================== ES6 Classes ====================
