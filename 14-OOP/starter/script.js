@@ -526,7 +526,7 @@ jay.introduce();
 jay.calcAge(); */
 
 // ===================Class Encapulation====================
-// ─── 4 TYPES OF CLASS MEMBERS ────────────────────────────────────────────────
+/* // ─── 4 TYPES OF CLASS MEMBERS ────────────────────────────────────────────────
 // 1. Public Fields    – accessible anywhere
 // 2. Private Fields   – # prefix, only accessible inside the class
 // 3. Public Methods   – the public API the outside world uses
@@ -610,4 +610,137 @@ acc1.requestLoan(1000); // ✅ goes through public method → internally calls #
 // acc1.#approveLoan(1000);// ❌ SyntaxError — private method, inaccessible from outside
 
 console.log(acc1.pin); // undefined — "pin" is not a public property; #pin is private
-// console.log(acc1.#movements); // ❌ SyntaxError — private field
+// console.log(acc1.#movements); // ❌ SyntaxError — private field */
+
+// ===================REAL WORLD EXAMPLE OF CLASSES====================
+// ─────────────────────────────────────────────────────────────────────────────
+// SCENARIO: A streaming platform (think Netflix/Spotify)
+// Demonstrates: public + private fields, encapsulation,
+//               static members, inheritance
+// ─────────────────────────────────────────────────────────────────────────────
+
+class StreamingAccount {
+  // ── PUBLIC FIELDS ──────────────────────────────────────────────────────────
+  platform = 'StreamFlix';
+
+  // ── PRIVATE FIELDS ─────────────────────────────────────────────────────────
+  #password;
+  #watchHistory = [];
+  #isLoggedIn = false;
+
+  // ── STATIC PRIVATE FIELD ───────────────────────────────────────────────────
+  // Belongs to the CLASS — shared across all instances, not per-object
+  static #totalUsers = 0;
+
+  constructor(username, password) {
+    this.username = username;
+    this.#password = password;
+    StreamingAccount.#totalUsers++; // increment global user count on each new account
+    console.log(`✅ Account created for ${this.username}`);
+  }
+
+  // ── PUBLIC METHODS ─────────────────────────────────────────────────────────
+
+  login(password) {
+    // Private method used internally for validation
+    if (!this.#verifyPassword(password))
+      return console.log('❌ Wrong password');
+    this.#isLoggedIn = true;
+    console.log(`👋 Welcome back, ${this.username}!`);
+    return this; // enables method chaining
+  }
+
+  logout() {
+    this.#isLoggedIn = false;
+    console.log(`👋 Goodbye, ${this.username}`);
+  }
+
+  watch(title) {
+    // Guard: must be logged in to use this feature
+    if (!this.#isLoggedIn) return console.log('❌ Please log in first');
+    this.#logWatch(title); // private logging method
+    console.log(`🎬 Now watching: "${title}"`);
+    return this;
+  }
+
+  getHistory() {
+    // Controlled READ access — outside code can see history but not modify it
+    return [...this.#watchHistory]; // spread = returns a copy, not the real array
+  }
+
+  // ── GETTER ─────────────────────────────────────────────────────────────────
+  // Read-only computed property — no setter means it can't be overwritten
+  get totalWatched() {
+    return this.#watchHistory.length;
+  }
+
+  // ── STATIC METHOD ──────────────────────────────────────────────────────────
+  // Called on the CLASS itself: StreamingAccount.getUserCount()
+  // Not available on instances — acc1.getUserCount() would throw
+  static getUserCount() {
+    return StreamingAccount.#totalUsers;
+  }
+
+  // ── PRIVATE METHODS ────────────────────────────────────────────────────────
+  #verifyPassword(input) {
+    return input === this.#password; // internal check — never exposed publicly
+  }
+
+  #logWatch(title) {
+    this.#watchHistory.push({
+      title,
+      watchedAt: new Date().toLocaleDateString(),
+    });
+  }
+}
+
+// ── CHILD CLASS: PremiumAccount ──────────────────────────────────────────────
+// Inherits everything from StreamingAccount and adds premium-only features
+class PremiumAccount extends StreamingAccount {
+  // Public field unique to Premium
+  tier = 'Premium';
+
+  // Private field unique to Premium
+  #downloads = [];
+
+  constructor(username, password, screens = 4) {
+    super(username, password); // MUST come first — initializes the parent
+    this.screens = screens; // how many screens can stream simultaneously
+    console.log(`⭐ Premium plan activated — ${screens} screens`);
+  }
+
+  // Premium-only method — not available on base StreamingAccount
+  download(title) {
+    if (!this.getHistory().length)
+      return console.log('❌ Watch something first');
+    this.#downloads.push(title);
+    console.log(`📥 Downloaded "${title}" for offline viewing`);
+    return this;
+  }
+
+  get totalDownloads() {
+    return this.#downloads.length;
+  }
+}
+
+// ─── USAGE ───────────────────────────────────────────────────────────────────
+
+const user1 = new StreamingAccount('alice', 'pass123');
+user1.login('pass123').watch('Breaking Bad').watch('Inception');
+console.log(user1.getHistory()); // [{title, watchedAt}, ...]
+console.log(user1.totalWatched); // 2  ← via getter
+
+const vip = new PremiumAccount('bob', 'securepass', 4);
+vip.login('securepass').watch('Dune').download('Dune');
+console.log(vip.totalDownloads); // 1
+console.log(vip.tier); // "Premium"
+console.log(vip.platform); // "StreamFlix" ← inherited public field
+
+// Static method — called on the class, not an instance
+console.log(StreamingAccount.getUserCount()); // 2
+
+// Encapsulation in action:
+console.log(user1.totalWatched); // ✅ 2 — via getter
+// console.log(user1.#watchHistory);  // ❌ SyntaxError
+// console.log(user1.#password);      // ❌ SyntaxError
+// vip.download('Dune');              // ❌ if not logged in — blocked by watch guard
