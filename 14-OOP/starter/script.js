@@ -368,7 +368,7 @@ console.log(sarah);
 console.log(sarah.calcAge()); */
 
 // ===================Class Inheritance====================
-// Constructor function — works like a C# class. 'this' refers to the new object being created.
+/* // Constructor function — works like a C# class. 'this' refers to the new object being created.
 const Person = function (firstName, birthYear) {
   this.firstName = firstName;
   this.birthYear = birthYear;
@@ -432,4 +432,4 @@ console.log(mike instanceof Object);
 console.log(mike.__proto__);
 console.log(mike.__proto__.__proto__);
 console.log(mike.__proto__.__proto__.__proto__);
-console.log(mike.__proto__.__proto__.__proto__.__proto__);
+console.log(mike.__proto__.__proto__.__proto__.__proto__); */
