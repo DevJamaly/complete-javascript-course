@@ -525,4 +525,89 @@ console.log(jay);
 jay.introduce();
 jay.calcAge(); */
 
-// ===================C====================
+// ===================Class Encapulation====================
+// ─── 4 TYPES OF CLASS MEMBERS ────────────────────────────────────────────────
+// 1. Public Fields    – accessible anywhere
+// 2. Private Fields   – # prefix, only accessible inside the class
+// 3. Public Methods   – the public API the outside world uses
+// 4. Private Methods  – # prefix, internal helpers only
+// + Each has a STATIC version (belongs to the class, not instances)
+
+class Account {
+  // ── PUBLIC FIELDS ─────────────────────────────────────────────────────────
+  // Defined on the class body — exist on every instance automatically.
+  // Equivalent to writing this.locale = ... inside the constructor.
+  locale = navigator.language;
+  bank = 'Bankist';
+
+  // ── PRIVATE FIELDS ────────────────────────────────────────────────────────
+  // The # prefix enforces true privacy — accessing from outside throws SyntaxError.
+  // Must be declared here before use, even if the value is set in the constructor.
+  #movements = []; // shared starting value for every instance
+  #pin; // declared here, value assigned per-instance in constructor
+
+  constructor(owner, currency, pin) {
+    // Standard public instance properties — readable and writable from outside
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin; // ← stored privately; acc1.pin returns undefined, not the value
+    console.log(`Thanks for opening an account, ${this.owner}`);
+  }
+
+  // ── PUBLIC METHODS (The API) ──────────────────────────────────────────────
+  // These are the ONLY intended ways for outside code to interact with the account.
+  // This pattern is called "encapsulation" — hide the data, expose controlled actions.
+
+  // Controlled read access to private data (outside code can't modify the array directly)
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val); // adds positive value to the private array
+  }
+
+  withdrawal(val) {
+    if (val <= 0) return; // guard clause — reject zero or negative withdrawals
+    this.deposit(-val); // reuses deposit() with a negative — DRY principle
+  }
+
+  requestLoan(val) {
+    // Internally calls a PRIVATE method — outside code cannot call #approveLoan directly
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log('Loan approved');
+    }
+  }
+
+  // ── GETTER ────────────────────────────────────────────────────────────────
+  // Accessed like a property (acc1.balance), not a method call (acc1.balance())
+  get balance() {
+    // BUG in original: was this.movements — should be this.#movements (private field)
+    return this.#movements.reduce((sum, mov) => sum + mov, 0);
+  }
+
+  // ── PRIVATE METHOD ────────────────────────────────────────────────────────
+  // Internal helper — not part of the public API.
+  // Real-world version would check credit history, score, existing debt, etc.
+  #approveLoan(val) {
+    return true; // simplified: always approves
+  }
+}
+
+// ─── USAGE ───────────────────────────────────────────────────────────────────
+const acc1 = new Account('Jonas', 'EUR', 1111);
+
+acc1.deposit(250); // ✅ uses public interface
+acc1.withdrawal(140); // ✅ uses public interface
+
+acc1.movements = []; // ⚠️ This does NOT affect #movements at all!
+// It just creates a NEW public property called "movements"
+// on the instance. #movements (private) remains intact.
+// This is exactly why private fields exist.
+
+acc1.requestLoan(1000); // ✅ goes through public method → internally calls #approveLoan
+// acc1.#approveLoan(1000);// ❌ SyntaxError — private method, inaccessible from outside
+
+console.log(acc1.pin); // undefined — "pin" is not a public property; #pin is private
+// console.log(acc1.#movements); // ❌ SyntaxError — private field
