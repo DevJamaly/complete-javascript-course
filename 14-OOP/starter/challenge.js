@@ -129,7 +129,7 @@ DATA CAR 1: 'Tesla' going at 120 km/h, with a charge of 23%
 GOOD LUCK 😀
 */
 
-const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
+/* const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 
 const Car = function (make, speed) {
   this.make = make;
@@ -192,3 +192,120 @@ console.log(tesla);
 tesla.chargeBattery(8);
 tesla.accelerate();
 tesla.brake();
+ */
+//===================CHALLENGE 4====================
+/* 
+1. Re-create challenge #3, but this time using ES6 classes: create an 'EVCl' child class of the 'CarCl' class
+2. Make the 'charge' property private;
+3. Implement the ability to chain the 'accelerate' and 'chargeBattery' methods of this class, and also update the 'brake' method in the 'CarCl' class. They experiment with chining!
+
+DATA CAR 1: 'Rivian' going at 120 km/h, with a charge of 23%
+
+GOOD LUCK 😀
+*/
+const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
+
+class Car {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = parseInt(speed, 10) || 0;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    this.printSpeed('accelerated');
+    return this;
+  }
+
+  brake() {
+    this.speed = Math.max(0, this.speed - 5);
+    this.printSpeed('braked');
+    return this;
+  }
+
+  printSpeed(actionStr) {
+    const subject = actionStr
+      ? `${this.make} ${actionStr} and its`
+      : `${this.make}'s`;
+    console.log(`The ${subject} ${this.speedString}`); // ← polymorphic dispatch
+  }
+
+  get speedString() {
+    return `speed is: ${this.speed} km/h`;
+  }
+}
+
+class EV extends Car {
+  #charge;
+
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = parseInt(charge, 10) || 0;
+  }
+
+  chargeBattery(chargeTo) {
+    this.#charge = clamp(parseInt(chargeTo, 10) || 0, 0, 100);
+    return this;
+  }
+
+  accelerate() {
+    if (this.#charge <= 0) {
+      console.log(`${this.make} has no charge — cannot accelerate!`);
+      return this;
+    }
+    this.#charge -= 1;
+    Car.prototype.accelerate.call(this); // handles speed += 10 AND printSpeed
+    return this;
+  }
+
+  brake() {
+    this.#charge = Math.min(this.#charge + 0.2, 100);
+    Car.prototype.brake.call(this);
+    return this;
+  }
+
+  get speedString() {
+    return `going at ${this.speed} km/h, with a charge of ${this.#charge}%`;
+  }
+}
+
+const bmw = new Car('BMW', 110);
+console.log(bmw);
+bmw.printSpeed();
+
+// DATA CAR 1: 'Rivian' going at 120 km/h, with a charge of 23%
+const rivian = new EV('Rivian', 120, 23);
+console.log(rivian);
+rivian
+  .accelerate()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .brake()
+  .chargeBattery(80)
+  .accelerate();
