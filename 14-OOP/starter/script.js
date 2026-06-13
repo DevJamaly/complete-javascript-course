@@ -433,3 +433,62 @@ console.log(mike.__proto__);
 console.log(mike.__proto__.__proto__);
 console.log(mike.__proto__.__proto__.__proto__);
 console.log(mike.__proto__.__proto__.__proto__.__proto__); */
+
+// ===================Class Inheritance ES6====================
+class Person {
+  constructor(fullName, birthYear) {
+    // 'set fullName' setter is triggered here, not direct assignment
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  introduce() {
+    // 'species' isn't on the instance — found up the prototype chain
+    console.log(`Hi I am ${this.fullName} and i am a ${this.species}`);
+  }
+
+  // Static: called on the class itself (Person.hey()), not on instances
+  static hey() {
+    console.log(`Hey there 👋`);
+  }
+
+  // Getter: accessed like a property (martha.age), not a method call
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  // Setter: intercepts 'this.fullName = ...' and validates before storing
+  set fullName(name) {
+    console.log(name);
+    // Stores on '_fullName' to avoid infinite setter recursion
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name`);
+  }
+
+  // Getter: exposes '_fullName' back as 'fullName' — completes the pair
+  get fullName() {
+    return this._fullName;
+  }
+}
+
+// Added outside the class body — attaches to the prototype, shared across all instances
+Person.prototype.species = 'Homo Sapien';
+
+// 'extends' sets up the prototype chain: Student → Person
+class Student extends Person {
+  constructor(fullName, birthYear, course) {
+    // 'super()' must come first — initializes 'this' via Person's constructor
+    super(fullName, birthYear);
+    this.course = course;
+  }
+
+  // Overrides Person's introduce() — same name, different behavior (polymorphism)
+  introduce() {
+    console.log(`My name is ${this.fullName} and I study ${this.course}`);
+  }
+}
+
+const martha = new Student('Martha Jones', 2012, 'Computer Science');
+console.log(martha);
+martha.introduce(); // calls Student's introduce(), not Person's
+console.log(martha.age); // inherited getter from Person — no override needed
