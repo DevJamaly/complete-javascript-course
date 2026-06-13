@@ -435,7 +435,7 @@ console.log(mike.__proto__.__proto__.__proto__);
 console.log(mike.__proto__.__proto__.__proto__.__proto__); */
 
 // ===================Class Inheritance ES6====================
-class Person {
+/* class Person {
   constructor(fullName, birthYear) {
     // 'set fullName' setter is triggered here, not direct assignment
     this.fullName = fullName;
@@ -491,4 +491,38 @@ class Student extends Person {
 const martha = new Student('Martha Jones', 2012, 'Computer Science');
 console.log(martha);
 martha.introduce(); // calls Student's introduce(), not Person's
-console.log(martha.age); // inherited getter from Person — no override needed
+console.log(martha.age); // inherited getter from Person — no override needed */
+
+// ===================Class Inheritance Object.create====================
+/* const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto);
+console.log(steven);
+
+const StudentProto = Object.create(PersonProto);
+
+StudentProto.init = function (firstName, birthYear, course) {
+  PersonProto.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+StudentProto.introduce = function () {
+  console.log(`My name is ${this.firstName} and I study ${this.course}`);
+};
+
+const jay = Object.create(StudentProto);
+jay.init('Jay', 2010, 'Computer Science');
+console.log(jay);
+jay.introduce();
+jay.calcAge(); */
+
+// ===================C====================
