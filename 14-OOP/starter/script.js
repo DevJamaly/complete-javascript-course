@@ -613,7 +613,7 @@ console.log(acc1.pin); // undefined — "pin" is not a public property; #pin is 
 // console.log(acc1.#movements); // ❌ SyntaxError — private field */
 
 // ===================REAL WORLD EXAMPLE OF CLASSES====================
-// ─────────────────────────────────────────────────────────────────────────────
+/* // ─────────────────────────────────────────────────────────────────────────────
 // SCENARIO: A streaming platform (think Netflix/Spotify)
 // Demonstrates: public + private fields, encapsulation,
 //               static members, inheritance
@@ -744,3 +744,138 @@ console.log(user1.totalWatched); // ✅ 2 — via getter
 // console.log(user1.#watchHistory);  // ❌ SyntaxError
 // console.log(user1.#password);      // ❌ SyntaxError
 // vip.download('Dune');              // ❌ if not logged in — blocked by watch guard
+ */
+
+// ===================CHAINING METHODS====================
+class Account {
+  locale = navigator.language;
+  bank = 'Bankist';
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+    console.log(`Thanks for opening an account, ${this.owner}`);
+  }
+
+  getMovements() {
+    return this.#movements;
+    // ⚠️ Returns the array, NOT `this`
+    // This breaks the chain — must always be called LAST
+    // You can't do .getMovements().deposit(100) because an array has no deposit()
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+    return this; // ← KEY: returns the object itself, enabling the next call in the chain
+  }
+
+  withdraw(val) {
+    if (val <= 0) return; // ⚠️ guard clause doesn't return `this` — chain breaks on invalid input
+    this.deposit(-val);
+    return this; // ← chainable
+  }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log('Loan approved');
+    }
+    return this; // ← chainable even if loan is rejected
+  }
+
+  #approveLoan(val) {
+    return true;
+  }
+
+  // Getter — not part of the chain, accessed as a property after the chain settles
+  get balance() {
+    return this.#movements.reduce((sum, mov) => sum + mov);
+  }
+}
+
+const acc1 = new Account('Jonas', 'EUR', 1111);
+
+// ── METHOD CHAINING IN ACTION ──────────────────────────────────────────────
+// Each method returns `this` (the acc1 object), so the next method
+// is called on the same object — like a pipeline of actions.
+// .getMovements() ends the chain and returns the movements array.
+const dailyTransactions = acc1
+  .deposit(250) // acc1.#movements: [250]           → returns acc1
+  .withdraw(140) // acc1.#movements: [250, -140]      → returns acc1
+  .deposit(100) // acc1.#movements: [250, -140, 100] → returns acc1
+  .deposit(150) // acc1.#movements: [..., 150]       → returns acc1
+  .requestLoan(1500) // acc1.#movements: [..., 1500]      → returns acc1
+  .withdraw(800) // acc1.#movements: [..., -800]      → returns acc1
+  .withdraw(700) // acc1.#movements: [..., -700]      → returns acc1
+  .getMovements(); // ← chain ends here, returns the array (not `this`)
+
+console.log(dailyTransactions); // [250, -140, 100, 150, 1500, -800, -700]
+console.log(acc1.balance); // 360 — accessed via getter after chain is done
+
+// ── METHOD CHAINING REAL WORLD EXAMPLE───────────────────────────────────────
+class CoffeeOrder {
+  // Private — no one should tamper with the order list or total directly
+  #items = [];
+  #total = 0;
+
+  constructor(customer) {
+    this.customer = customer;
+    console.log(`☕ Order started for ${customer}`);
+  }
+
+  // ── CHAINABLE METHODS (return this) ──────────────────────────
+
+  addDrink(name, price) {
+    this.#items.push({ category: 'drink', name, price });
+    this.#total += price;
+    console.log(`  + ${name} — $${price.toFixed(2)}`);
+    return this;
+  }
+
+  addFood(name, price) {
+    this.#items.push({ category: 'food', name, price });
+    this.#total += price;
+    console.log(`  + ${name} — $${price.toFixed(2)}`);
+    return this;
+  }
+
+  addExtra(label, price) {
+    this.#items.push({ category: 'extra', name: label, price });
+    this.#total += price;
+    console.log(`  + ${label} — $${price.toFixed(2)}`);
+    return this;
+  }
+
+  applyDiscount(percent) {
+    const discount = this.#total * (percent / 100);
+    this.#total -= discount;
+    console.log(`  🏷 ${percent}% discount applied (-$${discount.toFixed(2)})`);
+    return this;
+  }
+
+  // ── CHAIN TERMINATOR (does NOT return this) ───────────────────
+  // Returns a summary object — must be called last
+  checkout() {
+    console.log(`\n📋 Final order for ${this.customer}:`);
+    this.#items.forEach(i =>
+      console.log(`   • ${i.name}: $${i.price.toFixed(2)}`),
+    );
+    console.log(`   💳 Total: $${this.#total.toFixed(2)}\n`);
+    return { customer: this.customer, total: +this.#total.toFixed(2) };
+  }
+}
+
+// ── USAGE ────────────────────────────────────────────────────────
+const receipt = new CoffeeOrder('Taha')
+  .addDrink('Flat White', 4.5)
+  .addDrink('Iced Matcha Latte', 5.5)
+  .addFood('Almond Croissant', 3.75)
+  .addExtra('Extra Espresso Shot', 0.75)
+  .addExtra('Oat Milk Swap', 0.5)
+  .applyDiscount(10) // 10% off
+  .checkout(); // ← ends chain, returns summary object
+
+console.log(receipt); // { customer: 'Taha', total: 13.5 }
