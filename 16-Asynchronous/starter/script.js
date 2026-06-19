@@ -10,27 +10,48 @@ const countriesContainer = document.querySelector('.countries');
 // https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}
 
 //=====================AJAX===========================================
-/* const getCountryData = function (countryName) {
+const getCountryData = function (countryName) {
+  // XMLHttpRequest = the OLD way to make AJAX calls (before fetch() existed).
+  // Still useful to learn because course builds up to fetch()/promises later.
   const request = new XMLHttpRequest();
+
+  // .open() just CONFIGURES the request (method + URL) — doesn't send anything yet.
   request.open(
     'GET',
     `https://countries-api-836d.onrender.com/countries/name/${countryName}`,
   );
+
+  // .send() actually fires the request. This is the async part —
+  // browser handles it in the background (Web API), JS moves on immediately.
   request.send();
 
+  // Registering the callback AFTER .send() is fine — network requests always
+  // take way longer than this one synchronous line, so the listener is
+  // guaranteed to be attached before any response can arrive.
   request.addEventListener('load', function (e) {
-    console.log(e);
-    console.log(this.responseText);
+    console.log(e); // the raw "load" event object — rarely useful directly
+
+    // 'this' here = the `request` object (XMLHttpRequest instance), NOT undefined.
+    // Why: this is a regular function, not an arrow function, so JS binds `this`
+    // to whatever object the method was called on — here, addEventListener
+    // calls it as request.<callback>(), so `this` = request.
+    console.log(this.responseText); // raw JSON string response
+
+    // API returns an ARRAY (even for one matching country), so destructure
+    // the first element out instead of using JSON.parse(...)[0].
     const [country] = JSON.parse(this.responseText);
     console.log(country);
+
     renderCountryCard(country);
-
-
   });
 };
 
 const renderCountryCard = function (country) {
+  // Small formatting helper, scoped inside since it's only used here.
   const formattedPopulation = population =>
+    // population comes in as a string from the API — parseInt converts it,
+    // divide by 1_000_000 (readable thanks to the numeric separator) to get
+    // millions, .toFixed(1) rounds to 1 decimal, then append "M".
     `${(Number.parseInt(population, 10) / 1_000_000).toFixed(1)}M`;
 
   const cardHTML = `
@@ -46,14 +67,22 @@ const renderCountryCard = function (country) {
     </article>
     `;
 
+  // insertAdjacentHTML('beforeend', ...) appends new HTML at the end of the
+  // container's existing children — unlike `innerHTML +=`, it doesn't wipe
+  // and re-parse everything already in there (better performance, preserves
+  // existing event listeners on prior cards).
   countriesContainer.insertAdjacentHTML('beforeend', cardHTML);
+
+  // Fades the container in (assumes CSS has a transition on opacity).
   countriesContainer.style.opacity = 1;
 };
 
+// Fires 4 requests essentially AT THE SAME TIME — JS doesn't wait for one
+// to finish before starting the next, since .send() is non-blocking.
 getCountryData('uae');
 getCountryData('portugal');
 getCountryData('usa');
-getCountryData('germany'); */
+getCountryData('germany');
 
 //=====================CALLBACK HELL===========================================
 
@@ -73,8 +102,18 @@ const getCountryAndNeighbour = function (countryName) {
     renderCountryCard(country);
 
     //Render neighbour country 2
+    // Optional chaining (?.) — safely grabs the first border country code.
+    // If `borders` is undefined (island nations, etc.), this returns
+    // undefined instead of throwing an error.
     const neighbour = country.borders?.[0];
+
+    // Guard clause — if there's no neighbour, stop here, no point firing
+    // a second request for nothing.
     if (!neighbour) return;
+
+    // SECOND request, nested INSIDE the first request's callback.
+    // This only fires once country 1's data has already arrived —
+    // it can't start any earlier since it needs `neighbour`'s code first.
     const request2 = new XMLHttpRequest();
     request2.open(
       'GET',
@@ -87,12 +126,16 @@ const getCountryAndNeighbour = function (countryName) {
       const country2 = JSON.parse(this.responseText);
       console.log(country2);
 
+      // 'neighbour' className lets CSS style this card differently
+      // (e.g. smaller, indented) to visually show it's the related country.
       renderCountryCard(country2, 'neighbour');
     });
   });
 };
 
 const renderCountryCard = function (country, className = '') {
+  // Default param: className defaults to '' so the original calls
+  // (without a class) still work exactly like before.
   const formattedPopulation = population =>
     `${(Number.parseInt(population, 10) / 1_000_000).toFixed(1)}M`;
 
@@ -114,8 +157,10 @@ const renderCountryCard = function (country, className = '') {
 };
 
 getCountryAndNeighbour('uae');
-// getCountryAndNeighbour('usa');
+// getCountryAndNeighbour('usa'); // commented out so the 2nd dataset doesn't mix with UAE's cards on screen
 
+// 4 setTimeouts nested inside each other — each one only starts
+// counting once the PREVIOUS one has already fired.
 setTimeout(() => {
   console.log(`1 second has passed`);
   setTimeout(() => {
@@ -128,3 +173,5 @@ setTimeout(() => {
     }, 1000);
   }, 1000);
 }, 1000);
+
+//=====================PROMISES and FETCH API===========================================
