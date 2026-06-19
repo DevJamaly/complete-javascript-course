@@ -10,8 +10,7 @@ const countriesContainer = document.querySelector('.countries');
 // https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}
 
 //=====================AJAX===========================================
-
-const getCountryData = function (countryName) {
+/* const getCountryData = function (countryName) {
   const request = new XMLHttpRequest();
   request.open(
     'GET',
@@ -25,6 +24,8 @@ const getCountryData = function (countryName) {
     const [country] = JSON.parse(this.responseText);
     console.log(country);
     renderCountryCard(country);
+
+
   });
 };
 
@@ -52,6 +53,78 @@ const renderCountryCard = function (country) {
 getCountryData('uae');
 getCountryData('portugal');
 getCountryData('usa');
-getCountryData('germany');
+getCountryData('germany'); */
 
 //=====================CALLBACK HELL===========================================
+
+const getCountryAndNeighbour = function (countryName) {
+  const request = new XMLHttpRequest();
+  request.open(
+    'GET',
+    `https://countries-api-836d.onrender.com/countries/name/${countryName}`,
+  );
+  request.send();
+
+  request.addEventListener('load', function (e) {
+    const [country] = JSON.parse(this.responseText);
+    console.log(country);
+
+    //Render the country 1
+    renderCountryCard(country);
+
+    //Render neighbour country 2
+    const neighbour = country.borders?.[0];
+    if (!neighbour) return;
+    const request2 = new XMLHttpRequest();
+    request2.open(
+      'GET',
+      `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`,
+    );
+    request2.send();
+
+    request2.addEventListener('load', function (e) {
+      console.log(this.responseText);
+      const country2 = JSON.parse(this.responseText);
+      console.log(country2);
+
+      renderCountryCard(country2, 'neighbour');
+    });
+  });
+};
+
+const renderCountryCard = function (country, className = '') {
+  const formattedPopulation = population =>
+    `${(Number.parseInt(population, 10) / 1_000_000).toFixed(1)}M`;
+
+  const cardHTML = `
+    <article class="country ${className}">
+        <img class="country__img" src="${country.flag}" />
+        <div class="country__data">
+            <h3 class="country__name">${country.name}</h3>
+            <h4 class="country__region">${country.region}</h4>
+            <p class="country__row"><span>👫</span>${formattedPopulation(country.population)} people</p>
+            <p class="country__row"><span>🗣️</span>${country.languages[0].name}</p>
+            <p class="country__row"><span>💰</span>${country.currencies[0].name}</p>
+        </div>
+    </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', cardHTML);
+  countriesContainer.style.opacity = 1;
+};
+
+getCountryAndNeighbour('uae');
+// getCountryAndNeighbour('usa');
+
+setTimeout(() => {
+  console.log(`1 second has passed`);
+  setTimeout(() => {
+    console.log(`2 second has passed`);
+    setTimeout(() => {
+      console.log(`3 second has passed`);
+      setTimeout(() => {
+        console.log(`4 second has passed`);
+      }, 1000);
+    }, 1000);
+  }, 1000);
+}, 1000);
