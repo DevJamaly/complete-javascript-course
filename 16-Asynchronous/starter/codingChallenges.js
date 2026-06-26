@@ -109,10 +109,10 @@ btn.addEventListener('click', e => {
   const error = err =>
     errorNotification.showError(`ERROR(${err.code}): ${err.message}`);
 
-  //   whereAmI(52.508, 13.381);
-  //   whereAmI(19.037, 72.873);
-  //   whereAmI(-33.933, 18.474);
-  navigator.geolocation.getCurrentPosition(success, error, options);
+  whereAmI(52.508, 13.381);
+  whereAmI(19.037, 72.873);
+  whereAmI(-33.933, 18.474);
+  //   navigator.geolocation.getCurrentPosition(success, error, options);
 
   //   whereAmI();
   //   whereAmI(123456, 123456);

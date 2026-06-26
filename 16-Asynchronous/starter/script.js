@@ -351,7 +351,7 @@ btn.addEventListener('click', e => {
 }); */
 
 //=====================THROWING ERRORS MANUALLY===========================================
-const renderError = function (msg) {
+/* const renderError = function (msg) {
   countriesContainer.insertAdjacentText('beforeend', msg);
   countriesContainer.style.color = 'crimson';
 };
@@ -426,4 +426,49 @@ console.log(btn);
 btn.addEventListener('click', e => {
   console.log(e);
   getCountryData('madagascar');
+}); */
+
+//=====================THE EVENT LOOP===========================================
+// ============================================================
+// SYNC code runs first — top to bottom, nothing waits
+// ============================================================
+
+console.log(`Test Start`); // [1] Runs immediately → "Test Start"
+
+setTimeout(() => console.log(`0 sec timer`), 0);
+// [2] Handed off to Web API. Callback goes to CALLBACK QUEUE after 0ms.
+//     0ms doesn't mean "runs next" — it means "queued after 0ms".
+//     Callback Queue has LOWER priority, so it waits.
+
+Promise.resolve('Resolved Promise 1').then(res => console.log(res));
+// [3] Already resolved. .then callback goes straight to MICROTASK QUEUE.
+
+Promise.resolve('Resolved Promise 2').then(res => {
+  for (let i = 0; i < 1_000_000_000_0; i++) {} // heavy blocking loop
+  console.log(res);
 });
+// [4] Also already resolved. .then callback queued in MICROTASK QUEUE.
+//     The heavy loop inside doesn't matter yet — it hasn't run.
+
+console.log(`Test End`); // [5] Runs immediately → "Test End"
+
+// ============================================================
+// Call stack is now EMPTY. Event loop takes over.
+// ============================================================
+
+// MICROTASK QUEUE is drained FIRST (priority over Callback Queue):
+//   [6] → "Resolved Promise 1"
+//   [7] → heavy loop runs (blocks everything during this time)
+//        → "Resolved Promise 2"
+
+// Only NOW, with Microtask Queue empty, does Callback Queue get a turn:
+//   [8] → "0 sec timer"
+
+// ============================================================
+// OUTPUT ORDER:
+// 1. "Test Start"
+// 2. "Test End"
+// 3. "Resolved Promise 1"
+// 4. "Resolved Promise 2"   ← delayed by the heavy loop
+// 5. "0 sec timer"          ← despite being 0ms, runs LAST
+// ============================================================
