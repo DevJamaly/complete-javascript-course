@@ -175,7 +175,7 @@ setTimeout(() => {
 }, 1000); */
 
 //=====================PROMISES and FETCH API===========================================
-// const request = new XMLHttpRequest();
+/* // const request = new XMLHttpRequest();
 // request.open(
 //   'GET',
 //   `https://countries-api-836d.onrender.com/countries/name/${countryName}`,
@@ -231,6 +231,53 @@ const renderCountryCard = function (country) {
   countriesContainer.style.opacity = 1;
 };
 
-getCountryData('portugal');
+getCountryData('portugal'); */
 
 //=====================CHAINING PROMISES===========================================
+const getCountryData = function (countryName) {
+  // Fetch 1: get the main country by name
+  fetch(`https://countries-api-836d.onrender.com/countries/name/${countryName}`)
+    .then(response => response.json())
+    .then(data => {
+      renderCountryCard(data[0]);
+
+      // ?.[0] guards if the API returns nothing
+      // ?.borders?.[0] guards if the country has no borders (e.g. island nations)
+      const neighbour = data?.[0].borders?.[0]; // alpha code e.g. "SAU"
+
+      if (!neighbour) return; // no neighbour — exit early, skip Fetch 2
+
+      // Returning the new Promise is what extends the chain —
+      // without return, the next .then() fires immediately with undefined
+      // instead of waiting for Fetch 2 to resolve
+      return fetch(
+        `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`,
+      );
+    })
+    // Only reaches here after Fetch 2 resolves — same parse pattern as above
+    .then(response => response.json())
+    .then(data => renderCountryCard(data, 'neighbour')); // className flags it as a neighbour card
+};
+
+const renderCountryCard = function (country, className = '') {
+  const formattedPopulation = population =>
+    `${(Number.parseInt(population, 10) / 1_000_000).toFixed(1)}M`;
+
+  const cardHTML = `
+    <article class="country ${className}">
+        <img class="country__img" src="${country.flag}" />
+        <div class="country__data">
+            <h3 class="country__name">${country.name}</h3>
+            <h4 class="country__region">${country.region}</h4>
+            <p class="country__row"><span>👫</span>${formattedPopulation(country.population)} people</p>
+            <p class="country__row"><span>🗣️</span>${country.languages[0].name}</p>
+            <p class="country__row"><span>💰</span>${country.currencies[0].name}</p>
+        </div>
+    </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', cardHTML);
+  countriesContainer.style.opacity = 1;
+};
+
+getCountryData('uae');
