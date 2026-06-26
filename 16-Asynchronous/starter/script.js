@@ -283,7 +283,7 @@ const renderCountryCard = function (country, className = '') {
 getCountryData('uae'); */
 
 //=====================HANLDING REJECTED PROMISES===========================================
-const renderError = function (msg) {
+/* const renderError = function (msg) {
   countriesContainer.insertAdjacentText('beforeend', msg);
   countriesContainer.style.color = 'crimson';
 };
@@ -295,7 +295,7 @@ const getCountryData = function (countryName) {
       // .then() accepts a 2nd argument: a rejected-Promise handler,
       // but it only catches errors from THIS .then() — not the ones below.
       // .catch() at the end is cleaner since it catches the entire chain.
-      /* error => alert(error), */
+      // error => alert(error),
     )
     .then(data => {
       renderCountryCard(data[0]);
@@ -348,4 +348,82 @@ console.log(btn);
 btn.addEventListener('click', e => {
   console.log(e);
   getCountryData('portugal');
+}); */
+
+//=====================THROWING ERRORS MANUALLY===========================================
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  countriesContainer.style.color = 'crimson';
+};
+
+// Reusable fetch helper — abstracts the fetch + parse + error check pattern
+// so getCountryData doesn't repeat it for every request
+const getJson = function (url, errorMsg = 'Error ') {
+  return fetch(url).then(response => {
+    console.log(response);
+
+    // fetch() only rejects on network failure — NOT on 404/500 HTTP errors.
+    // response.ok is false for any non-2xx status, so we manually throw
+    // to force those cases into .catch() down the chain
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+
+const getCountryData = function (countryName) {
+  // getJson returns a Promise, so the chain starts here
+  getJson(
+    `https://countries-api-836d.onrender.com/countries/name/${countryName}`,
+    'Country not found! ',
+  )
+    .then(data => {
+      renderCountryCard(data[0]);
+      const neighbour = data?.[0].borders?.[0];
+
+      // throw inside .then() rejects the Promise — skips all remaining .then()s
+      // and drops straight into .catch(). Cleaner than a silent return.
+      if (!neighbour) throw new Error('No Neighbours found!');
+
+      return getJson(
+        `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`,
+        'Country not found! ',
+      );
+    })
+    .then(data => renderCountryCard(data, 'neighbour'))
+    .catch(error => {
+      console.error(error);
+      renderError(`Something went wrong: ${error.message}`);
+    })
+    .finally(() => {
+      btn.style.opacity = 0;
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+const renderCountryCard = function (country, className = '') {
+  const formattedPopulation = population =>
+    `${(Number.parseInt(population, 10) / 1_000_000).toFixed(1)}M`;
+
+  const cardHTML = `
+    <article class="country ${className}">
+        <img class="country__img" src="${country.flag}" />
+        <div class="country__data">
+            <h3 class="country__name">${country.name}</h3>
+            <h4 class="country__region">${country.region}</h4>
+            <p class="country__row"><span>👫</span>${formattedPopulation(country.population)} people</p>
+            <p class="country__row"><span>🗣️</span>${country.languages[0].name}</p>
+            <p class="country__row"><span>💰</span>${country.currencies[0].name}</p>
+        </div>
+    </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', cardHTML);
+};
+
+console.log(btn);
+
+btn.addEventListener('click', e => {
+  console.log(e);
+  getCountryData('madagascar');
 });
