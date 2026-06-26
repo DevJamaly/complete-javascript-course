@@ -234,7 +234,7 @@ const renderCountryCard = function (country) {
 getCountryData('portugal'); */
 
 //=====================CHAINING PROMISES===========================================
-const getCountryData = function (countryName) {
+/* const getCountryData = function (countryName) {
   // Fetch 1: get the main country by name
   fetch(`https://countries-api-836d.onrender.com/countries/name/${countryName}`)
     .then(response => response.json())
@@ -280,4 +280,72 @@ const renderCountryCard = function (country, className = '') {
   countriesContainer.style.opacity = 1;
 };
 
-getCountryData('uae');
+getCountryData('uae'); */
+
+//=====================HANLDING REJECTED PROMISES===========================================
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  countriesContainer.style.color = 'crimson';
+};
+
+const getCountryData = function (countryName) {
+  fetch(`https://countries-api-836d.onrender.com/countries/name/${countryName}`)
+    .then(
+      response => response.json(),
+      // .then() accepts a 2nd argument: a rejected-Promise handler,
+      // but it only catches errors from THIS .then() — not the ones below.
+      // .catch() at the end is cleaner since it catches the entire chain.
+      /* error => alert(error), */
+    )
+    .then(data => {
+      renderCountryCard(data[0]);
+      const neighbour = data?.[0].borders?.[0];
+      if (!neighbour) return;
+      return fetch(
+        `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`,
+      );
+    })
+    .then(response => response.json())
+    .then(data => renderCountryCard(data, 'neighbour'))
+
+    // Any rejected Promise anywhere above propagates down the chain until
+    // something handles it — .catch() sits at the bottom and catches all of them
+    .catch(error => {
+      console.error(error);
+      renderError(`Something went wrong: ${error.message}`);
+    })
+
+    // Runs no matter what — success or failure — like a guaranteed cleanup step.
+    // Think of it as the Promise equivalent of a try/catch/finally block.
+    .finally(() => {
+      btn.style.opacity = 0;
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+const renderCountryCard = function (country, className = '') {
+  const formattedPopulation = population =>
+    `${(Number.parseInt(population, 10) / 1_000_000).toFixed(1)}M`;
+
+  const cardHTML = `
+    <article class="country ${className}">
+        <img class="country__img" src="${country.flag}" />
+        <div class="country__data">
+            <h3 class="country__name">${country.name}</h3>
+            <h4 class="country__region">${country.region}</h4>
+            <p class="country__row"><span>👫</span>${formattedPopulation(country.population)} people</p>
+            <p class="country__row"><span>🗣️</span>${country.languages[0].name}</p>
+            <p class="country__row"><span>💰</span>${country.currencies[0].name}</p>
+        </div>
+    </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', cardHTML);
+};
+
+console.log(btn);
+
+btn.addEventListener('click', e => {
+  console.log(e);
+  getCountryData('portugal');
+});
