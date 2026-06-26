@@ -10,7 +10,7 @@ const countriesContainer = document.querySelector('.countries');
 // https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}
 
 //=====================AJAX===========================================
-const getCountryData = function (countryName) {
+/* const getCountryData = function (countryName) {
   // XMLHttpRequest = the OLD way to make AJAX calls (before fetch() existed).
   // Still useful to learn because course builds up to fetch()/promises later.
   const request = new XMLHttpRequest();
@@ -82,11 +82,11 @@ const renderCountryCard = function (country) {
 getCountryData('uae');
 getCountryData('portugal');
 getCountryData('usa');
-getCountryData('germany');
+getCountryData('germany'); */
 
 //=====================CALLBACK HELL===========================================
 
-const getCountryAndNeighbour = function (countryName) {
+/* const getCountryAndNeighbour = function (countryName) {
   const request = new XMLHttpRequest();
   request.open(
     'GET',
@@ -172,6 +172,65 @@ setTimeout(() => {
       }, 1000);
     }, 1000);
   }, 1000);
-}, 1000);
+}, 1000); */
 
 //=====================PROMISES and FETCH API===========================================
+// const request = new XMLHttpRequest();
+// request.open(
+//   'GET',
+//   `https://countries-api-836d.onrender.com/countries/name/${countryName}`,
+// );
+// request.send();
+
+// const countryName = 'uae';
+// const request = fetch(
+//   `https://countries-api-836d.onrender.com/countries/name/${countryName}`,
+// );
+// console.log(request);
+
+const getCountryData = function (countryName) {
+  // fetch() fires an async HTTP GET and returns a Promise<Response>
+  fetch(`https://countries-api-836d.onrender.com/countries/name/${countryName}`)
+    // Runs when the server responds — but body isn't parsed yet
+    .then(function (response) {
+      console.log(response);
+      // .json() parses the body stream — also async, returns Promise<Data>
+      // Must return it so the next .then() waits for it to resolve
+      return response.json();
+    })
+
+    // Runs after .json() resolves — data is the actual parsed JS value
+    .then(function (data) {
+      console.log(data);
+      renderCountryCard(data[0]); // API returns an array, grab first match
+    });
+};
+
+const renderCountryCard = function (country) {
+  // Converts raw population number to a readable "X.XM" string
+  const formattedPopulation = population =>
+    `${(Number.parseInt(population, 10) / 1_000_000).toFixed(1)}M`;
+
+  const cardHTML = `
+    <article class="country">
+        <img class="country__img" src="${country.flag}" />
+        <div class="country__data">
+            <h3 class="country__name">${country.name}</h3>
+            <h4 class="country__region">${country.region}</h4>
+            <p class="country__row"><span>👫</span>${formattedPopulation(country.population)} people</p>
+            <p class="country__row"><span>🗣️</span>${country.languages[0].name}</p>
+            <p class="country__row"><span>💰</span>${country.currencies[0].name}</p>
+        </div>
+    </article>
+    `;
+
+  // Appends new card without wiping existing DOM content (safer than innerHTML +=)
+  countriesContainer.insertAdjacentHTML('beforeend', cardHTML);
+
+  // Fades the container in — relies on a CSS opacity transition
+  countriesContainer.style.opacity = 1;
+};
+
+getCountryData('portugal');
+
+//=====================CHAINING PROMISES===========================================
