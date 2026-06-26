@@ -124,3 +124,119 @@ body {
   border: 3rem solid white;
   box-shadow: 0 2rem 5rem 1rem rgba(0, 0, 0, 0.1);
 }
+
+/* ============ERROR NOTIFICATION=================== */
+
+.error-notification {
+  /* Centered from both sides — keeps transform free for Y-only animation */
+  position: fixed;
+  bottom: 2rem;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
+  max-width: min(90vw, 420px);
+
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0.875rem 1rem;
+
+  background: #1c1c1e;
+  border: 0.5px solid rgba(255, 59, 48, 0.4);
+  /* border-left: 3px solid #ff3b30; */
+  border-radius: 8px;
+  color: #f5f5f5;
+  font-size: 14px;
+  line-height: 1.5;
+  z-index: 9999;
+
+  /* Slide IN — springy overshoot */
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.4s ease;
+}
+
+.error-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
+  max-width: min(90vw, 420px);
+
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0.875rem 1rem;
+
+  background: #1c1c1e;
+  color: #f5f5f5;
+  border: 0.5px solid rgba(255, 59, 48, 0.35);
+  border-left: 3px solid #ff3b30;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  z-index: 9999;
+
+  /* slide IN — spring */
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.4s ease;
+}
+
+.error-toast.hidden {
+  transform: translateY(calc(100% + 3rem));
+  opacity: 0;
+  pointer-events: none;
+  /* slide OUT — smooth */
+  transition:
+    transform 0.3s ease-in,
+    opacity 0.25s ease-in;
+}
+
+.toast-icon {
+  color: #ff3b30;
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.toast-msg {
+  flex: 1;
+}
+.toast-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 16px;
+  flex-shrink: 0;
+  padding: 0;
+  display: flex;
+}
+.toast-close:hover {
+  color: #f5f5f5;
+}
+
+.error-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: #ff3b30;
+  transform-origin: left;
+}
+.error-bar.running {
+  animation: toast-shrink 4s linear forwards;
+}
+
+@keyframes toast-shrink {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
