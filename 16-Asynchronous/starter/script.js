@@ -712,7 +712,7 @@ const whereAmI = function () {
 btn.addEventListener('click', whereAmI); */
 
 //=====================ASYNC/AWAIT===========================================
-
+/* 
 // ─────────────────────────────────────────────
 // 1. PROMISIFYING GEOLOCATION
 // ─────────────────────────────────────────────
@@ -850,3 +850,59 @@ console.log(`1. Starting location triangulation and identification`);
     console.log(`3. Displaying localized country card`);
   }
 })();
+ */
+
+//=====================PARALLEL PROMISES===========================================
+// ─────────────────────────────────────────────
+// 1. FETCH HELPER
+// ─────────────────────────────────────────────
+// async/await wrapper around fetch. throw on bad status →
+// rejects the promise → caller's catch fires.
+const getJson = async function (url, errorMsg = 'Error: ') {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+  return response.json();
+};
+
+// ─────────────────────────────────────────────
+// 2. PARALLEL FETCH — Promise.all
+// ─────────────────────────────────────────────
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    // ❌ SEQUENTIAL (commented out) — each await pauses until the previous finishes.
+    // 3 separate requests fired one after another → slowest possible approach.
+    // const [data1] = await getJson(`https://countries-api-836d.onrender.com/countries/name/${c1}`, 'Country not found!');
+    // const [data2] = await getJson(`https://countries-api-836d.onrender.com/countries/name/${c2}`, 'Country not found!');
+    // const [data3] = await getJson(`https://countries-api-836d.onrender.com/countries/name/${c3}`, 'Country not found!');
+    // console.log(data1.capital, data2.capital, data3.capital);
+
+    // ✅ PARALLEL — Promise.all fires all 3 requests simultaneously.
+    // Resolves when ALL settle → total time = slowest single request, not sum of all.
+    // Short-circuits: if ANY promise rejects, the whole thing rejects immediately.
+    const data = await Promise.all([
+      getJson(
+        `https://countries-api-836d.onrender.com/countries/name/${c1}`,
+        'Country not found!',
+      ),
+      getJson(
+        `https://countries-api-836d.onrender.com/countries/name/${c2}`,
+        'Country not found!',
+      ),
+      getJson(
+        `https://countries-api-836d.onrender.com/countries/name/${c3}`,
+        'Country not found!',
+      ),
+    ]);
+
+    // data is an array of results in the same order as the Promise.all array — not arrival order.
+    // Each getJson returns an array (API wraps countries in []), so d[0] unwraps it.
+    console.log(data.map(d => d[0].capital));
+  } catch (error) {
+    // Catches rejection from ANY of the 3 getJson calls — or a network failure.
+    errorNotification.showError(error.message);
+  }
+};
+
+get3Countries('portugal', 'uae', 'canada');
+
+//=====================PARALLEL PROMISES===========================================
