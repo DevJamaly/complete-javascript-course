@@ -594,7 +594,7 @@ authenticate('taha', '1234')
  */
 
 //=====================PROMISIFYING===========================================
-// navigator.geolocation.getCurrentPosition(
+/* // navigator.geolocation.getCurrentPosition(
 //   position => console.log(position),
 //   err => console.log(err),
 // );
@@ -707,6 +707,120 @@ const whereAmI = function () {
       btn.style.opacity = 0;
       countriesContainer.style.opacity = 1;
     });
+};
+
+btn.addEventListener('click', whereAmI); */
+
+//=====================ASYNC/AWAIT===========================================
+
+// ─────────────────────────────────────────────
+// 1. PROMISIFYING GEOLOCATION
+// ─────────────────────────────────────────────
+
+const getPosition = function () {
+  return new Promise((resolve, reject) => {
+    // Guard first — navigator.geolocation is undefined on unsupported browsers
+    if (!navigator.geolocation)
+      return reject(new Error('Geolocation is not supported by your browser'));
+    // resolve/reject passed directly as success/error callbacks — no manual wrappers needed
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+// ─────────────────────────────────────────────
+// 2. COORDINATE VALIDATION (SYNC)
+// ─────────────────────────────────────────────
+
+// Synchronous — no Promise needed. throw here propagates up into whereAmI's try/catch
+// because isValidCoords is called inside an async function with await context.
+const isValidCoords = function ({ latitude: lat, longitude: lng }) {
+  if (!Number.isFinite(lat) || !Number.isFinite(lng))
+    throw new Error('Coordinates must be valid numbers');
+
+  if (lat < -90 || lat > 90)
+    throw new Error(`Invalid latitude: ${lat} (must be -90 to 90)`);
+
+  if (lng < -180 || lng > 180)
+    throw new Error(`Invalid longitude: ${lng} (must be -180 to 180)`);
+
+  return { lat, lng };
+};
+
+// ─────────────────────────────────────────────
+// 3. REUSABLE FETCH HELPER (ASYNC)
+// ─────────────────────────────────────────────
+
+// async/await version of the Promise chain fetch pattern.
+// fetch() only rejects on network failure — NOT on 404/500.
+// We check response.ok manually and throw, which rejects the async function → triggers caller's catch.
+const getJson = async function (url, errorMsg = 'Error: ') {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+  return response.json(); // return await here is redundant — async already wraps it in a promise
+};
+
+// ─────────────────────────────────────────────
+// 4. DOM RENDERER (SYNC, PURE UI)
+// ─────────────────────────────────────────────
+
+const renderCountryCard = function (country, className = '') {
+  const formattedPopulation = population =>
+    `${(Number.parseInt(population, 10) / 1_000_000).toFixed(1)}M`;
+
+  const cardHTML = `
+    <article class="country ${className}">
+        <img class="country__img" src="${country.flag}" />
+        <div class="country__data">
+            <h3 class="country__name">${country.name}</h3>
+            <h4 class="country__region">${country.region}</h4>
+            <p class="country__row"><span>👫</span>${formattedPopulation(country.population)} people</p>
+            <p class="country__row"><span>🗣️</span>${country.languages[0].name}</p>
+            <p class="country__row"><span>💰</span>${country.currencies[0].name}</p>
+        </div>
+    </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', cardHTML);
+};
+
+// ─────────────────────────────────────────────
+// 5. MAIN FUNCTION — async/await + error handling
+// ─────────────────────────────────────────────
+
+// async makes this return a Promise automatically.
+// await pauses execution at each step until the Promise settles —
+// reads like synchronous code but behaves asynchronously.
+const whereAmI = async function () {
+  try {
+    // Each await either resolves to a value or throws — throw jumps straight to catch.
+    // This is equivalent to a .then() chain — each line depends on the previous.
+    const pos = await getPosition();
+    const { lat, lng } = isValidCoords(pos.coords); // sync throw caught by same try/catch
+
+    // Sequential awaits — each fires only after the previous resolves.
+    // Equivalent to chained .then() calls but without nesting or .catch() duplication.
+    const geoData = await getJson(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
+      'Could not process location!',
+    );
+
+    const countryData = await getJson(
+      `https://countries-api-836d.onrender.com/countries/alpha/${geoData.countryCode}`,
+      'Country not found! ',
+    );
+
+    renderCountryCard(countryData);
+  } catch (e) {
+    // ONE catch handles every failure above — getPosition, isValidCoords, both getJson calls.
+    // Any throw or rejected await lands here. Equivalent to .catch() at the end of a chain.
+    errorNotification.showError(e.message);
+    console.error(e);
+  } finally {
+    // Runs regardless of success or failure — equivalent to .finally() on a chain.
+    // ⚠️ Container shows even on error — move opacity=1 into try if that's undesired.
+    btn.style.opacity = 0;
+    countriesContainer.style.opacity = 1;
+  }
 };
 
 btn.addEventListener('click', whereAmI);
