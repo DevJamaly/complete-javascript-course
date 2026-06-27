@@ -853,7 +853,7 @@ console.log(`1. Starting location triangulation and identification`);
  */
 
 //=====================PARALLEL PROMISES===========================================
-// ─────────────────────────────────────────────
+/* // ─────────────────────────────────────────────
 // 1. FETCH HELPER
 // ─────────────────────────────────────────────
 // async/await wrapper around fetch. throw on bad status →
@@ -904,5 +904,118 @@ const get3Countries = async function (c1, c2, c3) {
 };
 
 get3Countries('portugal', 'uae', 'canada');
+ */
 
-//=====================PARALLEL PROMISES===========================================
+//=====================PROMISE COMBINATORS==========================================
+
+const getJson = async function (url, errorMsg = 'Error: ') {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+  return response.json();
+};
+
+// Rejects after N seconds — used to cap how long any promise is allowed to run
+const timeout = function (seconds) {
+  return new Promise(
+    (
+      _,
+      reject, // _ = resolve intentionally unused
+    ) =>
+      setTimeout(
+        () => reject(new Error('Request took too long')),
+        seconds * 1000,
+      ),
+  );
+};
+
+// ─────────────────────────────────────────────
+// Promise.race — first settled wins (resolve OR reject)
+// ─────────────────────────────────────────────
+
+// Fires all 3 requests simultaneously. Whichever resolves first wins — others are ignored.
+// If the winner rejects, race rejects too. Speed determines the result.
+(async function () {
+  const res = await Promise.race([
+    getJson(
+      `https://countries-api-836d.onrender.com/countries/name/italy`,
+      'Country not found!',
+    ),
+    getJson(
+      `https://countries-api-836d.onrender.com/countries/name/egypt`,
+      'Country not found!',
+    ),
+    getJson(
+      `https://countries-api-836d.onrender.com/countries/name/france`,
+      'Country not found!',
+    ),
+  ]);
+  console.log(res[0]); // res is the single winner — not an array of all results
+})();
+
+// ─────────────────────────────────────────────
+// Promise.race + timeout — real-world use case
+// ─────────────────────────────────────────────
+
+// Race between a real request and a timer.
+// If fetch takes >1s, timeout rejects first → catch fires.
+// This is the PRIMARY practical use of Promise.race.
+Promise.race([
+  getJson(
+    `https://countries-api-836d.onrender.com/countries/name/tanzania`,
+    'Country not found!',
+  ),
+  timeout(1),
+])
+  .then(res => console.log(res))
+  .catch(err => errorNotification.showError(err.message));
+
+// ─────────────────────────────────────────────
+// Promise.allSettled — waits for ALL, never short-circuits
+// ─────────────────────────────────────────────
+
+// Unlike Promise.all, a rejection does NOT cancel the rest.
+// Always resolves with an array of {status, value/reason} for every promise.
+// .catch() here never fires — allSettled itself never rejects.
+Promise.allSettled([
+  Promise.resolve('Success'),
+  Promise.reject('Error'), // ← doesn't kill the others
+  Promise.resolve('Success'),
+  Promise.resolve('Success'),
+]).then(res => console.log(res));
+// → [
+//     { status: 'fulfilled', value: 'Success' },
+//     { status: 'rejected',  reason: 'Error'  },
+//     { status: 'fulfilled', value: 'Success' },
+//     { status: 'fulfilled', value: 'Success' },
+//   ]
+
+// ─────────────────────────────────────────────
+// Promise.all — all must resolve, one rejection kills it
+// ─────────────────────────────────────────────
+
+// Short-circuits on first rejection → catch fires immediately, other results discarded.
+// Use when you need ALL results and one failure means the whole operation failed.
+Promise.all([
+  Promise.resolve('Success'),
+  Promise.reject('Error'), // ← kills everything, catch fires
+  Promise.resolve('Success'),
+  Promise.resolve('Success'),
+])
+  .then(res => console.log(res)) // never runs
+  .catch(err => errorNotification.showError(err.message)); // → 'Error'
+
+// ─────────────────────────────────────────────
+// Promise.any — first RESOLVED wins (ignores rejections)
+// ─────────────────────────────────────────────
+
+// Opposite of Promise.race — rejections are ignored, only first resolve matters.
+// Only rejects if ALL promises reject → AggregateError.
+// Use when you have fallbacks and only need one to succeed.
+Promise.any([
+  Promise.resolve('Success'), // ← first resolve wins
+  Promise.reject('Error'), // ← silently ignored
+  Promise.resolve('Success'),
+  Promise.resolve('Success'),
+])
+  .then(res => console.log(res)) // → 'Success'
+  .catch(err => errorNotification.showError(err.message)); // only if ALL reject
