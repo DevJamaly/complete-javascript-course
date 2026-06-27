@@ -1,5 +1,9 @@
 'use strict';
+
 import { errorNotification } from './errorNotification.js';
+
+const btn = document.querySelector('.btn-country');
+const countriesContainer = document.querySelector('.countries');
 
 //========================CODING CHALLENGE #1==============================
 /* 
@@ -26,9 +30,7 @@ TEST COORDINATES 2: -33.933, 18.474
 GOOD LUCK 😀
 */
 
-const btn = document.querySelector('.btn-country');
-const countriesContainer = document.querySelector('.countries');
-
+/* 
 const getJson = function (url, errorMsg = 'Error: ') {
   return fetch(url).then(response => {
     if (!response.ok) throw Error(`${errorMsg} (${response.status})`);
@@ -117,3 +119,108 @@ btn.addEventListener('click', e => {
   //   whereAmI();
   //   whereAmI(123456, 123456);
 });
+ */
+
+//========================CODING CHALLENGE #2=============================
+/* 
+Build the image loading functionality that I just showed you on the screen.
+
+Tasks are not super-descriptive this time, so that you can figure out some stuff on your own. Pretend you're working on your own 😉
+
+PART 1
+1. Create a function 'createImage' which receives imgPath as an input. This function returns a promise which creates a new image (use document.createElement('img')) and sets the .src attribute to the provided image path. When the image is done loading, append it to the DOM element with the 'images' class, and resolve the promise. The fulfilled value should be the image element itself. In case there is an error loading the image ('error' event), reject the promise.
+
+If this part is too tricky for you, just watch the first part of the solution.
+
+PART 2
+2. Comsume the promise using .then and also add an error handler;
+3. After the image has loaded, pause execution for 2 seconds using the wait function we created earlier;
+4. After the 2 seconds have passed, hide the current image (set display to 'none'), and load a second image (HINT: Use the image element returned by the createImage promise to hide the current image. You will need a global variable for that 😉);
+5. After the second image has loaded, pause execution for 2 seconds again;
+6. After the 2 seconds have passed, hide the current image.
+
+TEST DATA: Images in the img folder. Test the error handler by passing a wrong image path. Set the network speed to 'Fast 3G' in the dev tools Network tab, otherwise images load too fast.
+
+GOOD LUCK 😀
+*/
+
+const imagesContainer = document.querySelector('.images');
+let currentImg = null;
+btn.style.display = 'none';
+
+const wait = function (seconds) {
+  return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+};
+
+const createImage = function (imgPath) {
+  return new Promise((resolve, reject) => {
+    if (!imgPath) return reject(new Error('Image Path is empty!'));
+    const imgEl = document.createElement('img');
+    imgEl.src = imgPath;
+    imgEl.addEventListener('load', e => {
+      console.log(`IMAGE LOADED: `, e);
+      imagesContainer.insertAdjacentElement('afterbegin', imgEl);
+      return resolve(imgEl);
+    });
+    imgEl.addEventListener('error', e =>
+      reject(new Error(`Image not found: ${imgPath}`)),
+    );
+  });
+};
+
+// ─────────────────────────────────────────────
+// 1. ATTEMPT 1 FULL CHAIN
+// ─────────────────────────────────────────────
+// createImage('img/img-1.jpg')
+//   .then(imgEl => {
+//     currentImg = imgEl;
+//     return wait(2);
+//   })
+//   .then(() => {
+//     console.log(`2 seconds have passed, loading image 2`);
+//     currentImg.style.display = 'none';
+//     return createImage('img/img-2.jpg');
+//   })
+//   .then(imgEl => {
+//     currentImg = imgEl;
+//     return wait(2);
+//   })
+//   .then(() => {
+//     console.log(`2 seconds have passed, loading image 3`);
+//     currentImg.style.display = 'none';
+//     return createImage('img/img-3.jpg');
+//   })
+//   .then(imgEl => {
+//     currentImg = imgEl;
+//     return wait(2);
+//   })
+//   .then(() => {
+//     console.log(`2 seconds have passed, hiding all`);
+//     currentImg.style.display = 'none';
+//   })
+//   .catch(err => errorNotification.showError(err.message));
+
+// ─────────────────────────────────────────────
+// 2. ATTEMPT 2 MODULARIZATION BY EXTRACTING REPEATING LOGIC TO FUNCTION
+// ─────────────────────────────────────────────
+const showThenHide = (imgPath, seconds) =>
+  createImage(imgPath)
+    .then(imgEl => wait(seconds).then(() => imgEl))
+    .then(imgEl => (imgEl.style.display = 'none'));
+
+// showThenHide('img/img-1.jpg', 2)
+//   .then(() => showThenHide('img/img-2.jpg', 2))
+//   .then(() => showThenHide('img/img-3.jpg', 2))
+//   .catch(err => errorNotification.showError(err.message));
+
+// ─────────────────────────────────────────────
+// 3. ATTEMPT 3 CHAINING WITH REDUCE
+// ─────────────────────────────────────────────
+
+const images = ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg'];
+images
+  .reduce(
+    (chain, imgPath) => chain.then(() => showThenHide(imgPath, 2)),
+    Promise.resolve(),
+  )
+  .catch(err => errorNotification.showError(err.message));
