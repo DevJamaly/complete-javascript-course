@@ -810,17 +810,43 @@ const whereAmI = async function () {
     );
 
     renderCountryCard(countryData);
-  } catch (e) {
+
+    //Promise is always fulfilled and never rejected even if an error is thrown
+    return `You are in ${geoData.city}, ${geoData.countryName}`;
+  } catch (error) {
     // ONE catch handles every failure above — getPosition, isValidCoords, both getJson calls.
     // Any throw or rejected await lands here. Equivalent to .catch() at the end of a chain.
-    errorNotification.showError(e.message);
-    console.error(e);
+    errorNotification.showError(error.message);
+
+    //Reject the promise returned from the async function in case of error!
+    throw error;
   } finally {
     // Runs regardless of success or failure — equivalent to .finally() on a chain.
-    // ⚠️ Container shows even on error — move opacity=1 into try if that's undesired.
     btn.style.opacity = 0;
     countriesContainer.style.opacity = 1;
   }
 };
 
-btn.addEventListener('click', whereAmI);
+// btn.addEventListener('click', whereAmI);
+
+console.log(`1. Starting location triangulation and identification`);
+
+//This just outputs promise !
+// const countryStr = whereAmI();
+// console.log(countryStr);
+
+// whereAmI()
+//   .then(countryStr => console.log(`2: ${countryStr}`))
+//   .catch(err => console.error(`2: ${err.message}`))
+//   .finally(() => console.log(`3. Displaying localized country card`));
+
+(async function () {
+  try {
+    const countryStr = await whereAmI();
+    console.log(`2: ${countryStr}`);
+  } catch (err) {
+    console.error(`2: ${err.message}`);
+  } finally {
+    console.log(`3. Displaying localized country card`);
+  }
+})();
