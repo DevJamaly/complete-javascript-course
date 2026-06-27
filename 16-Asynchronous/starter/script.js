@@ -429,7 +429,7 @@ btn.addEventListener('click', e => {
 }); */
 
 //=====================THE EVENT LOOP===========================================
-// ============================================================
+/* // ============================================================
 // SYNC code runs first — top to bottom, nothing waits
 // ============================================================
 
@@ -471,4 +471,124 @@ console.log(`Test End`); // [5] Runs immediately → "Test End"
 // 3. "Resolved Promise 1"
 // 4. "Resolved Promise 2"   ← delayed by the heavy loop
 // 5. "0 sec timer"          ← despite being 0ms, runs LAST
-// ============================================================
+// ============================================================ */
+
+//=====================BUILDING PROMISES===========================================
+/* // ─────────────────────────────────────────────
+// 1. MANUALLY CREATING A PROMISE
+// ─────────────────────────────────────────────
+const lotteryPromise = new Promise(function (resolve, reject) {
+  // This runs SYNCHRONOUSLY — the "lottery machine" starts immediately.
+  // Think of this executor function as setting up the async operation.
+  console.log(`Lottery draw is happening 🔮`);
+
+  setTimeout(() => {
+    // This runs ASYNC — the result arrives after 2s.
+    // resolve() → fulfilled → .then() fires
+    // reject()  → rejected  → .catch() fires
+    if (Math.random() >= 0.5) resolve('You WIN 🎉');
+    else reject(new Error('You lost 😣'));
+  }, 2000);
+});
+
+// Consuming the promise
+lotteryPromise
+  .then(res => console.log(res)) // runs if resolved
+  .catch(err => console.error(err)); // runs if rejected
+
+// ─────────────────────────────────────────────
+// 2. PROMISIFYING setTimeout
+// ─────────────────────────────────────────────
+// Wraps setTimeout in a Promise so it plays nicely in Promise chains.
+// No reject needed — setTimeout can't fail.
+// resolve is passed directly as the callback; calling it after N seconds
+// fulfils the promise with no value (undefined), which is fine — we only
+// care that time passed, not what value comes back.
+const wait = seconds =>
+  new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+
+// ─────────────────────────────────────────────
+// 3. CALLBACK HELL vs PROMISE CHAIN
+// ─────────────────────────────────────────────
+// ❌ Callback Hell (commented out) — each step nests deeper, unreadable.
+// Each setTimeout must live INSIDE the previous one to fire sequentially.
+// setTimeout(() => {
+//   console.log(`1 second has passed`);
+//   setTimeout(() => {
+//     console.log(`2 second has passed`);
+//     setTimeout(() => {
+//       console.log(`3 second has passed`);
+//       setTimeout(() => {
+//         console.log(`4 second has passed`);
+//       }, 1000);
+//     }, 1000);
+//   }, 1000);
+// }, 1000);
+
+// ✅ Promise Chain — flat, readable, same sequential behaviour.
+// Each .then() returns a NEW promise (return wait(1)), so the next
+// .then() only fires when that new promise settles. Without `return`,
+// the chain wouldn't wait — all logs would fire simultaneously.
+wait(1)
+  .then(() => {
+    console.log('1 second has passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('2 second has passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('3 second has passed');
+    return wait(1);
+  })
+  .then(() => console.log('4 second has passed'));
+
+// ─────────────────────────────────────────────
+// 4. STATIC Promise.resolve / Promise.reject
+// ─────────────────────────────────────────────
+// Shortcuts — create an already-settled promise without new Promise().
+// Useful when a function must return a promise but the value is already known.
+Promise.resolve('Initial results').then(res => console.log(res)); // → "Initial results"
+Promise.reject(new Error(`Error: ❌`)).catch(err => console.error(err)); // → Error: ❌
+
+// ─────────────────────────────────────────────
+// 5. REAL World Example
+// ─────────────────────────────────────────────
+// Simulates a network request (manual Promise, like lotteryPromise)
+const authenticate = (username, password) =>
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (username === 'taha' && password === '1234')
+        resolve({ userId: 42, token: 'abc123' });
+      else reject(new Error('Invalid credentials'));
+    }, 1000);
+  });
+
+// Promisified delay — simulates a "loading" pause (like your wait())
+const delay = seconds =>
+  new Promise(resolve => setTimeout(resolve, seconds * 1000));
+
+// Simulates fetching a user profile (returns already-known data → Promise.resolve shortcut)
+const fetchProfile = userId =>
+  Promise.resolve({ userId, name: 'Taha', role: 'developer' });
+
+// Simulates a guaranteed server error → Promise.reject shortcut
+const fetchBannedUser = () => Promise.reject(new Error('Account suspended'));
+
+// ─── THE CHAIN ───────────────────────────────
+authenticate('taha', '1234')
+  .then(({ token }) => {
+    console.log('✅ Logged in, token:', token);
+    return delay(1); // artificial "loading" pause before next step
+  })
+  .then(() => fetchProfile(42)) // returns Promise.resolve → chain waits for it
+  .then(profile => {
+    console.log('👤 Profile loaded:', profile.name);
+  })
+  .catch(err => console.error('❌ Login failed:', err.message));
+ */
+
+//=====================PROMISIFYING===========================================
