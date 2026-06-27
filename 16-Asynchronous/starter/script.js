@@ -1,5 +1,7 @@
 'use strict';
 
+import { errorNotification } from './errorNotification.js';
+
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
@@ -592,3 +594,119 @@ authenticate('taha', '1234')
  */
 
 //=====================PROMISIFYING===========================================
+// navigator.geolocation.getCurrentPosition(
+//   position => console.log(position),
+//   err => console.log(err),
+// );
+// console.log('Getting position');
+
+// ─────────────────────────────────────────────
+// 1. PROMISIFYING THE GEOLOCATION API
+// ─────────────────────────────────────────────
+// getCurrentPosition() is callback-based. We wrap it in a Promise to fit it into a chain.
+// Elegant trick: resolve/reject passed directly as success/error callbacks — no manual wrappers.
+const getPosition = function () {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+// ─────────────────────────────────────────────
+// 2. REUSABLE FETCH HELPER
+// ─────────────────────────────────────────────
+// fetch() only rejects on network failure, NOT on HTTP errors (404, 500 etc).
+// We check response.ok manually and throw if bad — throwing inside .then() auto-triggers .catch().
+const getJson = function (url, errorMsg = 'Error: ') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw Error(`${errorMsg} (${response.status})`);
+    return response.json(); // parsed result passed to next .then()
+  });
+};
+
+// ─────────────────────────────────────────────
+// 3. COORDINATE VALIDATION
+// ─────────────────────────────────────────────
+// Destructures coords in the parameter. Returns a Promise so it plugs into the chain as a .then() step.
+// Any reject() skips all remaining .then() calls and lands in .catch().
+// ⚠️ Bug without `return` before reject(): execution continues and could call resolve() too.
+const isValidCoords = ({ latitude: lat, longitude: lng }) => {
+  return new Promise((resolve, reject) => {
+    if (!Number.isFinite(lat) || !Number.isFinite(lng))
+      return reject(new Error('Coordinates must be valid numbers'));
+
+    if (lat < -90 || lat > 90)
+      return reject(new Error(`Invalid latitude: ${lat} (must be -90 to 90)`));
+
+    if (lng < -180 || lng > 180)
+      return reject(
+        new Error(`Invalid longitude: ${lng} (must be -180 to 180)`),
+      );
+
+    resolve({ lat, lng });
+  });
+};
+
+// ─────────────────────────────────────────────
+// 4. DOM RENDERER
+// ─────────────────────────────────────────────
+// Pure UI function — injects a country card into the DOM.
+// className defaults to '' but accepts 'neighbour' for alternate styling.
+const renderCountryCard = function (country, className = '') {
+  // Inline helper: converts raw number → readable "X.XM" format
+  const formattedPopulation = population =>
+    `${(Number.parseInt(population, 10) / 1_000_000).toFixed(1)}M`;
+
+  const cardHTML = `
+    <article class="country ${className}">
+        <img class="country__img" src="${country.flag}" />
+        <div class="country__data">
+            <h3 class="country__name">${country.name}</h3>
+            <h4 class="country__region">${country.region}</h4>
+            <p class="country__row"><span>👫</span>${formattedPopulation(country.population)} people</p>
+            <p class="country__row"><span>🗣️</span>${country.languages[0].name}</p>
+            <p class="country__row"><span>💰</span>${country.currencies[0].name}</p>
+        </div>
+    </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', cardHTML);
+};
+
+// ─────────────────────────────────────────────
+// 5. MAIN CHAIN — whereAmI()
+// ─────────────────────────────────────────────
+// Each .then() receives the resolved value of the previous step.
+// Each `return` is critical — without it the chain won't wait for the next promise (common bug).
+const whereAmI = function () {
+  getPosition() // Step 1: Get GPS coords from browser
+    .then(pos => isValidCoords(pos.coords)) // Step 2: Validate → resolves {lat,lng} or rejects
+    .then(({ lat, lng }) =>
+      getJson(
+        // Step 3: Reverse geocode → city/country name
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
+        'Could not process location!',
+      ),
+    )
+    .then(data => {
+      console.log(`You are in ${data.city}, ${data.countryName}`);
+      return getJson(
+        // Step 4: Fetch full country data via country code
+        `https://countries-api-836d.onrender.com/countries/alpha/${data.countryCode}`,
+        'Country not found! ',
+      );
+    })
+    .then(data => renderCountryCard(data)) // Step 5: Render card to DOM
+    .catch(
+      (
+        error, // One catch handles ANY rejection from ANY step above
+      ) =>
+        errorNotification.showError(`Something went wrong: ${error.message}`),
+    )
+    .finally(() => {
+      // Runs regardless of success or failure
+      btn.style.opacity = 0;
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+btn.addEventListener('click', whereAmI);
