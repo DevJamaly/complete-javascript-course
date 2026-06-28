@@ -144,7 +144,7 @@ TEST DATA: Images in the img folder. Test the error handler by passing a wrong i
 GOOD LUCK 😀
 */
 
-const imagesContainer = document.querySelector('.images');
+/* const imagesContainer = document.querySelector('.images');
 let currentImg = null;
 btn.style.display = 'none';
 
@@ -223,4 +223,129 @@ images
     (chain, imgPath) => chain.then(() => showThenHide(imgPath, 2)),
     Promise.resolve(),
   )
-  .catch(err => errorNotification.showError(err.message));
+  .catch(err => errorNotification.showError(err.message)); */
+
+//========================CODING CHALLENGE #3=============================
+
+/* 
+PART 1
+Write an async function 'loadNPause' that recreates Coding Challenge #2, this time using async/await (only the part where the promise is consumed). Compare the two versions, think about the big differences, and see which one you like more.
+Don't forget to test the error handler, and to set the network speed to 'Fast 3G' in the dev tools Network tab.
+
+PART 2
+1. Create an async function 'loadAll' that receives an array of image paths 'imgArr';
+2. Use .map to loop over the array, to load all the images with the 'createImage' function (call the resulting array 'imgs')
+3. Check out the 'imgs' array in the console! Is it like you expected?
+4. Use a promise combinator function to actually get the images from the array 😉
+5. Add the 'paralell' class to all the images (it has some CSS styles).
+
+TEST DATA: ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']. To test, turn off the 'loadNPause' function.
+
+GOOD LUCK 😀
+*/
+
+const imagesContainer = document.querySelector('.images');
+btn.style.display = 'none';
+
+const wait = function (seconds) {
+  return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+};
+
+const createImage = function (imgPath) {
+  return new Promise((resolve, reject) => {
+    if (!imgPath) return reject(new Error('Image Path is empty!'));
+    const imgEl = document.createElement('img');
+    imgEl.src = imgPath;
+    imgEl.addEventListener('load', e => {
+      console.log(`IMAGE LOADED: `, e);
+      imagesContainer.insertAdjacentElement('afterbegin', imgEl);
+      return resolve(imgEl);
+    });
+    imgEl.addEventListener('error', e =>
+      reject(new Error(`Image not found: ${imgPath}`)),
+    );
+  });
+};
+
+// ─────────────────────────────────────────────
+// 1. ATTEMPT 1 FULL CHAIN
+// ─────────────────────────────────────────────
+const loadNPause = async function () {
+  try {
+    let imgEl = await createImage('img/img-1.jpg');
+    console.log(imgEl);
+    await wait(2);
+    imgEl.style.display = 'none';
+
+    imgEl = await createImage('img/img-2.jpg');
+    console.log(imgEl);
+    await wait(2);
+    imgEl.style.display = 'none';
+
+    imgEl = await createImage('img/img-3.jpg');
+    console.log(imgEl);
+    await wait(2);
+    imgEl.style.display = 'none';
+  } catch (error) {
+    errorNotification.showError(error.message);
+  }
+};
+
+// loadNPause();
+
+// ─────────────────────────────────────────────
+// 2. ATTEMPT 2 MODULARIZATION BY EXTRACTING REPEATING LOGIC TO FUNCTION
+// ─────────────────────────────────────────────
+
+const showThenHide = async function (imgPath, seconds) {
+  let imgEl = await createImage(imgPath);
+  await wait(seconds);
+  imgEl.style.display = 'none';
+};
+
+const loadNPauseSequentially = async function () {
+  try {
+    await showThenHide('img/img-1.jpg', 2);
+    await showThenHide('img/img-2.jpg', 2);
+    await showThenHide('img/img-3.jpg', 2);
+  } catch (error) {
+    errorNotification.showError(error.message);
+  }
+};
+// loadNPauseSequentially();
+
+// ─────────────────────────────────────────────
+// 3. ATTEMPT 3 LOOPING PROGRAMATICALLY
+// ─────────────────────────────────────────────
+
+const images = ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg'];
+const pauseInterval = 2;
+
+const loadNPauseProgrmatically = async function () {
+  try {
+    for (const imgPath of images) {
+      await showThenHide(imgPath, pauseInterval); // ✅ awaited sequentially
+    }
+  } catch (error) {
+    errorNotification.showError(error.message);
+  }
+};
+// loadNPauseProgrmatically();
+
+// ─────────────────────────────────────────────
+// PART 2: Multiple Image loading
+// ─────────────────────────────────────────────
+
+const loadAll = async function (imgArr) {
+  try {
+    const imgs = imgArr.map(imgPath => createImage(imgPath));
+    console.log(imgs);
+    const imgElements = await Promise.all(imgs);
+    console.log(imgElements);
+    imgElements.forEach(imgEl => imgEl.classList.add('parallel'));
+  } catch (error) {
+    errorNotification.showError(error.message);
+  }
+};
+
+loadAll(images);
