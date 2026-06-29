@@ -191,3 +191,43 @@ const userRoutes = require('./userRoutes'); // cached after first load
 
 app.use('/users', userRoutes);            // entire module consumed in one line
 app.listen(3000, () => console.log('Server running on port 3000')); */
+
+// ================= NPM LIBRARIES ==================
+// Imports only cloneDeep from lodash-es (ES module build) — avoids loading the entire library
+// Direct node_modules path needed here because there's no bundler resolving bare imports
+import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+
+const state = {
+  cart: [
+    // ⚠️ this is an ARRAY — matters for the bug below
+    { product: 'bread', quantity: 5 },
+    { product: 'pizza', quantity: 2 },
+  ],
+  user: { loggedIn: true },
+};
+
+// Shallow copy — top-level props duplicated, but cart[] and user{} are still shared references
+const stateClone = Object.assign({}, state);
+
+const stateCloneLevel1 = {
+  ...state, // brings in cart (ref) and user (ref)
+  cart: { ...state.cart }, // ⚠️ BUG: spreading an array into {} produces { '0': ..., '1': ... }
+  //    correct would be [...state.cart], though that still shares the item objects inside
+  user: { ...state.user }, // ✅ new object — fully independent from state.user (it's flat, so spread is safe)
+};
+
+// Native deep clone — all nesting is fully independent, no shared refs
+// Handles: Date, Map, Set, circular refs | Does NOT handle: functions, class instances
+const stateCloneRecursive = structuredClone(state);
+
+// Lodash deep clone — same result here, but handles more edge cases (functions, class prototypes)
+const stateDeepClone = cloneDeep(state);
+
+// Mutation happens AFTER all copies — this is what exposes whether each copy is truly independent
+state.user.loggedIn = false;
+
+console.log(stateClone); // user.loggedIn → false ❌  (shallow: user is the same object)
+console.log(stateCloneLevel1); // user.loggedIn → true  ✅  (spread made a new user object)
+// cart → plain object   ⚠️  ({ '0': ..., '1': ... }), not an array
+console.log(stateCloneRecursive); // user.loggedIn → true  ✅  (fully independent deep clone)
+console.log(stateDeepClone); // user.loggedIn → true  ✅  (fully independent deep clone)
