@@ -8,7 +8,7 @@ console.log(`Importing module`);
 
 // ================= Exporting & Importing in ES6 ==================
 
-/* // Style 1: named imports with renaming aliases
+// Style 1: named imports with renaming aliases
 // import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
 // addToCart('shampoo', 10);
 // console.log(price, tq);
@@ -33,7 +33,7 @@ add('apples', 8);
 
 // `cart` is a live binding to the same array in shoppingCart.js
 // Every add() call mutated it, so all 4 items appear here even though we never pushed directly
-console.log(cart); */
+console.log(cart);
 
 // ================= AWAIT IN ES2022 ==================
 

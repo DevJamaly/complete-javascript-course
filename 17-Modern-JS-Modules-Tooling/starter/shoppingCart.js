@@ -4,7 +4,7 @@ console.log('Exporting Module');
 
 // ================= Exporting & Importing in ES6 ==================
 
-/* // Not exported → private to this module; unlike scripts, modules don't leak to the global scope
+// Not exported → private to this module; unlike scripts, modules don't leak to the global scope
 const shippingCost = 10;
 
 // Named export — shared as a live binding: importers reference this exact same array object
@@ -28,10 +28,10 @@ export { totalPrice, totalQuantity as tq };
 export default function (product, quantity) {
   cart.push({ product, quantity });
   console.log(`${quantity} ${product} added to cart`);
-} */
+}
 
 // ================= AWAIT IN ES2022 ==================
-
+/* 
 // All three top-level awaits block sequentially — nothing below an await runs until it resolves
 // Any module that imports this file will also wait for all of these to finish
 
@@ -50,4 +50,4 @@ console.log(`Finished fetching users, now processing data`);
 // Outer: array of users | Inner: single user object per iteration
 userData.forEach(userData => {
   console.log(`${userData.id}: ${userData.name}`);
-});
+}); */
