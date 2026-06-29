@@ -68,7 +68,7 @@ console.log(lastPost);
 import * as ShoppingCart from './shoppingCart.js'; */
 
 // ================= MODULE PATTERN ==================
-// The pre-ES6 solution for encapsulation — an IIFE that acts like a module
+/* // The pre-ES6 solution for encapsulation — an IIFE that acts like a module
 //
 // Problems with this pattern (why ES6 modules exist):
 //   1. Still creates a GLOBAL variable (ShoppingCart2) — namespace collisions are possible
@@ -127,4 +127,67 @@ ShoppingCart2.addToCart('pizza', 2);
 console.log(ShoppingCart2.cart); // [{product: 'apple', quantity: 4}, {product: 'pizza', quantity: 2}]
 
 // undefined — shippingCost was never returned; the closure hides it permanently
-console.log(ShoppingCart2.shippingCost);
+console.log(ShoppingCart2.shippingCost); */
+
+// ================= COMMON JS ==================
+//
+// CommonJS (CJS) is Node.js's original module system, created in 2009 — years before ES6 modules.
+//
+// WHY IT DOESN'T WORK IN BROWSERS:
+//   `require()` is SYNCHRONOUS — it blocks execution until the entire file is loaded.
+//   Browsers load files over a NETWORK (HTTP), so blocking would freeze the page entirely.
+//   Browsers also have no built-in `require` or `module` globals — they're Node-only APIs.
+//   ES6 import/export was purpose-built for browsers: statically analyzed, async-friendly.
+//
+// WHY IT WORKS IN NODE.JS:
+//   Node reads files from the LOCAL FILESYSTEM (near-instant — synchronous blocking is fine).
+//   Node secretly wraps every file in a function before running it, injecting these locals:
+//   (function(exports, require, module, __filename, __dirname) { ...your code here... })
+//   This is why `exports`, `require`, `module` exist as "globals" — they're actually parameters.
+
+// ─── EXPORT ───────────────────────────────────────────────────────────────────
+
+/* // `exports` is a shorthand reference to `module.exports` (the object Node actually sends out)
+// Adding properties to `exports` defines your public API — everything else stays private
+// ⚠ This code has a typo: `export.addToCart` should be `exports.addToCart` (missing the 's')
+exports.addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(`${quantity} ${product} added to cart`);
+};
+// ⚠ Avoid: `exports = { addToCart }` — this BREAKS the reference to module.exports entirely
+// Safe:    `exports.addToCart = ...`  — mutates the shared object instead of replacing it
+
+
+// ─── IMPORT ───────────────────────────────────────────────────────────────────
+
+// require() synchronously loads, executes, and CACHES the module — same as calling a function
+// Returns whatever `module.exports` contains at the end of that file
+// Destructuring here pulls only `addToCart` out of the returned exports object
+const { addToCart } = require('./shoppingCart.js');
+// Subsequent require('./shoppingCart.js') anywhere returns the CACHED result — not re-executed
+
+
+// ─── REAL LIFE EXAMPLE ────────────────────────────────────────────────────────
+// CommonJS is how virtually every Node.js server and npm package is structured.
+// Here's what a real Express.js REST API looks like:
+
+// userRoutes.js (one module per concern — same encapsulation principle as ES6 modules)
+const express = require('express');       // npm package — loads from node_modules
+const router  = express.Router();
+
+const getUsers  = (req, res) => res.json([{ id: 1, name: 'Taha' }]);
+const createUser = (req, res) => res.status(201).json({ created: true });
+
+router.get('/',    getUsers);
+router.post('/',   createUser);
+
+module.exports = router;                  // export the whole router as one unit
+
+// ─────────────────────────────────────────────────────────────────────────────
+// app.js (entry point — requires the route file above)
+const express  = require('express');
+const app      = express();
+const userRoutes = require('./userRoutes'); // cached after first load
+
+app.use('/users', userRoutes);            // entire module consumed in one line
+app.listen(3000, () => console.log('Server running on port 3000')); */
