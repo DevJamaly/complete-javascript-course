@@ -196,7 +196,7 @@ app.listen(3000, () => console.log('Server running on port 3000')); */
 // Imports only cloneDeep from lodash-es (ES module build) — avoids loading the entire library
 // Direct node_modules path needed here because there's no bundler resolving bare imports
 // import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
-import cloneDeep from 'lodash-es'; //in parcel it will automatically get the corresponding dependency files
+import { cloneDeep } from 'lodash-es'; //in parcel it will automatically get the corresponding dependency files
 
 const state = {
   cart: [
@@ -227,12 +227,13 @@ const stateDeepClone = cloneDeep(state);
 // Mutation happens AFTER all copies — this is what exposes whether each copy is truly independent
 state.user.loggedIn = false;
 
-console.log(stateClone); // user.loggedIn → false ❌  (shallow: user is the same object)
-console.log(stateCloneLevel1); // user.loggedIn → true  ✅  (spread made a new user object)
+console.log('stateClone', stateClone); // user.loggedIn → false ❌  (shallow: user is the same object)
+console.log('stateCloneLevel1', stateCloneLevel1); // user.loggedIn → true  ✅  (spread made a new user object)
 // cart → plain object   ⚠️  ({ '0': ..., '1': ... }), not an array
-console.log(stateCloneRecursive); // user.loggedIn → true  ✅  (fully independent deep clone)
-console.log(stateDeepClone); // user.loggedIn → true  ✅  (fully independent deep clone)
+console.log('stateCloneRecursive', stateCloneRecursive); // user.loggedIn → true  ✅  (fully independent deep clone)
+console.log('stateCloneDeepLodash', stateDeepClone); // user.loggedIn → true  ✅  (fully independent deep clone)
 
+// ================= BABEL ==================
 // Parcel injects `module.hot` in dev mode only — it's undefined in production builds
 // so this if-guard prevents a crash when the bundle is deployed.
 // .accept() tells Parcel: "when this file or its dependencies change,
@@ -241,3 +242,18 @@ console.log(stateDeepClone); // user.loggedIn → true  ✅  (fully independent 
 if (module.hot) {
   module.hot.accept();
 }
+// Babel transforms SYNTAX (arrow fns, classes, etc.) but can't patch missing runtime FEATURES
+// core-js handles built-ins (find, Promise) — regenerator-runtime handles async/await generator machinery
+
+// Polyfill test: Array.prototype.find — doesn't exist in old envs, core-js patches it in
+console.log(cart.find(el => el.quantity >= 2));
+
+// Polyfill test: Promise — also absent in old envs, core-js injects an implementation
+Promise.resolve('TEST').then(res => console.log(res));
+
+// Polyfills all stable ES built-ins: Array.find, Promise, Object.assign, etc.
+import 'core-js/stable';
+
+// Polyfills async/await — Babel compiles async functions down to generator functions,
+// but generators themselves need this runtime to actually execute in old envs
+import 'regenerator-runtime/runtime';
