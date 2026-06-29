@@ -195,7 +195,8 @@ app.listen(3000, () => console.log('Server running on port 3000')); */
 // ================= NPM LIBRARIES ==================
 // Imports only cloneDeep from lodash-es (ES module build) — avoids loading the entire library
 // Direct node_modules path needed here because there's no bundler resolving bare imports
-import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+// import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+import cloneDeep from 'lodash-es'; //in parcel it will automatically get the corresponding dependency files
 
 const state = {
   cart: [
@@ -231,3 +232,12 @@ console.log(stateCloneLevel1); // user.loggedIn → true  ✅  (spread made a ne
 // cart → plain object   ⚠️  ({ '0': ..., '1': ... }), not an array
 console.log(stateCloneRecursive); // user.loggedIn → true  ✅  (fully independent deep clone)
 console.log(stateDeepClone); // user.loggedIn → true  ✅  (fully independent deep clone)
+
+// Parcel injects `module.hot` in dev mode only — it's undefined in production builds
+// so this if-guard prevents a crash when the bundle is deployed.
+// .accept() tells Parcel: "when this file or its dependencies change,
+// re-execute this module in place instead of triggering a full browser reload" —
+// preserving app state (scroll position, filled inputs, etc.) across saves.
+if (module.hot) {
+  module.hot.accept();
+}
